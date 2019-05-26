@@ -1,10 +1,14 @@
 # Garbage Hunter App
 
-Application that allows you to create a report of garbage on the street that might be useful for others
+Application that allows you to create a report of garbage on the street that might be useful for others.
+
+## First discussion
+
+See this [document](https://docs.google.com/document/d/1pZcK6nOgmYxSbN2b9MdQSOWLhik8D2KYSkoZ8O7XWAs/edit?usp=sharing) for our first discussion on 26.05.2019.
 
 ## Project pitch
 
-See this [presentation](https://docs.google.com/presentation/d/1I6PNRz_twv2VCshzv1o-vXBFN6c71CpDrIfRMc17KL8/edit?usp=sharing) for our project pitch
+See this [presentation](https://docs.google.com/presentation/d/1I6PNRz_twv2VCshzv1o-vXBFN6c71CpDrIfRMc17KL8/edit?usp=sharing) for our project pitch.
 
 ## Installation
 
