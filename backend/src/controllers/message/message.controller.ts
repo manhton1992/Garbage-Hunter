@@ -1,0 +1,3 @@
+/**
+ * Controller for /api/messages
+ */
