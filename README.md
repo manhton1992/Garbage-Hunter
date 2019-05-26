@@ -2,6 +2,10 @@
 
 Application that allows you to create a report of garbage on the street that might be useful for others
 
+## Project pitch
+
+See this [presentation](https://docs.google.com/presentation/d/1I6PNRz_twv2VCshzv1o-vXBFN6c71CpDrIfRMc17KL8/edit?usp=sharing) for our project pitch
+
 ## Installation
 
 1. Clone the project
