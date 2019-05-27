@@ -2,7 +2,9 @@
  * Model for User
  */
 
+/** Package imports */
 import * as mongoose from 'mongoose';
+import uniqueValidator from 'mongoose-unique-validator';
 
 /**
  * @description interface for user.
@@ -20,13 +22,15 @@ export interface IUserModel extends mongoose.Document {
 /**
  * @description Schema of user for mongoose.
  * @export
- * @Schema userSchema 
+ * @Schema UserSchema 
  */
-export const userSchema: mongoose.Schema = new mongoose.Schema(
+export const UserSchema: mongoose.Schema = new mongoose.Schema(
     {
         username: {
             type: String,
             required: true,
+            unique: true,
+            index: true,
         },
         token: {
             type: String,
@@ -40,13 +44,16 @@ export const userSchema: mongoose.Schema = new mongoose.Schema(
     {
         timestamps: {
             createdAt: 'created_at',
+            updatedAt: 'updated_at',
         },
     }
 );
+
+UserSchema.plugin(uniqueValidator);     // prevent identical username
 
 /**
  * @description Export the user mongoose Schema.
  * @export
  * @Model user 
  */
-export const user: mongoose.Model<IUserModel> = mongoose.model<IUserModel>('User', userSchema);
+export const user: mongoose.Model<IUserModel> = mongoose.model<IUserModel>('User', UserSchema);

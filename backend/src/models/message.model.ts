@@ -2,6 +2,7 @@
  * Model for Message
  */
 
+/** Package import */
 import * as mongoose from 'mongoose';
 
 /**
@@ -28,9 +29,9 @@ export interface IMessageModel extends mongoose.Document {
 /**
  * @description Schema of message for mongoose.
  * @export
- * @Schema messageSchema 
+ * @Schema MessageSchema 
  */
-export const messageSchema: mongoose.Schema = new mongoose.Schema(
+export const MessageSchema: mongoose.Schema = new mongoose.Schema(
     {
         title: {
             type: String,
@@ -88,4 +89,4 @@ export const messageSchema: mongoose.Schema = new mongoose.Schema(
  * @export
  * @Model message 
  */
-export const message: mongoose.Model<IMessageModel> = mongoose.model<IMessageModel>('Message', messageSchema);
+export const message: mongoose.Model<IMessageModel> = mongoose.model<IMessageModel>('Message', MessageSchema);

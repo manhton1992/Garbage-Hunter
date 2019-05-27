@@ -19,11 +19,16 @@ export const app: express.Application = express();
 const db_host: string = config.get('database.host');
 const port: string = config.get('server.port');
 
+app.use(bodyParser.json());
+
 /** Setup Database */
-mongoose.connect(db_host, {useNewUrlParser: true, useFindAndModify: false});
+mongoose.connect(db_host, {
+    useNewUrlParser: true, 
+    useFindAndModify: false,
+    useCreateIndex: true
+});
 
 app.use('/api', globalRouter);
-app.use(bodyParser.json());
 app.use(globalErrorHandler);
 
 
