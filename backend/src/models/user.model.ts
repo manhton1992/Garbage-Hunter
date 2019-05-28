@@ -13,7 +13,7 @@ import uniqueValidator from 'mongoose-unique-validator';
  * @extends {mongoose.Document}
  */
 export interface IUserModel extends mongoose.Document {
-    username: string;
+    email: string;
     password: string;
     created_at: Date;
 }
@@ -25,7 +25,7 @@ export interface IUserModel extends mongoose.Document {
  */
 export const UserSchema: mongoose.Schema = new mongoose.Schema(
     {
-        username: {
+        email: {
             type: String,
             required: true,
             unique: true,
