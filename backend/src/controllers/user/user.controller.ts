@@ -71,7 +71,7 @@ export const exportUsersAsCsv = async (req: Request, res: Response) => {
         users.forEach((item) => {
             let data = {
                 id: item.id,
-                username: item.username,
+                username: item.email,
                 created: item.created_at,
             };
             documents.push(data);
