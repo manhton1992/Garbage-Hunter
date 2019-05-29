@@ -1,3 +1,24 @@
-<p>
-  login works!
-</p>
+<div class="login">
+  <div class="login-container">
+    <div class="login-inhalt  d-flex flex-column justify-content-around">
+       <div>Login</div>
+       <div>
+         <Label>Email</Label>
+         <input type="text" [(ngModel)]="userLogin.email">
+       </div>
+       <div>
+          <Label>Password</Label>
+          <input type="text" [(ngModel)]="userLogin.password">
+        </div>
+        <div>
+          <button (click)="submitLogin()">Login</button>
+        </div>
+        <div>
+          Don't have account: 
+          <a routerLink="/register" routerLinkActive="active"> register </a>
+        </div>
+    </div>
+
+  </div>
+
+</div>
