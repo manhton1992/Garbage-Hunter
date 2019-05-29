@@ -18,7 +18,10 @@ import { globalErrorHandler } from './middlewares/errorhandler.middleware';
 export const app: express.Application = express();
 const db_host: string = config.get('database.host');
 const port: string = config.get('server.port');
+var cors = require('cors');
 
+
+app.use(cors());
 app.use(bodyParser.json());
 
 /** Setup Database */

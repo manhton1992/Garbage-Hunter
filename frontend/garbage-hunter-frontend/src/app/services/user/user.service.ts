@@ -10,6 +10,8 @@ import { User } from 'src/app/models/user.model';
 export class UserService {
 
   private userUrl = "http://localhost:3000/api/users"
+  public user: User;
+  private users: User[];
 
   constructor(private http: HttpClient) { }
 

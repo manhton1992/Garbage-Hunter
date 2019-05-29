@@ -1,3 +1,28 @@
-<p>
-  register works!
-</p>
+<div class="register">
+    <div class="register-container">
+      <div class="register-inhalt  d-flex flex-column justify-content-around">
+         <div>Login</div>
+         <div>
+           <Label>Email</Label>
+           <input type="text" [(ngModel)]="userRegister.email">
+         </div>
+         <div>
+            <Label>Password</Label>
+            <input type="text" [(ngModel)]="userRegister.password">
+          </div>
+          <div>
+              <Label>Password confirm</Label>
+              <input type="text" [(ngModel)]="passwordConfirm">
+            </div>
+          <div>
+            <button (click)="submitRegister()">Create Account</button>
+          </div>
+          <div>
+            Already have account: 
+            <a routerLink="/login" routerLinkActive="active"> login </a>
+          </div>
+      </div>
+  
+    </div>
+  
+  </div>
