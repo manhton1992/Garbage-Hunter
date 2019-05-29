@@ -1,8 +1,8 @@
 {
     "database": {
-        "host" : ""
+        "host" : "mongodb://localhost:27017/garbage-hunter"
     },
     "server": {
-        "port" : 0
+        "port" : 3000
     }
 }
