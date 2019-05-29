@@ -20,8 +20,8 @@ import {
 
 export const userRouter: express.Router = express.Router({ mergeParams: true });
 
-/** READ ALL */
-userRouter.get('/', logTime, wrapAsync(getUsers));
+/** READ ALL but check admin before send response req: ?id=... */
+userRouter.get('/get_all/:userid', logTime, wrapAsync(getUsers));
 
 /** CREATE */
 userRouter.post('/', logTime, wrapAsync(createUser));
@@ -32,8 +32,8 @@ userRouter.get('/download', logTime, wrapAsync(exportUsersAsCsv));
 /** Delete all activities in the database */
 userRouter.delete('/delete_all', logTime, wrapAsync(deleteAllUsers));
 
-/** READ BY ID */
-userRouter.get('/:userid', logTime, wrapAsync(getSingleUser));
+/** READ BY email and address with query ?email=..&&address=.. */
+userRouter.get('/', logTime, wrapAsync(getSingleUser));
 
 /** UPDATE */
 userRouter.put('/:userid', logTime, wrapAsync(updateSingleUser));

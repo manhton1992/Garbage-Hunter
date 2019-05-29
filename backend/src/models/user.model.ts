@@ -15,6 +15,7 @@ import uniqueValidator from 'mongoose-unique-validator';
 export interface IUserModel extends mongoose.Document {
     email: string;
     password: string;
+    isAdmin: boolean;
     created_at: Date;
 }
 
@@ -34,6 +35,11 @@ export const UserSchema: mongoose.Schema = new mongoose.Schema(
         password: {
             type: String,
             required: true,
+        },
+        isAdmin: {
+            type: Boolean,
+            required: true,
+            default: false,
         },
     },
     {

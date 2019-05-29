@@ -14,17 +14,26 @@ import { IUserModel, user } from '../../models/user.model';
  */
 export const getUsers = async (req: Request, res: Response) => {
     try {
-        /** Process queries to check for dates*/
-        req.query = processQueries(req.query);
-
-        const users: IUserModel[] = await user.find(req.query);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                items: users.length,
-                docs: users,
-            },
-        });
+        const checkAdminUser : IUserModel | null = await user.findById(req.params.userid);
+        if (checkAdminUser != null){
+            //  this user is admin, so he can get data
+            const users: IUserModel[] = await user.find();
+            res.status(200).send({
+                data: {
+                    status: 'success',
+                    items: users.length,
+                    docs: users,
+                },
+            });
+        } else {
+            // this user is not admin
+            res.status(200).send({
+                data: {
+                    status: 'fail',
+                },
+            });
+        }
+        
     } catch (error) {
         res.status(400).send({
             data: {
@@ -119,18 +128,29 @@ export const deleteAllUsers = async (req: Request, res: Response) => {
 
 /**
  * Get a single user by id
+ * get email and password from request query
  * @param req
  * @param res
  */
 export const getSingleUser = async (req: Request, res: Response) => {
     try {
-        const singleUser: IUserModel | null = await user.findById(req.params.userid);
+        const singleUser: IUserModel | null = await user.findOne({email: req.query.email, password: req.query.password});
+       if (singleUser != null){
         res.status(200).send({
             data: {
                 status: 'success',
                 docs: singleUser,
             },
         });
+       } else {
+        // user does not exist
+        res.status(200).send({
+            data: {
+                status: 'fail',
+            },
+        });
+       }
+
     } catch (error) {
         res.status(400).send({
             data: {
