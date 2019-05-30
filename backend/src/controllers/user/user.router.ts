@@ -21,7 +21,7 @@ import {
 export const userRouter: express.Router = express.Router({ mergeParams: true });
 
 /** READ ALL but check admin before send response req: ?id=... */
-userRouter.get('/get_all/:userid', logTime, wrapAsync(getUsers));
+userRouter.get('/get_all/:token', logTime, wrapAsync(getUsers));
 
 /** CREATE */
 userRouter.post('/', logTime, wrapAsync(createUser));
@@ -36,7 +36,7 @@ userRouter.delete('/delete_all', logTime, wrapAsync(deleteAllUsers));
 userRouter.get('/', logTime, wrapAsync(getSingleUser));
 
 /** UPDATE */
-userRouter.put('/:userid', logTime, wrapAsync(updateSingleUser));
+userRouter.put('/:token', logTime, wrapAsync(updateSingleUser));
 
 /** DELETE */
-userRouter.delete('/:userid', logTime, wrapAsync(deleteSingleUser));
+userRouter.delete('/:token', logTime, wrapAsync(deleteSingleUser));

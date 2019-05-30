@@ -6,6 +6,25 @@
 import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IUserModel, user } from '../../models/user.model';
+import * as jwt from "jsonwebtoken";
+
+const myJWTSecretKey = 'my-secret-key-from-linh';
+
+/**
+ * check Token from user each request
+ * @param token 
+ * @returns return the User or null
+ */
+export const checkJwt = (token: string) => {
+   
+    try {
+        let jwtPayload = <any>jwt.verify(token, myJWTSecretKey);
+        return jwtPayload;
+      } catch (error) {
+        //If token is not valid
+        return null;
+      }
+}
 
 /**
  * Get all users.
@@ -14,8 +33,8 @@ import { IUserModel, user } from '../../models/user.model';
  */
 export const getUsers = async (req: Request, res: Response) => {
     try {
-        const checkAdminUser : IUserModel | null = await user.findById(req.params.userid);
-        if (checkAdminUser != null){
+        let user = checkJwt(req.params.token);
+        if (user && user.isAdmin){
             //  this user is admin, so he can get data
             const users: IUserModel[] = await user.find();
             res.status(200).send({
@@ -135,11 +154,18 @@ export const deleteAllUsers = async (req: Request, res: Response) => {
 export const getSingleUser = async (req: Request, res: Response) => {
     try {
         const singleUser: IUserModel | null = await user.findOne({email: req.query.email, password: req.query.password});
-       if (singleUser != null){
+       if (singleUser){
+
+        // create a token. With this token, client can communite with server of the user
+         // sign with default (HMAC SHA256) 
+        const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey, {
+            expiresIn: "1h"
+          });
         res.status(200).send({
             data: {
                 status: 'success',
                 docs: singleUser,
+                token: token,
             },
         });
        } else {
@@ -168,15 +194,19 @@ export const getSingleUser = async (req: Request, res: Response) => {
  */
 export const updateSingleUser = async (req: Request, res: Response) => {
     try {
-        const updateUser: IUserModel | null = await user.findByIdAndUpdate(req.params.userid, req.body, {
-            new: true,
-        });
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: updateUser,
-            },
-        });
+        let user = checkJwt(req.params.token);
+        if(user){
+            const updateUser: IUserModel | null = await user.findByIdAndUpdate(user._id, req.body, {
+                new: true,
+            });
+            res.status(200).send({
+                data: {
+                    status: 'success',
+                    docs: updateUser,
+                },
+            });
+        }
+        
     } catch (error) {
         res.status(400).send({
             data: {
@@ -194,13 +224,17 @@ export const updateSingleUser = async (req: Request, res: Response) => {
  */
 export const deleteSingleUser = async (req: Request, res: Response) => {
     try {
-        const deleteUser: IUserModel | null = await user.findByIdAndDelete(req.params.userid);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: deleteUser,
-            },
-        });
+        let user = checkJwt(req.params.token);
+        if (user){
+            const deleteUser: IUserModel | null = await user.findByIdAndDelete(user._id);
+            res.status(200).send({
+                data: {
+                    status: 'success',
+                    docs: deleteUser,
+                },
+            });
+        }
+     
     } catch (error) {
         res.status(400).send({
             data: {

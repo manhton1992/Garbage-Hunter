@@ -20,11 +20,11 @@ export class UserService {
  * get all users. 
  * Just feature just for admin. 
  * We need compare this user id with admin id in backend.
- * @param id 
+ * @param token 
  */
-getAllUser(id: string){
+getAllUser(token: string){
 
-  const url = `${this.userUrl}/get_all/${id}`; 
+  const url = `${this.userUrl}/get_all/${token}`; 
   return this.http.get<User[]>(url).pipe(map(response => response['data']));
 }
 
@@ -52,21 +52,21 @@ getAllUser(id: string){
 
 /**
  * update user information
- * @param id 
+ * @param token 
  * @param user 
  */
-updateUser(id: string, user: User): Observable<{}>{
-  const url = `${this.userUrl}/${id}`;
+updateUser(token: string, user: User): Observable<{}>{
+  const url = `${this.userUrl}/${token}`;
   return this.http.put<User>(url, user)
   .pipe(map(response => response['data']));
 }
 
   /**
  * delete user 
- * @param id 
+ * @param token 
  */
-deleteUser(id: string): Observable<{}>{
-  const url = `${this.userUrl}/${id}`;
+deleteUser(token: string): Observable<{}>{
+  const url = `${this.userUrl}/${token}`;
   return this.http.delete<User>(url)
   .pipe(map(response => response['data']));
 }
