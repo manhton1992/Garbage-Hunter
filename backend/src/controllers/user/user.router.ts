@@ -10,21 +10,26 @@ import { logTime } from '../../middlewares/timelogger.middleware';
 import { wrapAsync } from '../../middlewares/errorhandler.middleware';
 import {
     getUsers,
-    createUser,
     deleteAllUsers,
+    login,
+    exportUsersAsCsv,
+    updateSingleUserWithToken,
+    deleteSingleUserWithToken,
+    registerUser,
+
+    createUser,
     getSingleUser,
     updateSingleUser,
-    deleteSingleUser,
-    exportUsersAsCsv,
+    deleteSingleUser
 } from './user.controller';
 
 export const userRouter: express.Router = express.Router({ mergeParams: true });
 
 /** READ ALL but check admin before send response req: ?id=... */
-userRouter.get('/get_all/:token', logTime, wrapAsync(getUsers));
+userRouter.get('/', logTime, wrapAsync(getUsers));
 
 /** CREATE */
-userRouter.post('/', logTime, wrapAsync(createUser));
+userRouter.post('/register', logTime, wrapAsync(registerUser));
 
 /** Download as CSV data */
 userRouter.get('/download', logTime, wrapAsync(exportUsersAsCsv));
@@ -33,10 +38,26 @@ userRouter.get('/download', logTime, wrapAsync(exportUsersAsCsv));
 userRouter.delete('/delete_all', logTime, wrapAsync(deleteAllUsers));
 
 /** READ BY email and address with query ?email=..&&address=.. */
-userRouter.get('/', logTime, wrapAsync(getSingleUser));
+userRouter.get('/login', logTime, wrapAsync(login));
 
 /** UPDATE */
-userRouter.put('/:token', logTime, wrapAsync(updateSingleUser));
+userRouter.put('/update/:token', logTime, wrapAsync(updateSingleUserWithToken));
 
 /** DELETE */
-userRouter.delete('/:token', logTime, wrapAsync(deleteSingleUser));
+userRouter.delete('/delete/:token', logTime, wrapAsync(deleteSingleUserWithToken));
+
+
+/**For Testing*/
+
+/** CREATE */
+userRouter.post('/', logTime, wrapAsync(createUser));
+
+/** READ BY ID */
+userRouter.get('/:userid', logTime, wrapAsync(getSingleUser));
+
+/** UPDATE */
+userRouter.put('/:userid', logTime, wrapAsync(updateSingleUser));
+
+/** DELETE */
+userRouter.delete('/:userid', logTime, wrapAsync(deleteSingleUser));
+

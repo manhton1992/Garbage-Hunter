@@ -37,7 +37,7 @@ export const checkJwt = (token: string) => {
  */
 export const getUsers = async (req: Request, res: Response) => {
     try {
-        let user = checkJwt(req.params.token);
+        let user = checkJwt(req.body.token);
         if (user && user.isAdmin){
             //  this user is admin, so he can get data
             const users: IUserModel[] = await user.find();
@@ -72,7 +72,7 @@ export const getUsers = async (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const createUser = async (req: Request, res: Response) => {
+export const registerUser = async (req: Request, res: Response) => {
     try {
         // create hash with salt 10
         let hash = bcrypt.hashSync(req.body.password, 10);
@@ -161,7 +161,7 @@ export const deleteAllUsers = async (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const getSingleUser = async (req: Request, res: Response) => {
+export const login = async (req: Request, res: Response) => {
     try {
 
         const singleUser: IUserModel | null = await user.findOne({email: req.query.email});
@@ -204,7 +204,7 @@ export const getSingleUser = async (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const updateSingleUser = async (req: Request, res: Response) => {
+export const updateSingleUserWithToken = async (req: Request, res: Response) => {
     try {
         let user = checkJwt(req.params.token);
         if(user){
@@ -234,7 +234,7 @@ export const updateSingleUser = async (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const deleteSingleUser = async (req: Request, res: Response) => {
+export const deleteSingleUserWithToken = async (req: Request, res: Response) => {
     try {
         let user = checkJwt(req.params.token);
         if (user){
@@ -292,3 +292,108 @@ const processQueries = (queries: any): object => {
     }
     return queries;
 };
+
+/**
+ * =========================
+ * FOR TESTING
+ * =========================
+ */
+
+/**
+ * Create new user
+ * @param req
+ * @param res
+ */
+export const createUser = async (req: Request, res: Response) => {
+    try {
+        const newUser: IUserModel = await user.create(req.body);
+        res.status(201).send({
+            data: {
+                status: 'success',
+                docs: newUser,
+            },
+        });
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+};
+
+/**
+ * Get a single user by id
+ * @param req
+ * @param res
+ */
+export const getSingleUser = async (req: Request, res: Response) => {
+    try {
+        const singleUser: IUserModel | null = await user.findById(req.params.userid);
+        res.status(200).send({
+            data: {
+                status: 'success',
+                docs: singleUser,
+            },
+        });
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+};
+
+/**
+ * Update a single user by id
+ * @param req
+ * @param res
+ */
+export const updateSingleUser = async (req: Request, res: Response) => {
+    try {
+        const updateUser: IUserModel | null = await user.findByIdAndUpdate(req.params.userid, req.body, {
+            new: true,
+        });
+        res.status(200).send({
+            data: {
+                status: 'success',
+                docs: updateUser,
+            },
+        });
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+};
+
+/**
+ * Delete a single user by id
+ * @param req
+ * @param res
+ */
+export const deleteSingleUser = async (req: Request, res: Response) => {
+    try {
+        const deleteUser: IUserModel | null = await user.findByIdAndDelete(req.params.userid);
+        res.status(200).send({
+            data: {
+                status: 'success',
+                docs: deleteUser,
+            },
+        });
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+};
+

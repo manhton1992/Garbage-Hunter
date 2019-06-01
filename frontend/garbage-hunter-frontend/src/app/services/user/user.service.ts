@@ -9,7 +9,12 @@ import { User } from 'src/app/models/user.model';
 })
 export class UserService {
 
-  private userUrl = "http://localhost:3000/api/users"
+  private userUrl = "http://localhost:3000/api/users";
+  private userLoginUrl = `${this.userUrl}/login`;
+  private userRegisterUrl = `${this.userUrl}/register`;
+  private userUpdateUrl = `${this.userUrl}/update`;
+  private userDeleleUrl = `${this.userUrl}/delete`;
+
   public user: User = null;
   private users: User[];
 
@@ -34,30 +39,30 @@ getAllUser(token: string){
  * @param email 
  * @param password 
  */
-  getUser(email: string, password: string){
+login(email: string, password: string){
 
-    const url = `${this.userUrl}?email=${email}&&password=${password}`; 
-    return this.http.get<User>(url).pipe(map(response => response['data']));
-  }
+  const url = `${this.userLoginUrl}?email=${email}&&password=${password}`; 
+  return this.http.get<User>(url).pipe(map(response => response['data']));
+}
 
-    /**
-   * create a new user instance
-   * @param activity 
-   * @returns
-   */
-  addUser(user: any){
-    return this.http.post<string>(this.userUrl,user)
-    .pipe(map(response => response['data']));
-  
-  }
+  /**
+ * create a new user instance
+ * @param activity 
+ * @returns
+ */
+register(user: any){
+  return this.http.post<string>(this.userRegisterUrl,user)
+  .pipe(map(response => response['data']));
+
+}
 
 /**
  * update user information
  * @param token 
  * @param user 
  */
-updateUser(token: string, user: User): Observable<{}>{
-  const url = `${this.userUrl}/${token}`;
+updateUserWithToken(token: string, user: User): Observable<{}>{
+  const url = `${this.userUpdateUrl}/${token}`;
   return this.http.put<User>(url, user)
   .pipe(map(response => response['data']));
 }
@@ -66,8 +71,8 @@ updateUser(token: string, user: User): Observable<{}>{
  * delete user 
  * @param token 
  */
-deleteUser(token: string): Observable<{}>{
-  const url = `${this.userUrl}/${token}`;
+deleteUserWithToken(token: string): Observable<{}>{
+  const url = `${this.userDeleleUrl}/${token}`;
   return this.http.delete<User>(url)
   .pipe(map(response => response['data']));
 }
