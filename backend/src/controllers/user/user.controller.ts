@@ -8,6 +8,10 @@ import { Request, Response } from 'express';
 import { IUserModel, user } from '../../models/user.model';
 import * as jwt from "jsonwebtoken";
 
+// use to hash the password
+let bcrypt = require('bcryptjs');
+
+// secret key use to create token
 const myJWTSecretKey = 'my-secret-key-from-linh';
 
 /**
@@ -70,13 +74,19 @@ export const getUsers = async (req: Request, res: Response) => {
  */
 export const createUser = async (req: Request, res: Response) => {
     try {
-        const newUser: IUserModel = await user.create(req.body);
-        res.status(201).send({
-            data: {
-                status: 'success',
-                docs: newUser,
-            },
-        });
+        // create hash with salt 10
+        let hash = bcrypt.hashSync(req.body.password, 10);
+        if (hash){
+            req.body.passwordHash = hash;
+            const newUser: IUserModel = await user.create(req.body);
+            res.status(201).send({
+                data: {
+                    status: 'success',
+                    docs: newUser,
+                },
+            });
+        } 
+
     } catch (error) {
         res.status(400).send({
             data: {
@@ -153,22 +163,26 @@ export const deleteAllUsers = async (req: Request, res: Response) => {
  */
 export const getSingleUser = async (req: Request, res: Response) => {
     try {
-        const singleUser: IUserModel | null = await user.findOne({email: req.query.email, password: req.query.password});
-       if (singleUser){
 
-        // create a token. With this token, client can communite with server of the user
-         // sign with default (HMAC SHA256) 
-        const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey, {
-            expiresIn: "1h"
-          });
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: singleUser,
-                token: token,
-            },
-        });
+        const singleUser: IUserModel | null = await user.findOne({email: req.query.email});
+        
+        // compare password with hashpassword
+        if (singleUser && bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
+
+            // create a token. With this token, client can communite with server of the user
+            // sign with default (HMAC SHA256) 
+            const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey, {
+                expiresIn: "1h"
+            });
+            res.status(200).send({
+                data: {
+                    status: 'success',
+                    docs: singleUser,
+                    token: token,
+                },
+            });
        } else {
+       
         // user does not exist
         res.status(200).send({
             data: {
