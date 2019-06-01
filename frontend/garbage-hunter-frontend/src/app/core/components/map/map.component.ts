@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { latLng, tileLayer, marker, icon, Map } from 'leaflet';
+import { Message } from 'src/app/models/message.model';
 
 @Component({
   selector: 'app-map',
@@ -8,7 +9,7 @@ import { latLng, tileLayer, marker, icon, Map } from 'leaflet';
 })
 export class MapComponent implements OnInit {
 
-  @Input() messages;
+  @Input() messages: Message[];
 
   streetMaps = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
