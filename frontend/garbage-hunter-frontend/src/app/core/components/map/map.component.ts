@@ -5,41 +5,63 @@ import { Message } from 'src/app/models/message.model';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss']
+  styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit {
-
+  /**
+   * @description messages being passed from parent component.
+   * @type {Message[]}
+   * @memberof MapComponent
+   */
   @Input() messages: Message[];
 
-  streetMaps = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  /**
+   * @description config layout for the map.
+   * @memberof MapComponent
+   */
+  map_conf_streetmap = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     detectRetina: true,
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
   });
 
- testmarker = marker([ 49.869009, 8.637904 ], {
-  icon: icon({
-    iconSize: [ 25, 41 ],
-    iconAnchor: [ 13, 41 ],
-    iconUrl: 'leaflet/marker-icon.png',
-    shadowUrl: 'leaflet/marker-shadow.png'
-  })
-});
-
-  options = {
-    layers: [this.streetMaps, this.testmarker],
-    zoom: 17,
-    center: latLng(49.869009, 8.637904)
+  /**
+   * @description config layout for marker.
+   * @memberof MapComponent
+   */
+  map_conf_marker = {
+    icon: icon({
+      iconSize: [25, 41],
+      iconAnchor: [13, 41],
+      iconUrl: 'leaflet/marker-icon.png',
+      shadowUrl: 'leaflet/marker-shadow.png',
+    }),
   };
 
-  onMapReady(map: Map) {
-    this.testmarker.bindPopup('I am a meldung');
+  /**
+   * @description general config for the map.
+   * @memberof MapComponent
+   */
+  map_conf = {
+    layers: [this.map_conf_streetmap],
+    zoom: 17,
+    center: latLng(49.869009, 8.637904),
+  };
+
+  /**
+   * @description executes after the map is ready.
+   * @param {Map} map
+   * @memberof MapComponent
+   */
+  onMapReady = (map: Map): void => {
+    this.messages.forEach((message) => {
+      marker([message.lat, message.lon], this.map_conf_marker)
+        .addTo(map)
+        .bindPopup(message._id);
+    });
   }
 
+  constructor() {}
 
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }
