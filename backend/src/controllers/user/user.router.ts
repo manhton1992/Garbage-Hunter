@@ -9,7 +9,7 @@ import express from 'express';
 import { logTime } from '../../middlewares/timelogger.middleware';
 import { wrapAsync } from '../../middlewares/errorhandler.middleware';
 import {
-    getUsers,
+    getAllUsers,
     deleteAllUsers,
     login,
     exportUsersAsCsv,
@@ -20,13 +20,14 @@ import {
     createUser,
     getSingleUser,
     updateSingleUser,
-    deleteSingleUser
+    deleteSingleUser,
+    getUsers,
 } from './user.controller';
 
 export const userRouter: express.Router = express.Router({ mergeParams: true });
 
 /** READ ALL but check admin before send response req: ?id=... */
-userRouter.get('/', logTime, wrapAsync(getUsers));
+userRouter.get('/get_all/:token', logTime, wrapAsync(getAllUsers));
 
 /** CREATE */
 userRouter.post('/register', logTime, wrapAsync(registerUser));
@@ -48,6 +49,10 @@ userRouter.delete('/delete/:token', logTime, wrapAsync(deleteSingleUserWithToken
 
 
 /**For Testing*/
+
+
+/** READ ALL */
+userRouter.get('/', logTime, wrapAsync(getUsers));
 
 /** CREATE */
 userRouter.post('/', logTime, wrapAsync(createUser));

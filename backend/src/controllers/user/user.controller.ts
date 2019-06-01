@@ -35,9 +35,9 @@ export const checkJwt = (token: string) => {
  * @param req
  * @param res
  */
-export const getUsers = async (req: Request, res: Response) => {
+export const getAllUsers = async (req: Request, res: Response) => {
     try {
-        let user = checkJwt(req.body.token);
+        let user = checkJwt(req.params.token);
         if (user && user.isAdmin){
             //  this user is admin, so he can get data
             const users: IUserModel[] = await user.find();
@@ -298,6 +298,35 @@ const processQueries = (queries: any): object => {
  * FOR TESTING
  * =========================
  */
+
+ /**
+ * Get all users.
+ * @param req
+ * @param res
+ */
+export const getUsers = async (req: Request, res: Response) => {
+    try {
+        /** Process queries to check for dates*/
+        req.query = processQueries(req.query);
+
+        const users: IUserModel[] = await user.find(req.query);
+        res.status(200).send({
+            data: {
+                status: 'success',
+                items: users.length,
+                docs: users,
+            },
+        });
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+};
+
 
 /**
  * Create new user
