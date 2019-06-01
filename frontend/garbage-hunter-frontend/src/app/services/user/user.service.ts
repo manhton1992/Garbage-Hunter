@@ -10,8 +10,9 @@ import { User } from 'src/app/models/user.model';
 export class UserService {
 
   private userUrl = "http://localhost:3000/api/users"
-  public user: User;
+  public user: User = null;
   private users: User[];
+
 
   constructor(private http: HttpClient) { }
 
@@ -71,5 +72,19 @@ deleteUser(token: string): Observable<{}>{
   .pipe(map(response => response['data']));
 }
 
+/**
+ * check if user have token in local storage
+ * if have, add user in user service
+ * that mean user log in automatically
+ */
+authenticate(){
+  let userDataString = localStorage.getItem("currentUser");
+  if (userDataString){
+    let userData = JSON.parse(userDataString);
+    this.user = userData.docs;
+    console.log("this user: " + JSON.stringify(this.user));
+    } 
+  }
 }
+
 

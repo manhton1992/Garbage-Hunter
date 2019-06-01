@@ -171,9 +171,7 @@ export const getSingleUser = async (req: Request, res: Response) => {
 
             // create a token. With this token, client can communite with server of the user
             // sign with default (HMAC SHA256) 
-            const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey, {
-                expiresIn: "1h"
-            });
+            const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey);
             res.status(200).send({
                 data: {
                     status: 'success',
