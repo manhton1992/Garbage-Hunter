@@ -13,8 +13,9 @@ import uniqueValidator from 'mongoose-unique-validator';
  * @extends {mongoose.Document}
  */
 export interface IUserModel extends mongoose.Document {
-    username: string;
-    password: string;
+    email: string;
+    passwordHash: string;
+    isAdmin: boolean;
     created_at: Date;
 }
 
@@ -25,15 +26,20 @@ export interface IUserModel extends mongoose.Document {
  */
 export const UserSchema: mongoose.Schema = new mongoose.Schema(
     {
-        username: {
+        email: {
             type: String,
             required: true,
             unique: true,
             index: true,
         },
-        password: {
+        passwordHash: {
             type: String,
             required: true,
+        },
+        isAdmin: {
+            type: Boolean,
+            required: true,
+            default: false,
         },
     },
     {
