@@ -21,7 +21,7 @@ export class RegisterComponent implements OnInit {
   submitRegister(){
     if (this.userRegister.email != "" && this.userRegister.password != ""
     && this.passwordConfirm.trim() == this.userRegister.password.trim()){
-      this.userService.addUser(this.userRegister).subscribe(res => {
+      this.userService.register(this.userRegister).subscribe(res => {
         console.log(res);
       });
     } else {

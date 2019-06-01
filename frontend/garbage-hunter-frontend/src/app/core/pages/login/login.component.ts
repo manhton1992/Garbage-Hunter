@@ -21,7 +21,7 @@ export class LoginComponent implements OnInit {
 
   submitLogin(){
     let response: any ;
-    this.userService.getUser(this.userLogin.email,this.userLogin.password).subscribe(response => {
+    this.userService.login(this.userLogin.email,this.userLogin.password).subscribe(response => {
       console.log(response);
       if (response && response.token){
         if(response.status != null && response.status == 'success'){
