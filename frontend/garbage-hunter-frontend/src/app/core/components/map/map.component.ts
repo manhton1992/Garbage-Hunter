@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { latLng, tileLayer, marker, icon, Map } from 'leaflet';
+import { latLng, tileLayer, marker, icon, Map, LatLng, circle, popup } from 'leaflet';
 import { Message } from 'src/app/models/message.model';
 
 @Component({
@@ -13,7 +13,7 @@ export class MapComponent implements OnInit {
    * @type {Message[]}
    * @memberof MapComponent
    */
-  @Input() messages: Message[];
+  @Input() messages: Message[] = [];
 
   /**
    * @description config layout for the map.
@@ -44,9 +44,21 @@ export class MapComponent implements OnInit {
    */
   map_conf = {
     layers: [this.map_conf_streetmap],
-    zoom: 17,
-    center: latLng(49.869009, 8.637904),
+    zoom: 13,
+    center: latLng(50.869009, 8.637904),
   };
+
+  /**
+   * @description the map component of the page
+   * @type {Map}
+   * @memberof MapComponent
+   */
+  myMap: Map = null;
+
+  constructor() {}
+
+  ngOnInit() {
+  }
 
   /**
    * @description executes after the map is ready.
@@ -54,14 +66,47 @@ export class MapComponent implements OnInit {
    * @memberof MapComponent
    */
   onMapReady = (map: Map): void => {
+    this.myMap = map;
+    setTimeout(() => {
+      this.setMarker(map);
+      this.getUserLocation();
+    }, 1000);
+  }
+
+  /**
+   * @description map click event.
+   * @memberof MapComponent
+   */
+  onMapClick = (e): void => {
+    popup()
+        .setLatLng(e.latlng)
+        .setContent(`Report a message <a href="message/create?lat=${e.latlng.lat}&lon=${e.latlng.lng}">here</a>`)
+        .openOn(this.myMap);
+  }
+
+  /**
+   * @description set markers for the messages in the map
+   * @memberof MapComponent
+   */
+  setMarker = (map: Map): void => {
     this.messages.forEach((message) => {
       marker([message.lat, message.lon], this.map_conf_marker)
-        .addTo(map)
-        .bindPopup(message._id);
+      .addTo(map)
+      .bindPopup(`<a href="message/${message._id}">${message.title}</a>`);
     });
   }
 
-  constructor() {}
-
-  ngOnInit() {}
+  /**
+   * @description get the current position.
+   * @memberof MapComponent
+   */
+  getUserLocation = ():void => {
+    navigator.geolocation.getCurrentPosition( (position) => {
+        let latlon = new LatLng(position.coords.latitude, position.coords.longitude);
+        this.myMap.setView(latlon,18);
+        marker(latlon, this.map_conf_marker).addTo(this.myMap).bindPopup(`Your current location: ${latlon.toString()}`);
+      }, () => {
+      alert('error, no location is allowed');
+    })
+  }
 }

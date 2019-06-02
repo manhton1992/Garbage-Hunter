@@ -14,7 +14,7 @@ export class HomeComponent implements OnInit {
    * @type {Message[]}
    * @memberof HomeComponent
    */
-  messages: Message[];
+  messages: Message[] = [];
 
   constructor(private messageService: MessageService) {}
 
