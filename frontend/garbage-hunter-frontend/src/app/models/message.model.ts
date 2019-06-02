@@ -6,7 +6,7 @@ export class Message{
     _id?: string;
     title: string;
     description: string;
-    creatorid: boolean;
+    creatorid: number;
     lon: number;
     lat: number;
     address: string;

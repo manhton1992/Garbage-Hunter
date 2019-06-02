@@ -20,111 +20,22 @@
   <h1 class="display-4">Recent messages</h1>
   <hr />
   <div class="row">
-    <div class="col-lg-6">
+    <div class="col-lg-6" *ngFor="let m of messages">
       <div class="card mb-3">
-        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
+        <h3 class="card-header"><a [routerLink]="['/message/' + m?._id]">{{m?.title}}</a></h3>
         <div class="card-body">
-          <h5 class="card-title">Garbage description...</h5>
+          <h5 class="card-title">{{m?.description}}</h5>
         </div>
-        <img class="garbage-img"
-          src="https://cdn1.stuttgarter-zeitung.de/media.media.ec722513-be5c-474a-88d9-db2b05e31ccb.original1024.jpg"
+        <img
+          class="garbage-img"
+          src="{{m?.image}}"
           alt="Card image"
         />
         <div class="card-body">
-          <p class="card-text">Garbage address...</p>
+          <p class="card-text">{{m?.address}}</p>
         </div>
         <div class="card-footer text-muted">
-          2 days ago
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="card mb-3">
-        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
-        <div class="card-body">
-          <h5 class="card-title">Garbage description...</h5>
-        </div>
-        <img class="garbage-img"
-          src="https://www.guetersloh.de/de-wAssets/img/fachbereich-31-umweltschutz/abfallberatung/weblication/wThumbnails/Bild-akkurat-0041-712991f99041294gcc3a16511b3576d4.jpg"
-          alt="Card image"
-        />
-        <div class="card-body">
-          <p class="card-text">Garbage address...</p>
-        </div>
-        <div class="card-footer text-muted">
-          2 days ago
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="card mb-3">
-        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
-        <div class="card-body">
-          <h5 class="card-title">Garbage description...</h5>
-        </div>
-        <img class="garbage-img"
-          src="https://www.heilemann-entsorgung.de/wp-content/uploads/2018/06/sperrmuell-esslingen.jpg"
-          alt="Card image"
-        />
-        <div class="card-body">
-          <p class="card-text">Garbage address...</p>
-        </div>
-        <div class="card-footer text-muted">
-          2 days ago
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="card mb-3">
-        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
-        <div class="card-body">
-          <h5 class="card-title">Garbage description...</h5>
-        </div>
-        <img class="garbage-img"
-          src="https://www.langen.de/var/cache/thumb_60377_1018_1_1200_1200_r2_jpeg_sperrmuell.jpg"
-          alt="Card image"
-        />
-        <div class="card-body">
-          <p class="card-text">Garbage address...</p>
-        </div>
-        <div class="card-footer text-muted">
-          2 days ago
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="card mb-3">
-        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
-        <div class="card-body">
-          <h5 class="card-title">Garbage description...</h5>
-        </div>
-        <img class="garbage-img"
-          src="https://umziehen.de/media/cache/article_image/cms/2018/12/Sperrmuell-entsorgen-Umziehen-SanneBerg-iStock.jpg?119431"
-          alt="Card image"
-        />
-        <div class="card-body">
-          <p class="card-text">Garbage address...</p>
-        </div>
-        <div class="card-footer text-muted">
-          2 days ago
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-6">
-      <div class="card mb-3">
-        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
-        <div class="card-body">
-          <h5 class="card-title">Garbage description...</h5>
-        </div>
-        <img class="garbage-img"
-          src="https://www.maz-online.de/var/storage/images/maz/lokales/ostprignitz-ruppin/zu-viel-sperrmuell-bringt-probleme/598702895-1-ger-DE/Zu-viel-Sperrmuell-bringt-Probleme_big_teaser_article.jpg"
-          alt="Card image"
-        />
-        <div class="card-body">
-          <p class="card-text">Garbage address...</p>
-        </div>
-        <div class="card-footer text-muted">
-          2 days ago
+          Reported at: <strong class="float-right">{{m?.created_at.toLocaleDateString()}}</strong>
         </div>
       </div>
     </div>

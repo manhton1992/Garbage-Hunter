@@ -27,8 +27,10 @@ export class HomeComponent implements OnInit {
    * @memberof HomeComponent
    */
   getMessages = (): void => {
-    this.messageService.getAllMessages().subscribe((messages) => {
-      this.messages = messages;
-    });
+    // REAL FUNCTION FIRST COMMENTED
+    // this.messageService.getAllMessages().subscribe((messages) => {
+    //   this.messages = messages;
+    // });
+    this.messages = this.messageService.testGetAllMessages();
   };
 }
