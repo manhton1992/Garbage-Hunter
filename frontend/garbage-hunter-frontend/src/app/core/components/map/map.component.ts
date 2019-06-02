@@ -16,6 +16,19 @@ export class MapComponent implements OnInit {
   @Input() messages: Message[] = [];
 
   /**
+   * @description the map component of the page
+   * @type {Map}
+   * @memberof MapComponent
+   */
+  myMap: Map = null;
+
+  /** 
+   * ==========================================
+   * CONFIG VARIABLES FOR THE MAP
+   * ==========================================
+   */
+
+  /**
    * @description config layout for the map.
    * @memberof MapComponent
    */
@@ -31,10 +44,22 @@ export class MapComponent implements OnInit {
    */
   map_conf_marker = {
     icon: icon({
-      iconSize: [25, 41],
-      iconAnchor: [13, 41],
-      iconUrl: 'leaflet/marker-icon.png',
-      shadowUrl: 'leaflet/marker-shadow.png',
+      iconSize: [51, 51],
+      iconAnchor: [25, 51],
+      popupAnchor: [0, -51],
+      iconUrl: 'assets/location-pin.png',
+    }),
+  };
+
+  /**
+   * @description config layout for user marker.
+   * @memberof MapComponent
+   */
+  map_conf_user = {
+    icon: icon({
+      iconSize: [40, 40],
+      popupAnchor: [0, -20],
+      iconUrl: 'assets/position-target.png',
     }),
   };
 
@@ -48,17 +73,11 @@ export class MapComponent implements OnInit {
     center: latLng(50.869009, 8.637904),
   };
 
-  /**
-   * @description the map component of the page
-   * @type {Map}
-   * @memberof MapComponent
+  /** 
+   * ==========================================
+   * FUNCTIONS
+   * ==========================================
    */
-  myMap: Map = null;
-
-  constructor() {}
-
-  ngOnInit() {
-  }
 
   /**
    * @description executes after the map is ready.
@@ -104,9 +123,20 @@ export class MapComponent implements OnInit {
     navigator.geolocation.getCurrentPosition( (position) => {
         let latlon = new LatLng(position.coords.latitude, position.coords.longitude);
         this.myMap.setView(latlon,18);
-        marker(latlon, this.map_conf_marker).addTo(this.myMap).bindPopup(`Your current location: ${latlon.toString()}`);
+        marker(latlon, this.map_conf_user).addTo(this.myMap).bindPopup(`Your current location:<br><strong>(${latlon.lat},${latlon.lng})</strong>`);
       }, () => {
       alert('error, no location is allowed');
     })
+  }
+
+  /** 
+   * ==========================================
+   * ANGULAR FUNCTIONS
+   * ==========================================
+   */
+
+  constructor() {}
+
+  ngOnInit() {
   }
 }
