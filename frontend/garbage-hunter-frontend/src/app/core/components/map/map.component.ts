@@ -122,7 +122,7 @@ export class MapComponent implements OnInit {
   getUserLocation = ():void => {
     navigator.geolocation.getCurrentPosition( (position) => {
         let latlon = new LatLng(position.coords.latitude, position.coords.longitude);
-        this.myMap.setView(latlon,18);
+        this.myMap.setView(latlon,14);
         marker(latlon, this.map_conf_user).addTo(this.myMap).bindPopup(`Your current location:<br><strong>(${latlon.lat},${latlon.lng})</strong>`);
       }, () => {
       alert('error, no location is allowed');

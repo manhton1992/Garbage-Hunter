@@ -1,37 +1,37 @@
-<div class="container my-3">
+<div class="container">
+  <div class="jumbotron jumbotron-fluid pt-5 pb-0">
+    <div class="text-center container">
+      <h1 class="display-2">Garbage Hunter</h1>
+      <p class="lead">
+        Garbage Hunter is the application to report unused things that lies on the street so other people can also see
+        them.
+        <br />
+        You can create, see and contribute to the messages.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="container mb-5">
   <app-map [messages]="messages"></app-map>
 </div>
 
 <div class="container">
+  <h1 class="display-4">Recent messages</h1>
+  <hr />
   <div class="row">
     <div class="col-lg-6">
-      <div class="card mb-3" [routerLink]="['/message/a']">
-        <h3 class="card-header">Garbage 1</h3>
-        <div class="card-body">
-          <h5 class="card-title">A big summary</h5>
-          <h6 class="card-subtitle text-muted">A small subtitle</h6>
-        </div>
-        <img style="height: 200px; width: 100%; display: block;"
-          src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-          alt="Card image">
-        <div class="card-body">
-          <p class="card-text">Some quick description of he message</p>
-        </div>
-        <div class="card-footer text-muted">
-          2 days ago
-        </div>
-      </div>
       <div class="card mb-3">
-        <h3 class="card-header">Garbage 2</h3>
+        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
         <div class="card-body">
-          <h5 class="card-title">A big summary</h5>
-          <h6 class="card-subtitle text-muted">A small subtitle</h6>
+          <h5 class="card-title">Garbage description...</h5>
         </div>
-        <img style="height: 200px; width: 100%; display: block;"
-          src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-          alt="Card image">
+        <img class="garbage-img"
+          src="https://cdn1.stuttgarter-zeitung.de/media.media.ec722513-be5c-474a-88d9-db2b05e31ccb.original1024.jpg"
+          alt="Card image"
+        />
         <div class="card-body">
-          <p class="card-text">Some quick description of he message</p>
+          <p class="card-text">Garbage address...</p>
         </div>
         <div class="card-footer text-muted">
           2 days ago
@@ -40,32 +40,88 @@
     </div>
     <div class="col-lg-6">
       <div class="card mb-3">
-        <h3 class="card-header">Garbage 3</h3>
+        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
         <div class="card-body">
-          <h5 class="card-title">A big summary</h5>
-          <h6 class="card-subtitle text-muted">A small subtitle</h6>
+          <h5 class="card-title">Garbage description...</h5>
         </div>
-        <img style="height: 200px; width: 100%; display: block;"
-          src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-          alt="Card image">
+        <img class="garbage-img"
+          src="https://www.guetersloh.de/de-wAssets/img/fachbereich-31-umweltschutz/abfallberatung/weblication/wThumbnails/Bild-akkurat-0041-712991f99041294gcc3a16511b3576d4.jpg"
+          alt="Card image"
+        />
         <div class="card-body">
-          <p class="card-text">Some quick description of he message</p>
+          <p class="card-text">Garbage address...</p>
         </div>
         <div class="card-footer text-muted">
           2 days ago
         </div>
       </div>
+    </div>
+    <div class="col-lg-6">
       <div class="card mb-3">
-        <h3 class="card-header">Garbage 4</h3>
+        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
         <div class="card-body">
-          <h5 class="card-title">A big summary</h5>
-          <h6 class="card-subtitle text-muted">A small subtitle</h6>
+          <h5 class="card-title">Garbage description...</h5>
         </div>
-        <img style="height: 200px; width: 100%; display: block;"
-          src="data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%22318%22%20height%3D%22180%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%20318%20180%22%20preserveAspectRatio%3D%22none%22%3E%3Cdefs%3E%3Cstyle%20type%3D%22text%2Fcss%22%3E%23holder_158bd1d28ef%20text%20%7B%20fill%3Argba(255%2C255%2C255%2C.75)%3Bfont-weight%3Anormal%3Bfont-family%3AHelvetica%2C%20monospace%3Bfont-size%3A16pt%20%7D%20%3C%2Fstyle%3E%3C%2Fdefs%3E%3Cg%20id%3D%22holder_158bd1d28ef%22%3E%3Crect%20width%3D%22318%22%20height%3D%22180%22%20fill%3D%22%23777%22%3E%3C%2Frect%3E%3Cg%3E%3Ctext%20x%3D%22129.359375%22%20y%3D%2297.35%22%3EImage%3C%2Ftext%3E%3C%2Fg%3E%3C%2Fg%3E%3C%2Fsvg%3E"
-          alt="Card image">
+        <img class="garbage-img"
+          src="https://www.heilemann-entsorgung.de/wp-content/uploads/2018/06/sperrmuell-esslingen.jpg"
+          alt="Card image"
+        />
         <div class="card-body">
-          <p class="card-text">Some quick description of he message</p>
+          <p class="card-text">Garbage address...</p>
+        </div>
+        <div class="card-footer text-muted">
+          2 days ago
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mb-3">
+        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
+        <div class="card-body">
+          <h5 class="card-title">Garbage description...</h5>
+        </div>
+        <img class="garbage-img"
+          src="https://www.langen.de/var/cache/thumb_60377_1018_1_1200_1200_r2_jpeg_sperrmuell.jpg"
+          alt="Card image"
+        />
+        <div class="card-body">
+          <p class="card-text">Garbage address...</p>
+        </div>
+        <div class="card-footer text-muted">
+          2 days ago
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mb-3">
+        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
+        <div class="card-body">
+          <h5 class="card-title">Garbage description...</h5>
+        </div>
+        <img class="garbage-img"
+          src="https://umziehen.de/media/cache/article_image/cms/2018/12/Sperrmuell-entsorgen-Umziehen-SanneBerg-iStock.jpg?119431"
+          alt="Card image"
+        />
+        <div class="card-body">
+          <p class="card-text">Garbage address...</p>
+        </div>
+        <div class="card-footer text-muted">
+          2 days ago
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-6">
+      <div class="card mb-3">
+        <h3 class="card-header"><a [routerLink]="['/message/a']">Garbage title</a></h3>
+        <div class="card-body">
+          <h5 class="card-title">Garbage description...</h5>
+        </div>
+        <img class="garbage-img"
+          src="https://www.maz-online.de/var/storage/images/maz/lokales/ostprignitz-ruppin/zu-viel-sperrmuell-bringt-probleme/598702895-1-ger-DE/Zu-viel-Sperrmuell-bringt-Probleme_big_teaser_article.jpg"
+          alt="Card image"
+        />
+        <div class="card-body">
+          <p class="card-text">Garbage address...</p>
         </div>
         <div class="card-footer text-muted">
           2 days ago
@@ -73,31 +129,30 @@
       </div>
     </div>
   </div>
-  
+
   <div style="Width: 30%; margin: 0 auto;">
-      <ul class="pagination">
-        <li class="page-item disabled">
-          <a class="page-link" href="#">&laquo;</a>
-        </li>
-        <li class="page-item active">
-          <a class="page-link" href="#">1</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">2</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">3</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">4</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">5</a>
-        </li>
-        <li class="page-item">
-          <a class="page-link" href="#">&raquo;</a>
-        </li>
-      </ul>
-    </div>
-    
+    <ul class="pagination">
+      <li class="page-item disabled">
+        <a class="page-link" href="#">&laquo;</a>
+      </li>
+      <li class="page-item active">
+        <a class="page-link" href="#">1</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="#">2</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="#">3</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="#">4</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="#">5</a>
+      </li>
+      <li class="page-item">
+        <a class="page-link" href="#">&raquo;</a>
+      </li>
+    </ul>
+  </div>
 </div>
