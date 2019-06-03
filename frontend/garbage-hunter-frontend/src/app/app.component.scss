@@ -1,3 +1,8 @@
 ::ng-deep body{
     padding-top: 0px;
 }
+
+/* make content minimum a full page, to make footer sticks on bottom */
+.content{
+    min-height: 100%;
+}
