@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { latLng, tileLayer, marker, icon, Map, LatLng, circle, popup } from 'leaflet';
+import { tileLayer, marker, icon, Map, LatLng, popup, latLng } from 'leaflet';
 import { Message } from 'src/app/models/message.model';
+import { MapService } from 'src/app/services/map/map.service';
 
 @Component({
   selector: 'app-map',
@@ -22,7 +23,7 @@ export class MapComponent implements OnInit {
    */
   myMap: Map = null;
 
-  /** 
+  /**
    * ==========================================
    * CONFIG VARIABLES FOR THE MAP
    * ==========================================
@@ -73,7 +74,7 @@ export class MapComponent implements OnInit {
     center: latLng(50.869009, 8.637904),
   };
 
-  /** 
+  /**
    * ==========================================
    * FUNCTIONS
    * ==========================================
@@ -90,18 +91,40 @@ export class MapComponent implements OnInit {
       this.setMarker(map);
       this.getUserLocation();
     }, 1000);
-  }
+  };
 
   /**
    * @description map click event.
+   * getting the address of the selected coordinate and 
+   * create a link to report new message with params
    * @memberof MapComponent
    */
   onMapClick = (e): void => {
-    popup()
-        .setLatLng(e.latlng)
-        .setContent(`Report a message <a href="message/create?lat=${e.latlng.lat}&lon=${e.latlng.lng}">here</a>`)
-        .openOn(this.myMap);
-  }
+    this.mapService.getAddressfromLatLon(e.latlng.lat, e.latlng.lng).subscribe(
+      (data) => {
+        let road = data.road ? data.road : '';
+        let house_number = data.house_number ? data.house_number : '';
+        let postcode = data.postcode ? data.postcode : '';
+        let city = data.city ? data.city : '';
+        let address = `${road} ${house_number}, ${postcode} ${city}`;
+        popup()
+          .setLatLng(e.latlng)
+          .setContent(
+            `<em>${address}</em><br><a href="message/create?lat=${e.latlng.lat}&lon=${
+              e.latlng.lng
+            }&address=${address}">Create new message</a>`
+          )
+          .openOn(this.myMap);
+      },
+      (err) => {
+        console.error(err);
+        popup()
+          .setLatLng(e.latlng)
+          .setContent(`<a href="message/create?lat=${e.latlng.lat}&lon=${e.latlng.lng}">Create new message</a>`)
+          .openOn(this.myMap);
+      }
+    );
+  };
 
   /**
    * @description set markers for the messages in the map
@@ -110,32 +133,37 @@ export class MapComponent implements OnInit {
   setMarker = (map: Map): void => {
     this.messages.forEach((message) => {
       marker([message.lat, message.lon], this.map_conf_marker)
-      .addTo(map)
-      .bindPopup(`<a href="message/${message._id}">${message.title}</a>`);
+        .addTo(map)
+        .bindPopup(`<a href="message/${message._id}">${message.title}</a>`);
     });
-  }
+  };
 
   /**
    * @description get the current position.
    * @memberof MapComponent
    */
-  getUserLocation = ():void => {
-    navigator.geolocation.getCurrentPosition( (position) => {
+  getUserLocation = (): void => {
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
         let latlon = new LatLng(position.coords.latitude, position.coords.longitude);
-        this.myMap.setView(latlon,14);
-        marker(latlon, this.map_conf_user).addTo(this.myMap).bindPopup(`Your current location:<br><strong>(${latlon.lat},${latlon.lng})</strong>`);
-      }, () => {
-      alert('error, no location is allowed');
-    })
-  }
+        this.myMap.setView(latlon, 14);
+        marker(latlon, this.map_conf_user)
+          .addTo(this.myMap)
+          .bindPopup(`Your current location:<br><strong>(${latlon.lat},${latlon.lng})</strong>`);
+      },
+      () => {
+        alert('error, no location is allowed');
+      }
+    );
+  };
 
-  /** 
+  /**
    * ==========================================
    * ANGULAR FUNCTIONS
    * ==========================================
    */
 
-  constructor() {}
+  constructor(private mapService: MapService) {}
 
   ngOnInit() {
   }
