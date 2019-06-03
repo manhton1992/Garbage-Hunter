@@ -15,6 +15,8 @@ import { HomeComponent } from './core/pages/home/home.component';
 import { LoginComponent } from './core/pages/login/login.component';
 import { RegisterComponent } from './core/pages/register/register.component';
 import { MapComponent } from './core/components/map/map.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
   declarations: [
@@ -34,7 +36,9 @@ import { MapComponent } from './core/components/map/map.component';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    LeafletModule.forRoot()
+    AngularFontAwesomeModule,
+    LeafletModule.forRoot(),
+    NgbModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
