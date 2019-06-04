@@ -1,7 +1,18 @@
+.jumbotron{
+    background-color: white;
+}
+
 .map{
     padding: 300px;
 }
 
 .pagination{
     margin: 0px;
+}
+
+.garbage-img{
+    height: 200px; 
+    width: 100%; 
+    display: block;
+    object-fit: cover;
 }

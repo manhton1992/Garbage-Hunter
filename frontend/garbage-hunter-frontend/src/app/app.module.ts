@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +14,9 @@ import { ShowMessageComponent } from './core/pages/show-message/show-message.com
 import { HomeComponent } from './core/pages/home/home.component';
 import { LoginComponent } from './core/pages/login/login.component';
 import { RegisterComponent } from './core/pages/register/register.component';
+import { MapComponent } from './core/components/map/map.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 @NgModule({
   declarations: [
@@ -24,13 +28,17 @@ import { RegisterComponent } from './core/pages/register/register.component';
     ShowMessageComponent,
     HomeComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
-    HttpClientModule
+    HttpClientModule,
+    AngularFontAwesomeModule,
+    LeafletModule.forRoot(),
+    NgbModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
