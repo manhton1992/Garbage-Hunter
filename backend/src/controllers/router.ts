@@ -13,3 +13,5 @@
  globalRouter.use('/messages', messageRouter);
  /** /api/eventbrite route */
  globalRouter.use('/users', userRouter);
+/** /api/email */
+globalRouter.use('/email', userRouter);
