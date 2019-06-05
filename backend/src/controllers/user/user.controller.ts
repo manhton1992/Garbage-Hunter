@@ -7,12 +7,17 @@ import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IUserModel, user } from '../../models/user.model';
 import * as jwt from "jsonwebtoken";
+import { sendMailRegister } from '../../_email_helper/email.controller';
 
 // use to hash the password
 let bcrypt = require('bcryptjs');
 
+//env
+require('dotenv').config();
+let environment = process.env;
+
 // secret key use to create token
-const myJWTSecretKey = 'my-secret-key-from-linh';
+const myJWTSecretKey = environment.JWT_SECRET_KEY;
 
 /**
  * check Token from user each request
@@ -22,8 +27,11 @@ const myJWTSecretKey = 'my-secret-key-from-linh';
 export const checkJwt = (token: string) => {
    
     try {
-        let jwtPayload = <any>jwt.verify(token, myJWTSecretKey);
-        return jwtPayload;
+        if(myJWTSecretKey){
+            let jwtPayload = <any>jwt.verify(token, myJWTSecretKey);
+            return jwtPayload;
+        }
+        return null;
       } catch (error) {
         //If token is not valid
         return null;
@@ -74,19 +82,33 @@ export const getAllUsers = async (req: Request, res: Response) => {
  */
 export const registerUser = async (req: Request, res: Response) => {
     try {
-        // create hash with salt 10
-        let hash = bcrypt.hashSync(req.body.password, 10);
-        if (hash){
-            req.body.passwordHash = hash;
-            const newUser: IUserModel = await user.create(req.body);
-            res.status(201).send({
-                data: {
-                    status: 'success',
-                    docs: newUser,
-                },
-            });
-        } 
 
+        const singleUser: IUserModel | null = await user.findOne({email: req.body.email});
+        if (!singleUser){
+              // create hash with salt 10
+            let hash = bcrypt.hashSync(req.body.password, 10);
+            if (hash){
+
+                req.body.passwordHash = hash;
+                const newUser: IUserModel = await user.create(req.body);
+                sendMailRegister(newUser);
+                res.status(201).send({
+                    data: {
+                        status: 'success',
+                        docs: newUser,
+                    },
+                });
+            } 
+        } else {
+            res.status(500).send({
+                data: {
+                    status: 'fail',
+                    message: 'this email is already registered'
+                }
+            });
+        }
+
+      
     } catch (error) {
         res.status(400).send({
             data: {
@@ -167,7 +189,7 @@ export const login = async (req: Request, res: Response) => {
         const singleUser: IUserModel | null = await user.findOne({email: req.query.email});
         
         // compare password with hashpassword
-        if (singleUser && bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
+        if (myJWTSecretKey && singleUser && bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
 
             // create a token. With this token, client can communite with server of the user
             // sign with default (HMAC SHA256) 
@@ -425,4 +447,30 @@ export const deleteSingleUser = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const confirmEmail = async (req: Request, res: Response) => {
+    let user: any = checkJwt(req.params.token);
+    req.body.isConfirm = true;
+    try {
+        if(user){
+            const updateUser: IUserModel | null = await user.findByIdAndUpdate(user._id, req.body, {
+                new: true,
+            });
+            res.status(200).send({
+                data: {
+                    status: 'success',
+                },
+            });
+        }
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+    
+}
+
 
