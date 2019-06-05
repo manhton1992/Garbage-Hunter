@@ -191,22 +191,33 @@ export const login = async (req: Request, res: Response) => {
         // compare password with hashpassword
         if (myJWTSecretKey && singleUser && bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
 
-            // create a token. With this token, client can communite with server of the user
-            // sign with default (HMAC SHA256) 
-            const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey);
-            res.status(200).send({
-                data: {
-                    status: 'success',
-                    docs: singleUser,
-                    token: token,
-                },
-            });
+            if (singleUser.isConfirm){
+                // create a token. With this token, client can communite with server of the user
+                // sign with default (HMAC SHA256) 
+                const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey);
+                res.status(200).send({
+                    data: {
+                        status: 'success',
+                        docs: singleUser,
+                        token: token,
+                    },
+                });
+            } else {
+                res.status(500).send({
+                    data: {
+                        status: 'fail',
+                        message: 'please confirm the email'
+                    },
+                });
+            }
+
        } else {
        
         // user does not exist
-        res.status(200).send({
+        res.status(500).send({
             data: {
                 status: 'fail',
+                message: 'user does not exist'
             },
         });
        }
@@ -228,9 +239,9 @@ export const login = async (req: Request, res: Response) => {
  */
 export const updateSingleUserWithToken = async (req: Request, res: Response) => {
     try {
-        let user = checkJwt(req.params.token);
-        if(user){
-            const updateUser: IUserModel | null = await user.findByIdAndUpdate(user._id, req.body, {
+        let checkedUser = checkJwt(req.params.token);
+        if(checkedUser){
+            const updateUser: IUserModel | null = await user.findByIdAndUpdate(checkedUser._id, req.body, {
                 new: true,
             });
             res.status(200).send({
@@ -382,6 +393,8 @@ export const createUser = async (req: Request, res: Response) => {
 export const getSingleUser = async (req: Request, res: Response) => {
     try {
         const singleUser: IUserModel | null = await user.findById(req.params.userid);
+        if (singleUser)
+             sendMailRegister(singleUser);
         res.status(200).send({
             data: {
                 status: 'success',
@@ -449,11 +462,11 @@ export const deleteSingleUser = async (req: Request, res: Response) => {
 };
 
 export const confirmEmail = async (req: Request, res: Response) => {
-    let user: any = checkJwt(req.params.token);
+    let checkedUser: any = checkJwt(req.params.token);
     req.body.isConfirm = true;
     try {
-        if(user){
-            const updateUser: IUserModel | null = await user.findByIdAndUpdate(user._id, req.body, {
+        if(checkedUser){
+            const updateUser: IUserModel | null = await user.findByIdAndUpdate(checkedUser._id, req.body, {
                 new: true,
             });
             res.status(200).send({

@@ -16,7 +16,13 @@ module.exports.GmailTransport = nodemailer.createTransport({
 
 module.exports.ViewOption = (transport: any, hbs: any) => {
     transport.use('compile', hbs({
-            viewPath: '_email_helper/email',
+        viewEngine: {
+            extName: '.hbs',
+            partialsDir: 'src/_email_helper/email_layout',
+            layoutsDir: 'src/_email_helper/email_layout',
+            defaultLayout: 'register-email.hbs',
+          },
+            viewPath: 'src/_email_helper/email_layout',
             extName: '.hbs'
     }));
 }

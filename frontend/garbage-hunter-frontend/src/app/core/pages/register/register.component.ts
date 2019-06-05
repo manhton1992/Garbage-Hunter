@@ -23,6 +23,7 @@ export class RegisterComponent implements OnInit {
     && this.passwordConfirm.trim() == this.userRegister.password.trim()){
       this.userService.register(this.userRegister).subscribe(res => {
         console.log(res);
+        alert ("register success. Please confirm email to use this account");
       });
     } else {
       console.log("password and password confirm not the same");

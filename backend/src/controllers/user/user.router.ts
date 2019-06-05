@@ -49,7 +49,7 @@ userRouter.put('/update/:token', logTime, wrapAsync(updateSingleUserWithToken));
 /** DELETE */
 userRouter.delete('/delete/:token', logTime, wrapAsync(deleteSingleUserWithToken));
 
-userRouter.get('confirm_email/:token', logTime, wrapAsync(confirmEmail))
+userRouter.get('/confirm_email/:token', logTime, wrapAsync(confirmEmail))
 
 /**For Testing*/
 

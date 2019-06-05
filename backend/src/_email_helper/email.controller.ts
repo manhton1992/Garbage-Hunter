@@ -20,33 +20,38 @@ const myJWTSecretKey = environment.JWT_SECRET_KEY;
 
 // emailTo: string, url: string, token: string
 export const sendMailRegister = async (user: IUserModel) => {
-  let urlConfirmEmail = environment.URL_CONFIRM_EMAIL;
+  try {
+    let urlConfirmEmail = environment.URL_CONFIRM_EMAIL;
 
-  if (user && myJWTSecretKey && urlConfirmEmail){
+    if (user && myJWTSecretKey && urlConfirmEmail){
+     
+     const token = jwt.sign(user.toJSON(), myJWTSecretKey);
+  
+     mailConfig.ViewOption(gmailTransport,hbs);
+     let HelperOptions = {
+       from: '"Garbage Hunter Team" <garbage.hunter.2019@gmail.com>',
+       to: user.email,
+       subject: 'Register Confirm',
+       template: 'register-email',
+       context: {
+         email: user.email,
+         token: token,
+         url: urlConfirmEmail,
+       }
+       };
    
-   const token = jwt.sign(user.toJSON(), myJWTSecretKey);
-
-   mailConfig.ViewOption(gmailTransport,hbs);
-   let HelperOptions = {
-     from: '"Garbage Hunter Team" <garbage.hunter.2019@gmail.com>',
-     to: user.email,
-     subject: 'Register Confirm',
-     template: 'register-email',
-     context: {
-       email: user.email,
-       token: token,
-       url: urlConfirmEmail,
-     }
-     };
- 
-     gmailTransport.sendMail(HelperOptions, (error: any,info: any) => {
-         if(error) {
-           console.log(error);
-         }
-         console.log("email is send");
-         console.log(info);
-     });
- 
+       gmailTransport.sendMail(HelperOptions, (error: any,info: any) => {
+           if(error) {
+             console.log(error);
+           }
+           console.log("email is send");
+           console.log(info);
+       });
+   
+    }
+  } catch (error) {
+    console.log(error)
   }
+ 
 
 }
