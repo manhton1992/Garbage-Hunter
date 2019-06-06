@@ -17,6 +17,8 @@ import { RegisterComponent } from './core/pages/register/register.component';
 import { MapComponent } from './core/components/map/map.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+import { CommentComponent } from './core/components/comment/comment.component';
+import { CreateCommentComponent } from './core/components/create-comment/create-comment.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +31,9 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    MapComponent
+    MapComponent,
+    CommentComponent,
+    CreateCommentComponent
   ],
   imports: [
     BrowserModule,
