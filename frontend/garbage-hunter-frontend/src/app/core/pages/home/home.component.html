@@ -17,10 +17,12 @@
 </div>
 
 <div class="container">
-  <h1 class="display-4">Recent messages</h1>
+  <h1 class="display-4">Recent messages : </h1>
+  <h2> number of messages : {{messages.length}}</h2>
   <hr />
   <div class="row">
     <div class="col-lg-6" *ngFor="let m of messages">
+      <p> {{m.description}}</p>
       <div class="card mb-3">
         <h3 class="card-header"><a [routerLink]="['/message/' + m?._id]">{{m?.title}}</a></h3>
         <div class="card-body">
@@ -35,8 +37,11 @@
           <p class="card-text">{{m?.address}}</p>
         </div>
         <div class="card-footer text-muted">
-          Reported at: <strong class="float-right">{{m?.created_at.toLocaleDateString()}}</strong>
-        </div>
+          <div class="input-group">
+            <span>Reported at :</span>
+            <span>&nbsp; {{m.created_at | date: 'HH:mm dd-MM-yyyy'}}</span>
+          </div>
+         </div>
       </div>
     </div>
   </div>
