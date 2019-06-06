@@ -7,17 +7,15 @@ import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IUserModel, user } from '../../models/user.model';
 import * as jwt from "jsonwebtoken";
-import { sendMailRegister } from '../../_email_helper/email.controller';
+import { sendMailRegister } from '../../_helpers/email-helper/send-email';
+import config from "config";
 
 // use to hash the password
 let bcrypt = require('bcryptjs');
 
-//env
-require('dotenv').config();
-let environment = process.env;
 
 // secret key use to create token
-const myJWTSecretKey = environment.JWT_SECRET_KEY;
+const myJWTSecretKey = config.get<string>("jwt.secret-key");
 
 /**
  * check Token from user each request
@@ -461,6 +459,11 @@ export const deleteSingleUser = async (req: Request, res: Response) => {
     }
 };
 
+/**
+ * change user infor after user confirm email
+ * @param req 
+ * @param res 
+ */
 export const confirmEmail = async (req: Request, res: Response) => {
     let checkedUser: any = checkJwt(req.params.token);
     req.body.isConfirm = true;

@@ -3,25 +3,29 @@
  */
 
 import { Request, Response } from 'express';
-import { IUserModel, user } from '../models/user.model';
+import { IUserModel, user } from '../../models/user.model';
 import * as jwt from "jsonwebtoken";
-const mailConfig = require('../_email_helper/email-config');
+import config from 'config';
+
+const mailConfig = require('../email-helper/email-config');
 const hbs = require('nodemailer-express-handlebars');
 const gmailTransport = mailConfig.GmailTransport;
 
-//env
-require('dotenv').config();
-let environment = process.env;
+// need to send email successfully
+process.env.NODE_TLS_REJECT_UNAUTHORIZED='0';
 
 // secret key use to create token
-const myJWTSecretKey = environment.JWT_SECRET_KEY;
+const myJWTSecretKey = config.get<string>("jwt.secret-key");
 
 
-
-// emailTo: string, url: string, token: string
+/**
+ * this module create a token and put it into email
+ * and send email to user
+ * @param user 
+ */
 export const sendMailRegister = async (user: IUserModel) => {
   try {
-    let urlConfirmEmail = environment.URL_CONFIRM_EMAIL;
+    let urlConfirmEmail = config.get("url.confirm-email");
 
     if (user && myJWTSecretKey && urlConfirmEmail){
      
