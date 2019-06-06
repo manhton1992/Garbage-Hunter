@@ -2,6 +2,7 @@
  * Global router
  */
 
+
 /** Package imports */
 import * as express from 'express';
 import { messageRouter } from './message/message.router';
@@ -16,3 +17,4 @@ globalRouter.use('/messages', messageRouter);
 globalRouter.use('/messages/:messageid/comments', commentRouter);
 /** /api/users route */
 globalRouter.use('/users', userRouter);
+

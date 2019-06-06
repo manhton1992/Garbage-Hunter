@@ -34,12 +34,15 @@ export class LoginComponent implements OnInit {
           // store user details and jwt token in local storage to keep user logged in between page refreshes
           localStorage.setItem('currentUser', JSON.stringify(user));
 
-          console.log("login success");
+          console.log("login successfully");
+          alert ("login successfully");
           
         } else if (response.status != null && response.status == 'fail'){
           console.log("false input or user does not exist");
+          alert ("false input or user does not exist");
         } else {
           console.log("error when einlogging")
+          alert ("error when einlogging");
         }
   
       }

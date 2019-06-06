@@ -7,12 +7,15 @@ import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IUserModel, user } from '../../models/user.model';
 import * as jwt from "jsonwebtoken";
+import { sendMailRegister } from '../../_helpers/email-helper/send-email';
+import config from "config";
 
 // use to hash the password
 let bcrypt = require('bcryptjs');
 
+
 // secret key use to create token
-const myJWTSecretKey = 'my-secret-key-from-linh';
+const myJWTSecretKey = config.get<string>("jwt.secret-key");
 
 /**
  * check Token from user each request
@@ -22,8 +25,11 @@ const myJWTSecretKey = 'my-secret-key-from-linh';
 export const checkJwt = (token: string) => {
    
     try {
-        let jwtPayload = <any>jwt.verify(token, myJWTSecretKey);
-        return jwtPayload;
+        if(myJWTSecretKey){
+            let jwtPayload = <any>jwt.verify(token, myJWTSecretKey);
+            return jwtPayload;
+        }
+        return null;
       } catch (error) {
         //If token is not valid
         return null;
@@ -74,19 +80,33 @@ export const getAllUsers = async (req: Request, res: Response) => {
  */
 export const registerUser = async (req: Request, res: Response) => {
     try {
-        // create hash with salt 10
-        let hash = bcrypt.hashSync(req.body.password, 10);
-        if (hash){
-            req.body.passwordHash = hash;
-            const newUser: IUserModel = await user.create(req.body);
-            res.status(201).send({
-                data: {
-                    status: 'success',
-                    docs: newUser,
-                },
-            });
-        } 
 
+        const singleUser: IUserModel | null = await user.findOne({email: req.body.email});
+        if (!singleUser){
+              // create hash with salt 10
+            let hash = bcrypt.hashSync(req.body.password, 10);
+            if (hash){
+
+                req.body.passwordHash = hash;
+                const newUser: IUserModel = await user.create(req.body);
+                sendMailRegister(newUser);
+                res.status(201).send({
+                    data: {
+                        status: 'success',
+                        docs: newUser,
+                    },
+                });
+            } 
+        } else {
+            res.status(500).send({
+                data: {
+                    status: 'fail',
+                    message: 'this email is already registered'
+                }
+            });
+        }
+
+      
     } catch (error) {
         res.status(400).send({
             data: {
@@ -167,24 +187,35 @@ export const login = async (req: Request, res: Response) => {
         const singleUser: IUserModel | null = await user.findOne({email: req.query.email});
         
         // compare password with hashpassword
-        if (singleUser && bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
+        if (myJWTSecretKey && singleUser && bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
 
-            // create a token. With this token, client can communite with server of the user
-            // sign with default (HMAC SHA256) 
-            const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey);
-            res.status(200).send({
-                data: {
-                    status: 'success',
-                    docs: singleUser,
-                    token: token,
-                },
-            });
+            if (singleUser.isConfirm){
+                // create a token. With this token, client can communite with server of the user
+                // sign with default (HMAC SHA256) 
+                const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey);
+                res.status(200).send({
+                    data: {
+                        status: 'success',
+                        docs: singleUser,
+                        token: token,
+                    },
+                });
+            } else {
+                res.status(500).send({
+                    data: {
+                        status: 'fail',
+                        message: 'please confirm the email'
+                    },
+                });
+            }
+
        } else {
        
         // user does not exist
-        res.status(200).send({
+        res.status(500).send({
             data: {
                 status: 'fail',
+                message: 'user does not exist'
             },
         });
        }
@@ -206,9 +237,9 @@ export const login = async (req: Request, res: Response) => {
  */
 export const updateSingleUserWithToken = async (req: Request, res: Response) => {
     try {
-        let user = checkJwt(req.params.token);
-        if(user){
-            const updateUser: IUserModel | null = await user.findByIdAndUpdate(user._id, req.body, {
+        let checkedUser = checkJwt(req.params.token);
+        if(checkedUser){
+            const updateUser: IUserModel | null = await user.findByIdAndUpdate(checkedUser._id, req.body, {
                 new: true,
             });
             res.status(200).send({
@@ -360,6 +391,8 @@ export const createUser = async (req: Request, res: Response) => {
 export const getSingleUser = async (req: Request, res: Response) => {
     try {
         const singleUser: IUserModel | null = await user.findById(req.params.userid);
+        if (singleUser)
+             sendMailRegister(singleUser);
         res.status(200).send({
             data: {
                 status: 'success',
@@ -425,4 +458,35 @@ export const deleteSingleUser = async (req: Request, res: Response) => {
         });
     }
 };
+
+/**
+ * change user infor after user confirm email
+ * @param req 
+ * @param res 
+ */
+export const confirmEmail = async (req: Request, res: Response) => {
+    let checkedUser: any = checkJwt(req.params.token);
+    req.body.isConfirm = true;
+    try {
+        if(checkedUser){
+            const updateUser: IUserModel | null = await user.findByIdAndUpdate(checkedUser._id, req.body, {
+                new: true,
+            });
+            res.status(200).send({
+                data: {
+                    status: 'success',
+                },
+            });
+        }
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+    
+}
+
 

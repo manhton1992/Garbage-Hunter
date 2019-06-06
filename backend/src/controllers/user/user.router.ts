@@ -16,6 +16,7 @@ import {
     updateSingleUserWithToken,
     deleteSingleUserWithToken,
     registerUser,
+    confirmEmail,
 
     createUser,
     getSingleUser,
@@ -23,6 +24,7 @@ import {
     deleteSingleUser,
     getUsers,
 } from './user.controller';
+import { user } from '../../models/user.model';
 
 export const userRouter: express.Router = express.Router({ mergeParams: true });
 
@@ -47,6 +49,7 @@ userRouter.put('/update/:token', logTime, wrapAsync(updateSingleUserWithToken));
 /** DELETE */
 userRouter.delete('/delete/:token', logTime, wrapAsync(deleteSingleUserWithToken));
 
+userRouter.get('/confirm_email/:token', logTime, wrapAsync(confirmEmail))
 
 /**For Testing*/
 
