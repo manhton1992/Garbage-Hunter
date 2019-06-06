@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
-import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +12,8 @@ export class LoginComponent implements OnInit {
     email : "",
     password : "",
   };
+  passwordType: string = 'password';
+  passwordShow: boolean = false;
   constructor(private userService : UserService) { }
 
    
@@ -47,6 +48,15 @@ export class LoginComponent implements OnInit {
       }
     });
  
+  }
+  public togglePassword(){
+      if (this.passwordShow){
+        this.passwordShow = false;
+        this.passwordType = 'password';
+      }else {
+        this.passwordShow = true;
+        this.passwordType = 'text';
+      }
   }
 
 }

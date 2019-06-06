@@ -12,6 +12,9 @@ export class RegisterComponent implements OnInit {
     email: "",
     password: ""
   }
+  passwordType: string = 'password';
+  passwordShow: boolean = false;
+
   private passwordConfirm: String = "";
   constructor(private userService: UserService) {}
 
@@ -27,6 +30,15 @@ export class RegisterComponent implements OnInit {
       });
     } else {
       console.log("password and password confirm not the same");
+    }
+  }
+  public togglePassword(){
+    if (this.passwordShow){
+      this.passwordShow = false;
+      this.passwordType = 'password';
+    }else {
+      this.passwordShow = true;
+      this.passwordType = 'text';
     }
   }
 
