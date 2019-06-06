@@ -11,8 +11,8 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'message/create', component: CreateMessageComponent },
-  { path: 'message/:id', component: ShowMessageComponent },
+  { path: 'messages/create', component: CreateMessageComponent },
+  { path: 'messages/:messageid', component: ShowMessageComponent },
   { path: 'admin', component: AdminComponent },
 ];
 

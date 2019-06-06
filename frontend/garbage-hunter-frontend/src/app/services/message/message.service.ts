@@ -9,6 +9,12 @@ import { observableHandleError } from 'src/app/middlewares/errorhandler.middlewa
   providedIn: 'root',
 })
 export class MessageService {
+  
+  /**
+   * @description url for the message API.
+   * @private
+   * @memberof MessageService
+   */
   private messageUrl = 'http://localhost:3000/api/messages';
 
   constructor(private http: HttpClient) {}
