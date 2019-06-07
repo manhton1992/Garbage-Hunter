@@ -37,3 +37,8 @@
 </form>
 </div>
 </div>
+
+<!-- TODO change the place of the map and resize the div if necessary -->
+<div class="container">
+  <app-map [pageType]="'create'" (createCoordinates)="handleMapCoordinateChange($event)"></app-map>
+</div>
