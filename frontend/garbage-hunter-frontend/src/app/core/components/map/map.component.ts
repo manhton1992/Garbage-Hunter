@@ -113,8 +113,8 @@ export class MapComponent implements OnInit {
    * @description map click event.
    * @memberof MapComponent
    */
-  onMapClick = (e: any, pageType: string): void => {
-    switch (pageType) {
+  onMapClick = (e: any): void => {
+    switch (this.pageType) {
       case 'home':
         this.homePagePopup(e);
         break;
@@ -136,11 +136,7 @@ export class MapComponent implements OnInit {
   homePagePopup = (e: any): void => {
     this.mapService.getAddressfromLatLon(e.latlng.lat, e.latlng.lng).subscribe(
       (data) => {
-        let road = data.road ? data.road : '';
-        let house_number = data.house_number ? data.house_number : '';
-        let postcode = data.postcode ? data.postcode : '';
-        let city = data.city ? data.city : '';
-        let address = `${road} ${house_number}, ${postcode} ${city}`;
+        let address = this.processAddress(data);
         popup()
           .setLatLng(e.latlng)
           .setContent(
@@ -218,9 +214,11 @@ export class MapComponent implements OnInit {
       (position) => {
         let latlon = new LatLng(position.coords.latitude, position.coords.longitude);
         this.myMap.setView(latlon, 14);
-        marker(latlon, this.map_conf_user)
+        this.mapService.getAddressfromLatLon(latlon.lat, latlon.lng).subscribe(data => {
+          marker(latlon, this.map_conf_user)
           .addTo(this.myMap)
-          .bindPopup(`Your current location:<br><strong>(${latlon.lat},${latlon.lng})</strong>`);
+          .bindPopup(`Your current location:<br><strong>${this.processAddress(data)}</strong>`);
+        });
       },
       () => {
         alert('error, no location is allowed');
@@ -237,6 +235,14 @@ export class MapComponent implements OnInit {
     if (this.messages.length > 0 && this.messages[0]) { 
       this.myMap.setView(new LatLng(this.messages[0].lat, this.messages[0].lon), 17);
     }
+  }
+
+  processAddress = (data: any): string => {
+    let road = data.road ? data.road : '';
+    let house_number = data.house_number ? data.house_number : '';
+    let postcode = data.postcode ? data.postcode : '';
+    let city = data.city ? data.city : '';
+    return `${road} ${house_number}, ${postcode} ${city}`;
   }
 
   /**
