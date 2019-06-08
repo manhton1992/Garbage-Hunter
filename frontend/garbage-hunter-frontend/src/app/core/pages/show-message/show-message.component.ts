@@ -2,6 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import {MessageService} from "../../../services/message/message.service";
 import {Message} from "../../../models/message.model";
 import {Location} from "@angular/common";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-show-message',
@@ -12,15 +13,18 @@ export class ShowMessageComponent implements OnInit {
   @Input() message : Message;
   constructor(
     private messageService : MessageService,
-    private location : Location
+    private location : Location,
+    private route : ActivatedRoute
   ) { }
   ngOnInit() {
     this.getMessage();
   }
   getMessage() : void {
-    let stringToSplit = window.location.href;
-    let x = stringToSplit.split("/");
-    this.messageService.getMessageById(x[x.length-1]).subscribe(message => this.message = message);
+    let messageId;
+    this.route.paramMap.subscribe(params => {
+      messageId = params.get("id");
+      this.messageService.getMessageById(params.get("id")).subscribe(message => this.message = message);
+    })
   }
   goBack() : void {
     this.location.back();
