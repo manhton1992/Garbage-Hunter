@@ -44,11 +44,19 @@ export class ShowMessageComponent implements OnInit {
    * @description get the message item.
    * @param {string} messageid
    */
-  getMessage = (messageid: string):void => {
-    this.messageService.getMessageById(messageid).subscribe(message => {
-      this.message = message;
-    })
+  // getMessage = (messageid: string):void => {
+  //   this.messageService.getMessageById(messageid).subscribe(message => {
+  //     this.message = message;
+  //   })
+  // }
+
+  getMessage = (messageid: string):void => {    
+    console.log(messageid);
+    this.message = this.messageService.testGetMessageById(messageid);
+    console.log(this.message);
   }
+
+
 
   /**
    * @description get all comments of the message.

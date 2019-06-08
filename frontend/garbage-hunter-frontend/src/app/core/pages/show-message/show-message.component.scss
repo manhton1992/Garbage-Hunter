@@ -2,12 +2,29 @@
     padding: 2rem 0;
     font-weight: bold;
     text-align: center;
+    text-transform: capitalize;
 }
 
-.j{
+.text-body{
     text-align: justify;
+    text-indent: 20px;
 }
 
 .form-group{
     border: 2px;
+}
+
+.garbage-img{
+    height: 400px; 
+    width: 100%; 
+    display: block;
+    object-fit: cover;
+}
+
+.seperator{
+    padding : 20px;
+}
+
+.col-lg-6{
+    margin-left: 20px;
 }
