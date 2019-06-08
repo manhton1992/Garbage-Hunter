@@ -9,6 +9,12 @@ import { observableHandleError } from 'src/app/middlewares/errorhandler.middlewa
   providedIn: 'root',
 })
 export class MessageService {
+  
+  /**
+   * @description url for the message API.
+   * @private
+   * @memberof MessageService
+   */
   private messageUrl = 'http://localhost:3000/api/messages';
 
   constructor(private http: HttpClient) {}
@@ -61,13 +67,21 @@ export class MessageService {
   }
 
   /**
-   * @description delet message by id.
+   * @description delete message by id.
    * @returns {Observable<{}>}
    * @memberof MessageService
    */
   deleteMessage(messageid: string): Observable<{}> {
     const url = `${this.messageUrl}/${messageid}`;
     return this.http.delete<{}>(url).pipe(catchError((err) => observableHandleError(err)));
+  }
+
+  /**
+   * @description download all messages
+   * @memberof MessageService
+   */
+  downloadMessages(): void {
+    window.open(this.messageUrl + '/download', '_self');
   }
 
   /**

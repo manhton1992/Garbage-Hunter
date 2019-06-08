@@ -110,7 +110,7 @@ export class MapComponent implements OnInit {
         popup()
           .setLatLng(e.latlng)
           .setContent(
-            `<em>${address}</em><br><a href="message/create?lat=${e.latlng.lat}&lon=${
+            `<em>${address}</em><br><a href="messages/create?lat=${e.latlng.lat}&lon=${
               e.latlng.lng
             }&address=${address}">Create new message</a>`
           )
@@ -120,7 +120,7 @@ export class MapComponent implements OnInit {
         console.error(err);
         popup()
           .setLatLng(e.latlng)
-          .setContent(`<a href="message/create?lat=${e.latlng.lat}&lon=${e.latlng.lng}">Create new message</a>`)
+          .setContent(`<a href="messages/create?lat=${e.latlng.lat}&lon=${e.latlng.lng}">Create new message</a>`)
           .openOn(this.myMap);
       }
     );
@@ -134,7 +134,7 @@ export class MapComponent implements OnInit {
     this.messages.forEach((message) => {
       marker([message.lat, message.lon], this.map_conf_marker)
         .addTo(map)
-        .bindPopup(`<a href="message/${message._id}">${message.title}</a>`);
+        .bindPopup(`<a href="messages/${message._id}">${message.title}</a>`);
     });
   };
 
