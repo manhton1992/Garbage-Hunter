@@ -67,13 +67,21 @@ export class MessageService {
   }
 
   /**
-   * @description delet message by id.
+   * @description delete message by id.
    * @returns {Observable<{}>}
    * @memberof MessageService
    */
   deleteMessage(messageid: string): Observable<{}> {
     const url = `${this.messageUrl}/${messageid}`;
     return this.http.delete<{}>(url).pipe(catchError((err) => observableHandleError(err)));
+  }
+
+  /**
+   * @description download all messages
+   * @memberof MessageService
+   */
+  downloadMessages(): void {
+    window.open(this.messageUrl + '/download', '_self');
   }
 
   /**

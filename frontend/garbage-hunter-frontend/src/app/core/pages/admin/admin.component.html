@@ -7,151 +7,56 @@
          <!-- Page Heading -->
          <div class="d-sm-flex align-items-center justify-content-between my-4">
            <h2 class="mb-0 text-secondary">Dashboard</h2>
-           <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
-              <fa name="download" size="sm"></fa> Export all messages</a>
+           <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" (click)="download()">
+             <fa name="download" size="sm"></fa> Export all messages
+           </button>
          </div>
 
-         <!-- Content Row -->
+         <!-- Status boxes -->
          <div class="row">
-
-           <!-- Earnings (Monthly) Card Example -->
            <div class="col-xl-3 col-md-6 mb-4">
-             <div class="card shadow h-100 py-2">
-               <div class="card-body">
-                 <div class="row no-gutters align-items-center">
-                   <div class="col mr-2">
-                     <div class="font-weight-bold text-primary text-uppercase mb-1">Total</div>
-                     <div class="row no-gutters align-items-center">
-                       <div class="col-auto">
-                         <div class="h5 mb-0 mr-3 font-weight-bold">373</div>
-                       </div>
-                       <div class="col">
-                         <div class="progress mr-2">
-                           <div class="progress-bar bg-info" role="progressbar" style="width: 100%" aria-valuenow="100"
-                             aria-valuemin="0" aria-valuemax="100"></div>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </div>
+             <app-admin-number-box [data]="dataTotalBox()"></app-admin-number-box>
            </div>
-
-           <!-- Earnings (Monthly) Card Example -->
            <div class="col-xl-3 col-md-6 mb-4">
-             <div class="card border-left-success shadow h-100 py-2">
-               <div class="card-body">
-                 <div class="row no-gutters align-items-center">
-                   <div class="col mr-2">
-                     <div class="font-weight-bold text-success text-uppercase mb-1">Available</div>
-                     <div class="row no-gutters align-items-center">
-                       <div class="col-auto">
-                         <div class="h5 mb-0 mr-3 font-weight-bold">201</div>
-                       </div>
-                       <div class="col">
-                         <div class="progress mr-2">
-                           <div class="progress-bar bg-info" role="progressbar" style="width: 53%" aria-valuenow="53"
-                             aria-valuemin="0" aria-valuemax="100"></div>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </div>
+             <app-admin-number-box [data]="dataAvailableBox()">
+             </app-admin-number-box>
            </div>
-
-           <!-- Earnings (Monthly) Card Example -->
            <div class="col-xl-3 col-md-6 mb-4">
-             <div class="card border-left-info shadow h-100 py-2">
-               <div class="card-body">
-                 <div class="row no-gutters align-items-center">
-                   <div class="col mr-2">
-                     <div class="font-weight-bold text-danger text-uppercase mb-1">Unavailable</div>
-                     <div class="row no-gutters align-items-center">
-                       <div class="col-auto">
-                         <div class="h5 mb-0 mr-3 font-weight-bold">122</div>
-                       </div>
-                       <div class="col">
-                         <div class="progress mr-2">
-                           <div class="progress-bar bg-info" role="progressbar" style="width: 33%" aria-valuenow="33"
-                             aria-valuemin="0" aria-valuemax="100"></div>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </div>
+             <app-admin-number-box [data]="dataUnavailableBox()">
+             </app-admin-number-box>
            </div>
-
-           <!-- Pending Requests Card Example -->
            <div class="col-xl-3 col-md-6 mb-4">
-             <div class="card shadow h-100 py-2">
-               <div class="card-body">
-                 <div class="row no-gutters align-items-center">
-                   <div class="col mr-2">
-                     <div class="font-weight-bold text-warning text-uppercase mb-1">Archived</div>
-                     <div class="row no-gutters align-items-center">
-                       <div class="col-auto">
-                         <div class="h5 mb-0 mr-3 font-weight-bold">50</div>
-                       </div>
-                       <div class="col">
-                         <div class="progress mr-2">
-                           <div class="progress-bar bg-info" role="progressbar" style="width: 13%" aria-valuenow="13"
-                             aria-valuemin="0" aria-valuemax="100"></div>
-                         </div>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-             </div>
+             <app-admin-number-box [data]="dataArchivedBox()">
+             </app-admin-number-box>
            </div>
          </div>
 
-         <!-- Statistics -->
-
-         <div class="row">
-
-           <div class="col-12">
-             <div class="card shadow mb-4">
-               <!-- Card Header -->
-               <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                 <h5 class="m-0 font-weight-bold text-secondary">Monthly statistics</h5>
-               </div>
-               <!-- Card Body -->
-               <div class="card-body">
-                 <div class="statistics-container">
-                   <div id="monthly-statistics"></div>
-                 </div>
-               </div>
-             </div>
+         <!-- Monthly line chart -->
+         <div class="card shadow mb-4">
+           <!-- Card Header -->
+           <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+             <h5 class="m-0 font-weight-bold text-secondary">Monthly statistics</h5>
+           </div>
+           <!-- Card Body -->
+           <div class="card-body">
+             <app-chart-line [xAxisLabel]="'Month (2019)'" [yAxisLabel]="'Number'" [data]="dataMonthly()"></app-chart-line>
            </div>
          </div>
 
-         <div class="row">
-
-           <!-- Area Chart -->
-           <div class="col-12">
-             <div class="card shadow mb-4">
-               <!-- Card Header - Dropdown -->
-               <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                 <h5 class="m-0 font-weight-bold text-secondary">Categories</h5>
-               </div>
-               <!-- Card Body -->
-               <div class="card-body">
-                 <div class="statistics-container">
-                   <div id="category-statistics"></div>
-                 </div>
-               </div>
-             </div>
+         <!-- Categories pie chart -->
+         <div class="card shadow mb-4">
+           <!-- Card Header -->
+           <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+             <h5 class="m-0 font-weight-bold text-secondary">Categories</h5>
+           </div>
+           <!-- Card Body -->
+           <div class="card-body">
+             <app-chart-pie [data]="dataCategory()"></app-chart-pie>
            </div>
          </div>
 
        </div>
-       <!-- /.container-fluid -->
+       <!-- End of container-fluid -->
 
      </div>
      <!-- End of Container div -->

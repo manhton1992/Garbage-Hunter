@@ -1,0 +1,23 @@
+<div class="card shadow h-100 py-2">
+  <div class="card-body">
+    <div class="row no-gutters align-items-center">
+      <div class="col mr-2">
+        <!-- Title of box -->
+        <div class="font-weight-bold text-uppercase mb-1" [ngClass]="textColor()">{{ data?.heading }}</div>
+        <div class="row no-gutters align-items-center">
+          <!-- Value -->
+          <div class="col-auto">
+            <div class="h5 mb-0 mr-3 font-weight-bold">{{ data?.value }}</div>
+          </div>
+          <div class="col">
+            <!-- Progress bar -->
+            <div class="progress mr-2">
+              <div class="progress-bar" [ngClass]="progressBarColor()" role="progressbar" [style.width.%]="countProgress()" [attr.aria-valuenow]="countProgress()" 
+                aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
