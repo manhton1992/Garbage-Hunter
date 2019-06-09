@@ -14,13 +14,13 @@ export class CreateMessageComponent implements OnInit {
   newMessage: Message = {
     title: '',
     description: '',
-    creatorid: 12345,
+    creatorId: '',
     lon: null,
     lat: null,
     address: '',
     available: true,
     archive: false,
-    image: 'https://cdn1.stuttgarter-zeitung.de/media.media.ec722513-be5c-474a-88d9-db2b05e31ccb.original1024.jpg',
+    imageUrl: 'https://cdn1.stuttgarter-zeitung.de/media.media.ec722513-be5c-474a-88d9-db2b05e31ccb.original1024.jpg',
     phone: null,
   }
   constructor(private userService: UserService, private messageService : MessageService, private mapService: MapService) { }
