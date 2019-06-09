@@ -6,6 +6,7 @@
 import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IMessageModel, message } from '../../models/message.model';
+import { upload } from '../../_helpers/image-upload-helper/image-upload';
 
 /**
  * Get all messages.
@@ -189,6 +190,43 @@ export const deleteSingleMessage = async (req: Request, res: Response) => {
                 status: 'success',
                 docs: deleteMessage,
             },
+        });
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+};
+
+/**
+ * Upload image to AWS S3
+ * @param req
+ * @param res
+ */
+export const uploadImage = async (req: Request, res: Response) => {
+    try {
+        const singleUpload = upload.single('image');
+        singleUpload(req, res, (error) => {
+            if (error) {
+                res.status(422).send({
+                    data: {
+                        status: 'error',
+                        message: error.message,
+                    },
+                });
+            } else {
+                res.status(200).send({
+                    data: {
+                        status: 'success',
+                        docs: {
+                            imageUrl: req.file.path,
+                        },
+                    },
+                });
+            }
         });
     } catch (error) {
         res.status(400).send({
