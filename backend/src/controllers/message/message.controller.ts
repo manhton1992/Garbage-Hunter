@@ -6,7 +6,7 @@
 import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IMessageModel, message } from '../../models/message.model';
-import { upload } from '../../_helpers/image-upload-helper/image-upload';
+import { upload } from '../../helpers/image-upload-helper/image-upload';
 
 /**
  * Get all messages.

@@ -7,7 +7,7 @@ import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IUserModel, user } from '../../models/user.model';
 import * as jwt from "jsonwebtoken";
-import { sendMailRegister } from '../../_helpers/email-helper/send-email';
+import { sendMailRegister } from '../../helpers/email-helper/send-email';
 import config from "config";
 
 // use to hash the password
