@@ -3,6 +3,10 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+
+
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,6 +23,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { CommentComponent } from './core/components/comment/comment.component';
 import { CreateCommentComponent } from './core/components/create-comment/create-comment.component';
+import { AdminNumberBoxComponent } from './core/components/admin-number-box/admin-number-box.component';
+import { ChartLineComponent } from './core/components/chart-line/chart-line.component';
+import { ChartPieComponent } from './core/components/chart-pie/chart-pie.component';
 
 @NgModule({
   declarations: [
@@ -33,14 +40,19 @@ import { CreateCommentComponent } from './core/components/create-comment/create-
     RegisterComponent,
     MapComponent,
     CommentComponent,
-    CreateCommentComponent
+    CreateCommentComponent,
+    AdminNumberBoxComponent,
+    ChartLineComponent,
+    ChartPieComponent
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
     AngularFontAwesomeModule,
+    NgxChartsModule,
     LeafletModule.forRoot(),
     NgbModule.forRoot(),
   ],

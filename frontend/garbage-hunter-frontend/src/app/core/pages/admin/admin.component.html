@@ -1,3 +1,62 @@
-<p>
-  admin works!
-</p>
+     <!-- Container Div -->
+     <div class="container">
+
+       <!-- Begin Page Content -->
+       <div class="container-fluid">
+
+         <!-- Page Heading -->
+         <div class="d-sm-flex align-items-center justify-content-between my-4">
+           <h2 class="mb-0 text-secondary">Dashboard</h2>
+           <button class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" (click)="download()">
+             <fa name="download" size="sm"></fa> Export all messages
+           </button>
+         </div>
+
+         <!-- Status boxes -->
+         <div class="row">
+           <div class="col-xl-3 col-md-6 mb-4">
+             <app-admin-number-box [data]="dataTotalBox()"></app-admin-number-box>
+           </div>
+           <div class="col-xl-3 col-md-6 mb-4">
+             <app-admin-number-box [data]="dataAvailableBox()">
+             </app-admin-number-box>
+           </div>
+           <div class="col-xl-3 col-md-6 mb-4">
+             <app-admin-number-box [data]="dataUnavailableBox()">
+             </app-admin-number-box>
+           </div>
+           <div class="col-xl-3 col-md-6 mb-4">
+             <app-admin-number-box [data]="dataArchivedBox()">
+             </app-admin-number-box>
+           </div>
+         </div>
+
+         <!-- Monthly line chart -->
+         <div class="card shadow mb-4">
+           <!-- Card Header -->
+           <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+             <h5 class="m-0 font-weight-bold text-secondary">Monthly statistics</h5>
+           </div>
+           <!-- Card Body -->
+           <div class="card-body">
+             <app-chart-line [xAxisLabel]="'Month (2019)'" [yAxisLabel]="'Number'" [data]="dataMonthly()"></app-chart-line>
+           </div>
+         </div>
+
+         <!-- Categories pie chart -->
+         <div class="card shadow mb-4">
+           <!-- Card Header -->
+           <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+             <h5 class="m-0 font-weight-bold text-secondary">Categories</h5>
+           </div>
+           <!-- Card Body -->
+           <div class="card-body">
+             <app-chart-pie [data]="dataCategory()"></app-chart-pie>
+           </div>
+         </div>
+
+       </div>
+       <!-- End of container-fluid -->
+
+     </div>
+     <!-- End of Container div -->

@@ -59,5 +59,4 @@ export class ShowMessageComponent implements OnInit {
       this.comments = comments;
     })
   }
-
 }
