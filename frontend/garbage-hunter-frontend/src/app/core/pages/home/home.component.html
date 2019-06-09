@@ -12,8 +12,8 @@
   </div>
 </div>
 
-<div class="container mb-5">
-  <app-map [messages]="messages"></app-map>
+<div class="container mb-5" [ngStyle]="{height: '75vh'}">
+  <app-map [pageType]="'home'" [messages]="messages"></app-map>
 </div>
 
 <div class="container">
