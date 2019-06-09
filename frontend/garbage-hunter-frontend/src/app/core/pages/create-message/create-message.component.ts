@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { MapService } from 'src/app/services/map/map.service';
 import {Message} from "../../../models/message.model";
 import {MessageService} from "../../../services/message/message.service";
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-create-message',
@@ -13,23 +14,32 @@ export class CreateMessageComponent implements OnInit {
   newMessage: Message = {
     title: '',
     description: '',
-    creatorid: 123456,
-    lon: 8.634846210479736,
-    lat: 49.869857346128846,
+    creatorid: 12345,
+    lon: null,
+    lat: null,
     address: '',
     available: true,
     archive: false,
     image: 'https://cdn1.stuttgarter-zeitung.de/media.media.ec722513-be5c-474a-88d9-db2b05e31ccb.original1024.jpg',
-    phone: 0,
+    phone: null,
   }
-  constructor(private messageService : MessageService, private mapService: MapService) { }
+  constructor(private userService: UserService, private messageService : MessageService, private mapService: MapService) { }
 
   ngOnInit() {
-
+    this.setCreator();
   }
+
   addNewMessage(){
     let newMessage = Object.assign({},this.newMessage);
     this.messageService.createMessage(newMessage).subscribe();
+  }
+
+  /**
+   * @description set the creatorid as the logged in user
+   * @memberof CreateMessageComponent
+   */
+  setCreator = (): void => {
+    // this.newMessage.creatorid = this.userService.user ? this.userService.user._id : null;
   }
 
   /**
@@ -46,8 +56,8 @@ export class CreateMessageComponent implements OnInit {
    * @memberof CreateMessageComponent
    */
   changeLatLon = (latlon: any): void => {
-    // this.message.lat = latlon.lat;
-    // this.message.lon = latlon.lng;
+    this.newMessage.lat = latlon.lat;
+    this.newMessage.lon = latlon.lng;
   }
 
   /**
@@ -61,7 +71,7 @@ export class CreateMessageComponent implements OnInit {
         let house_number = data.house_number ? data.house_number : '';
         let postcode = data.postcode ? data.postcode : '';
         let city = data.city ? data.city : '';
-        // this.message.address = `${road} ${house_number}, ${postcode} ${city}`;
+        this.newMessage.address = `${road} ${house_number}, ${postcode} ${city}`;
       },
       (err) => {
         console.error(err);

@@ -1,29 +1,41 @@
 <div class="container">
-<div class="page-header">
-  <h1 id="big-title">Create a Message</h1>
-</div>
-<div class="bs-component">
-<form (ngSubmit)="addNewMessage()">
-    <div class="form-group">
-      <label for="createNewMessageTitle"> Title : </label>
-      <input id="createNewMessageTitle" [(ngModel)]="newMessage.title" [ngModelOptions]="{standalone: true}" required="required" type="text" class="form-control" placeholder="Please enter a title">
-    </div>
-    <div class="form-group>">
-      <label for="createNewMessageDescription"> Description : </label>
-      <textarea id="createNewMessageDescription" [(ngModel)]="newMessage.description" [ngModelOptions]="{standalone: true}" required="required" class="form-control" rows="6" placeholder="Please enter a description"></textarea>
-    </div>
-    <div class="form-group">
-      <label for="createNewMessageAddress">Address : </label>
-      <input id="createNewMessageAddress" [(ngModel)]="newMessage.address" [ngModelOptions]="{standalone: true}" type="text" class="form-control" placeholder="Please enter address">
-    </div>
-    <div class="form-group">
-      <label for="createNewMessageTelephone">Telephone Number : </label>
-      <input id="createNewMessageTelephone" [(ngModel)]="newMessage.phone" [ngModelOptions]="{standalone: true}" required="required" type="tel" class="form-control" placeholder="Please enter your phone number">
-    </div>
-    <div class="form-group">
+  <div class="page-header">
+    <h1 id="big-title">Create a Message</h1>
+  </div>
+  <!-- TODO change the place of the map and resize the div if necessary -->
+  <div class="row">
+    
+  <div class="mx-auto col-6">
+    <app-map [pageType]="'create'" (createPageLatLon)="handleMapCoordinateChange($event)"></app-map>
+  </div>
+  <div class="bs-component col-6">
+    <form (ngSubmit)="addNewMessage()">
+      <div class="form-group">
+        <label for="createNewMessageTitle"> Title : </label>
+        <input id="createNewMessageTitle" [(ngModel)]="newMessage.title" [ngModelOptions]="{standalone: true}"
+          required="required" type="text" class="form-control" placeholder="Please enter a title">
+      </div>
+      <div class="form-group>">
+        <label for="createNewMessageDescription"> Description : </label>
+        <textarea id="createNewMessageDescription" [(ngModel)]="newMessage.description"
+          [ngModelOptions]="{standalone: true}" required="required" class="form-control" rows="6"
+          placeholder="Please enter a description"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="createNewMessageAddress">Address : </label>
+        <input id="createNewMessageAddress" [(ngModel)]="newMessage.address" [ngModelOptions]="{standalone: true}"
+          type="text" class="form-control" placeholder="Please enter address">
+      </div>
+      <div class="form-group">
+        <label for="createNewMessageTelephone">Telephone Number : </label>
+        <input id="createNewMessageTelephone" [(ngModel)]="newMessage.phone" [ngModelOptions]="{standalone: true}"
+          required="required" type="tel" class="form-control" placeholder="Please enter your phone number">
+      </div>
+      <div class="form-group">
         <div class="input-group mb-3">
           <div class="custom-file">
-            <input [ngModel]="newMessage.image" [ngModelOptions]="{standalone:true}" type="text" class="custom-file-input" id="inputGroupFile02">
+            <input [ngModel]="newMessage.image" [ngModelOptions]="{standalone:true}" type="text"
+              class="custom-file-input" id="inputGroupFile02">
             <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
           </div>
           <div class="input-group-append">
@@ -32,11 +44,8 @@
         </div>
       </div>
       <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
-</form>
-</div>
-</div>
+    </form>
+  </div>
 
-<!-- TODO change the place of the map and resize the div if necessary -->
-<div class="container">
-  <app-map [pageType]="'create'" (createCoordinates)="handleMapCoordinateChange($event)"></app-map>
+</div>
 </div>
