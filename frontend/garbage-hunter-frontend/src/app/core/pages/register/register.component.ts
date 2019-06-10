@@ -8,14 +8,14 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class RegisterComponent implements OnInit {
 
-  private userRegister = {
+  userRegister = {
     email: "",
     password: ""
   }
   passwordType: string = 'password';
   passwordShow: boolean = false;
 
-  private passwordConfirm: String = "";
+  passwordConfirm: String = "";
   constructor(private userService: UserService) {}
 
   ngOnInit() {

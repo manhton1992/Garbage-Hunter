@@ -8,7 +8,7 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class LoginComponent implements OnInit {
 
-  private userLogin = {
+  userLogin = {
     email : "",
     password : "",
   };
