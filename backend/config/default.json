@@ -20,9 +20,9 @@
         "confirm-email": "http://localhost:3000/api/users/confirm_email"
     },
     "aws": {
-        "AWS_SECRET_ACCESS": "yxpuDg7eu+e4486oDth96QNfkQNJth3Cozd6thAU",
-        "AWS_ACCESS_KEY": "AKIAIGFDX4XX3CO2X3PA",
-        "AWS_S3_BUCKET_NAME": "bagus-nanda",
+        "AWS_SECRET_ACCESS": "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",
+        "AWS_ACCESS_KEY": "AKIAIS5UWF5SIAYZ7D5A",
+        "AWS_S3_BUCKET_NAME": "garbage-hunter",
         "AWS_S3_REGION": "eu-central-1"
     }
 }
