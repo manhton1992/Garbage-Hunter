@@ -78,7 +78,7 @@ export class CreateMessageComponent implements OnInit {
   newMessage: Message = {
     title: '',
     description: '',
-    creatorId: '',
+    creatorId: '12345',
     lon: null,
     lat: null,
     address: '',

@@ -31,7 +31,7 @@ messageRouter.post('/', logTime, wrapAsync(createMessage));
 messageRouter.get('/download', logTime, wrapAsync(exportMessagesAsCsv));
 
 /** Upload image to AWS S3 */
-messageRouter.get('/image_upload', logTime, wrapAsync(uploadImage));
+messageRouter.post('/image_upload', logTime, wrapAsync(uploadImage));
 
 /** Delete all activities in the database */
 messageRouter.delete('/delete_all', logTime, wrapAsync(deleteAllMessages));

@@ -206,7 +206,7 @@ export const deleteSingleMessage = async (req: Request, res: Response) => {
  * @param req
  * @param res
  */
-export const uploadImage = async (req: Request, res: Response) => {
+export const uploadImage = async (req: any, res: Response) => {
     try {
         const singleUpload = upload.single('image');
         singleUpload(req, res, (error) => {
@@ -218,11 +218,12 @@ export const uploadImage = async (req: Request, res: Response) => {
                     },
                 });
             } else {
+                console.log(req.file.location);
                 res.status(200).send({
                     data: {
                         status: 'success',
                         docs: {
-                            imageUrl: req.file.path,
+                            imageUrl: req.file.location,
                         },
                     },
                 });

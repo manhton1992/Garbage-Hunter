@@ -20,9 +20,9 @@
         "confirm-email": "http://localhost:3000/api/users/confirm_email"
     },
     "aws": {
-        "AWS_SECRET_ACCESS": "",
-        "AWS_ACCESS_KEY": "",
-        "AWS_S3_BUCKET_NAME": "",
-        "AWS_S3_REGION": ""
+        "AWS_SECRET_ACCESS": "yxpuDg7eu+e4486oDth96QNfkQNJth3Cozd6thAU",
+        "AWS_ACCESS_KEY": "AKIAIGFDX4XX3CO2X3PA",
+        "AWS_S3_BUCKET_NAME": "bagus-nanda",
+        "AWS_S3_REGION": "eu-central-1"
     }
 }
