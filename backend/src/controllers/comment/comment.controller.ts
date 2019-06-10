@@ -4,7 +4,7 @@
 
 /** Package imports */
 import { Request, Response } from 'express';
-import { ICommentModel, comment } from '../../../models/comment.model';
+import { ICommentModel, comment } from '../../models/comment.model';
 
 /**
  * Get all comments in a message.
@@ -13,7 +13,7 @@ import { ICommentModel, comment } from '../../../models/comment.model';
  */
 export const getComments = async (req: Request, res: Response) => {
     try {
-        const comments: ICommentModel[] = await comment.find({messageid: req.params.messageid});
+        const comments: ICommentModel[] = await comment.find(req.query);
         res.status(200).send({
             data: {
                 status: 'success',

@@ -6,8 +6,8 @@
 import express from 'express';
 
 /** Module imports */
-import { logTime } from '../../../middlewares/timelogger.middleware';
-import { wrapAsync } from '../../../middlewares/errorhandler.middleware';
+import { logTime } from '../../middlewares/timelogger.middleware';
+import { wrapAsync } from '../../middlewares/errorhandler.middleware';
 import { getComments, createComment, deleteAllComments, getSingleComment, updateSingleComment, deleteSingleComment } from './comment.controller';
 
 

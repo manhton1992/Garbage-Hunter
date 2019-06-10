@@ -45,8 +45,7 @@ export class CategoryService {
    * @memberof CategoryService
    */
   createCategory = (category: Category): Observable<Category> => {
-    const url = `${this.categoryUrl}`;
-    return this.http.post<Category>(url, category).pipe(
+    return this.http.post<Category>(this.categoryUrl, category).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );

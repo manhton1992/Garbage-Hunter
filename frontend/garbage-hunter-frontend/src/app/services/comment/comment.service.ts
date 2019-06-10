@@ -10,23 +10,21 @@ import { Observable } from 'rxjs';
 })
 export class CommentService {
   /**
-   * @description url of the comment will be processed in each function.
-   * EACH FUNCTION NEEDS TO PASSED THE MESSAGE ID
+   * @description url of the comment API.
    * @private
    * @memberof CommentService
    */
-  private messageUrl = 'http://localhost:3000/api/messages';
+  private commentUrl = 'http://localhost:3000/api/comments';
 
   constructor(private http: HttpClient, ) {}
 
   /**
-   * @description get all comments in a message.
+   * @description get all comments.
    * @returns {Observable<Comment>[]}
    * @memberof CommentService
    */
-  getAllComments = (messageid: string): Observable<Comment[]> => {
-    const url = `${this.messageUrl}/${messageid}/comments`;
-    return this.http.get<Comment[]>(url).pipe(
+  getAllComments = (query: any): Observable<Comment[]> => {
+    return this.http.get<Comment[]>(this.commentUrl, { params: query }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
@@ -37,8 +35,8 @@ export class CommentService {
    * @returns {Observable<Message>}
    * @memberof CommentService
    */
-  getCommentById = (messageid: string, commentid: string): Observable<Comment> => {
-    const url = `${this.messageUrl}/${messageid}/comments/${commentid}`;
+  getCommentById = (commentid: string): Observable<Comment> => {
+    const url = `${this.commentUrl}/${commentid}`;
     return this.http.get<Comment>(url).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
@@ -50,9 +48,8 @@ export class CommentService {
    * @returns {Observable<Comment>}
    * @memberof CommentService
    */
-  createComment = (messageid: string, comment: Comment): Observable<Comment> => {
-    const url = `${this.messageUrl}/${messageid}/comments`;
-    return this.http.post<Comment>(url, comment).pipe(
+  createComment = (comment: Comment): Observable<Comment> => {
+    return this.http.post<Comment>(this.commentUrl, comment).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
@@ -63,8 +60,8 @@ export class CommentService {
    * @returns {Observable<Comment>}
    * @memberof CommentService
    */
-  updateCommentById(messageid: string, comment: Comment): Observable<Comment> {
-    const url = `${this.messageUrl}/${messageid}/comments/${comment._id}`;
+  updateCommentById(comment: Comment): Observable<Comment> {
+    const url = `${this.commentUrl}/${comment._id}`;
     return this.http.put<Comment>(url, comment).pipe(catchError((err) => observableHandleError(err)));
   }
 
@@ -73,8 +70,8 @@ export class CommentService {
    * @returns {Observable<{}>}
    * @memberof CommentService
    */
-  deleteCommentById(messageid: string, commentid: string): Observable<{}> {
-    const url = `${this.messageUrl}/${messageid}/comments/${commentid}`;
+  deleteCommentById(commentid: string): Observable<{}> {
+    const url = `${this.commentUrl}/${commentid}`;
     return this.http.delete<{}>(url).pipe(catchError((err) => observableHandleError(err)));
   }
 }

@@ -45,8 +45,7 @@ export class MessageCategoryService {
    * @memberof MessageCategoryService
    */
   createMessageCategory = (messageCategory: MessageCategory): Observable<MessageCategory> => {
-    const url = `${this.messageCategoryUrl}`;
-    return this.http.post<MessageCategory>(url, messageCategory).pipe(
+    return this.http.post<MessageCategory>(this.messageCategoryUrl, messageCategory).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );

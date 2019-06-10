@@ -36,7 +36,7 @@ export class ShowMessageComponent implements OnInit {
     this.route.params.subscribe(params => {
       let messageid = params['messageid'];
       this.getMessage(messageid);
-      this.getComments(messageid);
+      this.getComments();
     });
   }
 
@@ -54,8 +54,8 @@ export class ShowMessageComponent implements OnInit {
    * @description get all comments of the message.
    * @param {string} messageid
    */
-  getComments = (messageid: string):void => {
-    this.commentService.getAllComments(messageid).subscribe(comments => {
+  getComments = ():void => {
+    this.commentService.getAllComments({ messageId: this.message._id }).subscribe(comments => {
       this.comments = comments;
     })
   }
