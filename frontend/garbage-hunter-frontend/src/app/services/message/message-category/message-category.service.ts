@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/internal/operators';
 import { observableHandleError } from 'src/app/middlewares/errorhandler.middleware';
 import { MessageCategory } from 'src/app/models/message-category.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class MessageCategoryService {
 
-  private messageCategoryUrl = 'http://localhost:3000/api/message_category';
+  private messageCategoryUrl = `${environment.baseUrl}/message_category`;
 
   constructor(private http: HttpClient) { }
 

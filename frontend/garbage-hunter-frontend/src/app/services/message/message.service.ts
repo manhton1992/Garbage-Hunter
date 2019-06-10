@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/internal/operators';
 import { Message } from 'src/app/models/message.model';
 import { observableHandleError } from 'src/app/middlewares/errorhandler.middleware';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +16,7 @@ export class MessageService {
    * @private
    * @memberof MessageService
    */
-  private messageUrl = 'http://localhost:3000/api/messages';
+  private messageUrl = `${environment.baseUrl}/messages`;
 
   constructor(private http: HttpClient) {}
 

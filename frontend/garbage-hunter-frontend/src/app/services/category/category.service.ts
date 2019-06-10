@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/internal/operators';
 import { observableHandleError } from 'src/app/middlewares/errorhandler.middleware';
 import { Category } from 'src/app/models/category.model';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
 
-  private categoryUrl = 'http://localhost:3000/api/categories';
+  private categoryUrl = `${environment.baseUrl}/categories`;
 
   constructor(private http: HttpClient) { }
 

@@ -4,6 +4,7 @@ import { Comment } from 'src/app/models/comment.model';
 import { map, catchError } from 'rxjs/internal/operators';
 import { observableHandleError } from 'src/app/middlewares/errorhandler.middleware';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +15,7 @@ export class CommentService {
    * @private
    * @memberof CommentService
    */
-  private commentUrl = 'http://localhost:3000/api/comments';
+  private commentUrl = `${environment.baseUrl}/comments`;
 
   constructor(private http: HttpClient, ) {}
 
