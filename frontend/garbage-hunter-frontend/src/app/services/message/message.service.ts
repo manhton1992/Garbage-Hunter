@@ -83,4 +83,20 @@ export class MessageService {
   downloadMessages(): void {
     window.open(this.messageUrl + '/download', '_self');
   }
+
+  /**
+   * @description upload image to AWS S3
+   * @param {File} image
+   * @returns {Observable<string>}
+   * @memberof MessageService
+   */
+  uploadImage(image: File): Observable<string> {
+    const url = `${this.messageUrl}/image_upload`;
+    const formData = new FormData();
+    formData.append('image', image);
+    return this.http.post<string>(url, formData).pipe(
+      map((response) => response['data']['docs']['imageUrl']),
+      catchError((err) => observableHandleError(err))
+    );
+  }
 }

@@ -4,12 +4,30 @@ import {Message} from "../../../models/message.model";
 import {MessageService} from "../../../services/message/message.service";
 import { UserService } from 'src/app/services/user/user.service';
 
+/**
+ * @description class for the uploaded image
+ * @class ImageSnippet
+ */
+class ImageSnippet {
+  pending: boolean = false;
+  status: string = 'init';
+
+  constructor(public src: string, public file: File) {}
+}
+
 @Component({
   selector: 'app-create-message',
   templateUrl: './create-message.component.html',
   styleUrls: ['./create-message.component.scss']
 })
 export class CreateMessageComponent implements OnInit {
+
+  /**
+   * @description selected image of the input file
+   * @type {ImageSnippet}
+   * @memberof CreateMessageComponent
+   */
+  selectedFile: ImageSnippet;
 
   newMessage: Message = {
     title: '',
@@ -77,6 +95,32 @@ export class CreateMessageComponent implements OnInit {
         console.error(err);
       }
     );
+  }
+
+  /**
+   * @description handle when an image is chosen (upload image to storage server).
+   * @memberof CreateMessageComponent
+   */
+  onFileChange = (e: any): void => {
+    const file: File = e.target.files[0];
+    const reader = new FileReader();
+
+    reader.addEventListener('load', (event: any) => {
+      this.selectedFile = new ImageSnippet(event.target.result, file);
+      this.selectedFile.pending = true;
+      
+      this.messageService.uploadImage(this.selectedFile.file).subscribe(imageUrl => {
+        this.selectedFile.pending = false;
+        this.selectedFile.status = 'ok';
+        this.newMessage.imageUrl = imageUrl;
+      }, error => {
+        this.selectedFile.pending = false;
+        this.selectedFile.status = 'fail';
+        this.selectedFile.src = 'https://www.shareicon.net/data/128x128/2015/09/22/105437_cloud_512x512.png';
+      });
+    });
+
+    reader.readAsDataURL(file);
   }
 
 }
