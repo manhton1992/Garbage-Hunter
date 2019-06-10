@@ -3,6 +3,7 @@ import { MapService } from 'src/app/services/map/map.service';
 import {Message} from "../../../models/message.model";
 import {MessageService} from "../../../services/message/message.service";
 import { UserService } from 'src/app/services/user/user.service';
+import { Category } from 'src/app/models/category.model';
 
 /**
  * @description class for the uploaded image
@@ -28,6 +29,35 @@ export class CreateMessageComponent implements OnInit {
    * @memberof CreateMessageComponent
    */
   selectedFile: ImageSnippet;
+
+  selectedCategories: Category[];
+
+  categories: Category[] = [
+    {
+      _id: '1',
+      name: 'chair'
+    },
+    {
+      _id: '2',
+      name: 'furniture'
+    },
+    {
+      _id: '3',
+      name: 'electronic'
+    },
+    {
+      _id: '4',
+      name: 'bed'
+    },
+    {
+      _id: '5',
+      name: 'table'
+    },
+    {
+      _id: '6',
+      name: 'sofa'
+    },
+  ];
 
   newMessage: Message = {
     title: '',
@@ -108,7 +138,7 @@ export class CreateMessageComponent implements OnInit {
     reader.addEventListener('load', (event: any) => {
       this.selectedFile = new ImageSnippet(event.target.result, file);
       this.selectedFile.pending = true;
-      
+
       this.messageService.uploadImage(this.selectedFile.file).subscribe(imageUrl => {
         this.selectedFile.pending = false;
         this.selectedFile.status = 'ok';
