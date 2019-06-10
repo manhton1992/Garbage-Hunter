@@ -15,9 +15,6 @@ import { upload } from '../../helpers/image-upload-helper/image-upload';
  */
 export const getMessages = async (req: Request, res: Response) => {
     try {
-        /** Process queries to check for dates*/
-        req.query = processQueries(req.query);
-
         const messages: IMessageModel[] = await message.find(req.query);
         res.status(200).send({
             data: {

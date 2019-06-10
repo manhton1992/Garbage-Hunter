@@ -24,8 +24,8 @@ export class MessageService {
    * @returns {Observable<Message>[]}
    * @memberof MessageService
    */
-  getAllMessages = (): Observable<Message[]> => {
-    return this.http.get<Message[]>(this.messageUrl).pipe(
+  getAllMessages = (query: any): Observable<Message[]> => {
+    return this.http.get<Message[]>(this.messageUrl, { params: query }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );

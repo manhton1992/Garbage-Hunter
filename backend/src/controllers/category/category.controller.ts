@@ -14,10 +14,8 @@ import { ICategoryModel, category } from '../../models/category.model';
  */
 export const getCategories = async (req: Request, res: Response) => {
     try {
-        /** Process queries to check for dates*/
-        //req.query = processQueries(req.query);
 
-        const categories: ICategoryModel[] = await category.find();
+        const categories: ICategoryModel[] = await category.find(req.query);
         res.status(200).send({
             data: {
                 status: 'success',

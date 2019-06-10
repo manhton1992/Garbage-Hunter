@@ -47,7 +47,7 @@ export class AdminComponent implements OnInit {
    * @memberof AdminComponent
    */
   getAllMessages = (): void => {
-    this.messageService.getAllMessages().subscribe((messages) => {
+    this.messageService.getAllMessages({}).subscribe((messages) => {
       this.messages = messages;
       this.availableMessages = this.getAvailableMessages();
       this.unavailableMessages = this.getUnavailableMessages();

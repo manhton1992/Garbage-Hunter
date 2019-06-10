@@ -17,7 +17,7 @@ export const getMessageCategory = async (req: Request, res: Response) => {
         /** Process queries to check for dates*/
         //req.query = processQueries(req.query);
 
-        const messageCategories: IMessageCategoryModel[] = await messageCategory.find();
+        const messageCategories: IMessageCategoryModel[] = await messageCategory.find(req.query);
         res.status(200).send({
             data: {
                 status: 'success',

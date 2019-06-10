@@ -17,7 +17,7 @@ export const getUserCategory = async (req: Request, res: Response) => {
         /** Process queries to check for dates*/
         //req.query = processQueries(req.query);
 
-        const userCategories: IUserCategoryModel[] = await userCategory.find();
+        const userCategories: IUserCategoryModel[] = await userCategory.find(req.query);
         res.status(200).send({
             data: {
                 status: 'success',
