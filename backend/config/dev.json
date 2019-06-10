@@ -1,6 +1,6 @@
 {
     "database": {
-        "host" : "mongodb://localhost:27017/garbage-hunter"
+        "host" : "mongodb://garbage-hunter:Sommersemester2019@ds235437.mlab.com:35437/garbage-hunter"
     },
     "server": {
         "port" : 3000
