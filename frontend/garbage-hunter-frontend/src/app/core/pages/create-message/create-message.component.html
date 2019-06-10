@@ -31,23 +31,6 @@
             />
           </div>
         <!-- End of title input -->
-        <!-- Category input -->
-        <div class="form-group">
-            <label for="categoryInput"> Select categories: </label>
-            <select
-              [(ngModel)]="selectedCategories"
-              [ngModelOptions]="{ standalone: true }"
-              id="categoryInput"
-              required="required"
-              class="form-control"
-              multiple
-              >
-              <option *ngFor="let category of categories" [ngValue]="category">
-                {{category.name | uppercase}}
-              </option>
-            </select>
-          </div>
-          <!-- End of category input -->
         <!-- Description input -->
         <div class="form-group">
           <label for="createNewMessageDescription"> Description: </label>
@@ -61,6 +44,24 @@
           ></textarea>
         </div>
         <!-- End of description input -->
+        <!-- Category input -->
+        <div class="form-group">
+            <label for="categoryInput"> Select categories: </label>
+            <select
+              [(ngModel)]="selectedCategories"
+              [ngModelOptions]="{ standalone: true }"
+              id="categoryInput"
+              required="required"
+              class="form-control"
+              size="6"
+              multiple
+              >
+              <option *ngFor="let category of categories" [ngValue]="category">
+                {{category.name | uppercase}}
+              </option>
+            </select>
+          </div>
+          <!-- End of category input -->
         <!-- Address input -->
         <div class="form-group">
           <label for="createNewMessageAddress">Address of the garbage: </label>
@@ -114,7 +115,7 @@
           </div>
           <div *ngIf="selectedFile.status === 'fail'" class="alert alert-danger" role="alert">Image upload failed!</div>
         </div>
-        <!-- End of container for image upload -->
+        <!-- End of container for image upload --> 
         <div class="form-group">
           <button type="submit" class="btn btn-primary" id="submitBtn">Create!</button>
         </div>

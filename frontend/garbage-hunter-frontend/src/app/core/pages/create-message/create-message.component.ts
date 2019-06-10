@@ -30,8 +30,19 @@ export class CreateMessageComponent implements OnInit {
    */
   selectedFile: ImageSnippet;
 
+  /**
+   * @description selected categories of the message.
+   * @type {Category[]}
+   * @memberof CreateMessageComponent
+   */
   selectedCategories: Category[];
 
+  /**
+   * @description list of categories.
+   * TODO still dummy data, need to fetch from db.
+   * @type {Category[]}
+   * @memberof CreateMessageComponent
+   */
   categories: Category[] = [
     {
       _id: '1',
@@ -59,6 +70,11 @@ export class CreateMessageComponent implements OnInit {
     },
   ];
 
+  /**
+   * @description message that will be created.
+   * @type {Message}
+   * @memberof CreateMessageComponent
+   */
   newMessage: Message = {
     title: '',
     description: '',
