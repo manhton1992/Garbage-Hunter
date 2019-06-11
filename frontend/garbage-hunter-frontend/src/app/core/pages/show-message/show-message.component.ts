@@ -4,6 +4,7 @@ import { CommentService } from 'src/app/services/comment/comment.service';
 import { Message } from 'src/app/models/message.model';
 import { Comment } from 'src/app/models/comment.model';
 import { ActivatedRoute } from '@angular/router';
+import { Category } from 'src/app/models/category.model';
 
 @Component({
   selector: 'app-show-message',
@@ -18,6 +19,13 @@ export class ShowMessageComponent implements OnInit {
    * @memberof ShowMessageComponent
    */
   message: Message = null;
+
+  /**
+   * @description all categories of the main message.
+   * @type {Category[]}
+   * @memberof ShowMessageComponent
+   */
+  messageCategories: Category[] = [];
 
   /**
    * @description all comments of the main message.
@@ -38,6 +46,7 @@ export class ShowMessageComponent implements OnInit {
       this.getMessage(messageid);
       this.getComments();
     });
+    this.messageCategories = this.dummyCategories;  // test dummy
   }
 
   /**
@@ -59,4 +68,25 @@ export class ShowMessageComponent implements OnInit {
       this.comments = comments;
     })
   }
+
+  /**
+   * @description show action div that contains buttons to do something to the message
+   * @memberof ShowMessageComponent
+   */
+  showActionDiv = (): boolean => {
+    // TODO should return false if it is a normal user (can only see)
+    return true;
+  }
+
+  // DUMMY CATEGORIES
+  dummyCategories: Category[] = [
+    {
+      _id: 'cat1',
+      name: 'chair'
+    },
+    {
+      _id: 'cat2',
+      name: 'furniture'
+    }
+  ]
 }

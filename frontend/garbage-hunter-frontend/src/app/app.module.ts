@@ -26,6 +26,7 @@ import { CreateCommentComponent } from './core/components/create-comment/create-
 import { AdminNumberBoxComponent } from './core/components/admin-number-box/admin-number-box.component';
 import { ChartLineComponent } from './core/components/chart-line/chart-line.component';
 import { ChartPieComponent } from './core/components/chart-pie/chart-pie.component';
+import { CommentListComponent } from './core/components/comment-list/comment-list.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { ChartPieComponent } from './core/components/chart-pie/chart-pie.compone
     CreateCommentComponent,
     AdminNumberBoxComponent,
     ChartLineComponent,
-    ChartPieComponent
+    ChartPieComponent,
+    CommentListComponent
   ],
   imports: [
     BrowserModule,
