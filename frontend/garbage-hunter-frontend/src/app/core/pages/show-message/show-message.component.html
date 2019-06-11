@@ -48,7 +48,7 @@
       <div class="row">
         <div class="col-lg-6">
           <dt>Creator:</dt>
-          <dd>Bien</dd>
+          <dd>{{creator?.email}}</dd>
           <dt>Created at:</dt>
           <dd>{{message?.created_at | date: 'HH:mm dd.MM.yyyy'}}</dd>
           <div *ngIf="message?.phone">

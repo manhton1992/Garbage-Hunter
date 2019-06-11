@@ -5,6 +5,7 @@ import { Message } from 'src/app/models/message.model';
 import { Comment } from 'src/app/models/comment.model';
 import { ActivatedRoute } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-show-message',
@@ -27,6 +28,8 @@ export class ShowMessageComponent implements OnInit {
    */
   messageCategories: Category[] = [];
 
+  creator: User = null;
+
   /**
    * @description all comments of the main message.
    * @type {Comment[]}
@@ -47,6 +50,7 @@ export class ShowMessageComponent implements OnInit {
       this.getComments();
     });
     this.messageCategories = this.dummyCategories;  // test dummy
+    this.creator = this.dummyCreator;  // test dummy
   }
 
   /**
@@ -89,4 +93,17 @@ export class ShowMessageComponent implements OnInit {
       name: 'furniture'
     }
   ]
+
+  dummyCreator: User = {
+    _id: 'user1',
+    email: 'bagusnanda@test.com',
+    firstName: 'Bagus',
+    lastName: 'Nanda',
+    phoneNumber: '015628374',
+    passwordHash: 'string',
+    isAdmin: true,
+    isConfirm: true,
+    profileImageUrl: 'string',
+    created_at: new Date('2019-02-12'),
+  }
 }
