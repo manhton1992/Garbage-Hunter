@@ -12,6 +12,7 @@ export class UserService {
 
   private userUrl = `${environment.baseUrl}/users`;
   private userLoginUrl = `${this.userUrl}/login`;
+  private userLoginByTokenUrl = `${this.userUrl}/login`;
   private userRegisterUrl = `${this.userUrl}/register`;
   private userUpdateUrl = `${this.userUrl}/update`;
   private userDeleleUrl = `${this.userUrl}/delete`;
@@ -87,10 +88,15 @@ authenticate(){
   let userDataString = localStorage.getItem("currentUser");
   if (userDataString){
     let userData = JSON.parse(userDataString);
-    this.user = userData.docs;
-    console.log("this user: " + JSON.stringify(this.user));
-    } 
+    if(userData.token){
+      const url = `${this.userLoginByTokenUrl}/${userData.token}`;
+      return this.http.get<User>(url)
+      .pipe(map(response => response['data']));
+    }
   }
+  return null;
+}
+
 }
 
 

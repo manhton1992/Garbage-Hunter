@@ -187,24 +187,32 @@ export const login = async (req: Request, res: Response) => {
         const singleUser: IUserModel | null = await user.findOne({email: req.query.email});
         
         // compare password with hashpassword
-        if (myJWTSecretKey && singleUser && bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
+        if (myJWTSecretKey && singleUser ){
 
-            if (singleUser.isConfirm){
-                // create a token. With this token, client can communite with server of the user
-                // sign with default (HMAC SHA256) 
-                const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey);
+            if (bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
+                if (singleUser.isConfirm){
+                    // create a token. With this token, client can communite with server of the user
+                    // sign with default (HMAC SHA256) 
+                    const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey);
+                    res.status(200).send({
+                        data: {
+                            status: 'success',
+                            token: token,
+                        },
+                    });
+                } else {
+                    res.status(200).send({
+                        data: {
+                            status: '401',
+                            message: 'please confirm the email'
+                        },
+                    });
+                }
+            } else {
                 res.status(200).send({
                     data: {
-                        status: 'success',
-                        docs: singleUser,
-                        token: token,
-                    },
-                });
-            } else {
-                res.status(500).send({
-                    data: {
-                        status: 'fail',
-                        message: 'please confirm the email'
+                        status: '401',
+                        message: 'false password. Please try again'
                     },
                 });
             }
@@ -212,9 +220,9 @@ export const login = async (req: Request, res: Response) => {
        } else {
        
         // user does not exist
-        res.status(500).send({
+        res.status(200).send({
             data: {
-                status: 'fail',
+                status: '401',
                 message: 'user does not exist'
             },
         });
@@ -224,6 +232,42 @@ export const login = async (req: Request, res: Response) => {
         res.status(400).send({
             data: {
                 status: 'error',
+                message: error.message,
+            },
+        });
+    }
+};
+
+
+/**
+ * Get a single user by token
+ * get email and password from request query
+ * @param req
+ * @param res
+ */
+export const loginByToken = async (req: Request, res: Response) => {
+    try {
+        let checkedUser = checkJwt(req.params.token);
+        if (checkedUser){
+            res.status(200).send({
+                data: {
+                    status: 'success',
+                    docs: checkedUser,
+                },
+            });
+        } else {
+            res.status(200).send({
+                data: {
+                    status: '401',
+                    message: 'token are not avaiable. please log in again'
+                },
+            });
+        }
+
+    } catch (error) {
+        res.status(200).send({
+            data: {
+                status: '401',
                 message: error.message,
             },
         });
