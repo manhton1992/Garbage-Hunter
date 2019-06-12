@@ -24,11 +24,10 @@ export class LoginComponent implements OnInit {
     let response: any ;
     this.userService.login(this.userLogin.email,this.userLogin.password).subscribe(response => {
       console.log(response);
-      if (response && response.token){
-        if(response.status != null && response.status == 'success'){
+      if (response ){
+        if(response.status != null && response.status == 'success' && response.token){
           //this.userService.user = response.docs; 
           let user = {
-            docs: response.docs,
             token: response.token,
           }
           // store user details and jwt token in local storage to keep user logged in between page refreshes
@@ -37,14 +36,13 @@ export class LoginComponent implements OnInit {
           console.log("login successfully");
           alert ("login successfully");
           
-        } else if (response.status != null && response.status == 'fail'){
-          console.log("false input or user does not exist");
-          alert ("false input or user does not exist");
+        } else if (response.status && response.status == '401'){
+          console.log(response.message);
+          alert (response.message);
         } else {
           console.log("error when einlogging")
           alert ("error when einlogging");
         }
-  
       }
     });
  
