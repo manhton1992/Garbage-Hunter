@@ -23,6 +23,8 @@ class ImageSnippet {
 })
 export class CreateMessageComponent implements OnInit {
 
+  constructor(private userService: UserService, private messageService : MessageService, private mapService: MapService) { }
+
   /**
    * @description selected image of the input file
    * @type {ImageSnippet}
@@ -78,7 +80,7 @@ export class CreateMessageComponent implements OnInit {
   newMessage: Message = {
     title: '',
     description: '',
-    creatorId: '12345',
+    creatorId: this.userService.user ? this.userService.user._id : "12345",
     lon: null,
     lat: null,
     address: '',
@@ -87,7 +89,6 @@ export class CreateMessageComponent implements OnInit {
     imageUrl: 'https://cdn1.stuttgarter-zeitung.de/media.media.ec722513-be5c-474a-88d9-db2b05e31ccb.original1024.jpg',
     phone: null,
   }
-  constructor(private userService: UserService, private messageService : MessageService, private mapService: MapService) { }
 
   ngOnInit() {
     this.setCreator();
@@ -95,7 +96,16 @@ export class CreateMessageComponent implements OnInit {
 
   addNewMessage(){
     let newMessage = Object.assign({},this.newMessage);
-    this.messageService.createMessage(newMessage).subscribe();
+    if(this.userService.user){
+      this.messageService.createMessage(newMessage).subscribe(response => {
+        if (response){
+          alert ("create message successfully");
+        }
+      });
+    } else {
+      alert ("please login to create new message");
+    }
+
   }
 
   /**
