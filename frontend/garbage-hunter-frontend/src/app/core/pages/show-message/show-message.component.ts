@@ -6,6 +6,7 @@ import { Comment } from 'src/app/models/comment.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { User } from 'src/app/models/user.model';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-show-message',
@@ -13,6 +14,13 @@ import { User } from 'src/app/models/user.model';
   styleUrls: ['./show-message.component.scss']
 })
 export class ShowMessageComponent implements OnInit {
+
+  /**
+   * @description current user that accessing the page.
+   * @type {User}
+   * @memberof ShowMessageComponent
+   */
+  currentUser: User = null;
 
   /**
    * @description the main message.
@@ -28,6 +36,11 @@ export class ShowMessageComponent implements OnInit {
    */
   messageCategories: Category[] = [];
 
+  /**
+   * @description creator of the main message
+   * @type {User}
+   * @memberof ShowMessageComponent
+   */
   creator: User = null;
 
   /**
@@ -40,14 +53,17 @@ export class ShowMessageComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private commentService: CommentService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
   ) { }
 
   ngOnInit() {
+    this.currentUser = this.userService.user;
     this.route.params.subscribe(params => {
       let messageid = params['messageid'];
       this.getMessage(messageid);
+      this.getCreator();
       this.getComments();
     });
     this.messageCategories = this.dummyCategories;  // test dummy
@@ -67,6 +83,15 @@ export class ShowMessageComponent implements OnInit {
   }
 
   /**
+   * @description get the creator of the message
+   * @memberof ShowMessageComponent
+   */
+  getCreator = (): void => {
+    if (this.message) {
+      
+    }
+  }
+  /**
    * @description get all comments of the message.
    * @param {string} messageid
    */
@@ -79,12 +104,49 @@ export class ShowMessageComponent implements OnInit {
   }
 
   /**
+   * @description delete the message.
+   * @memberof ShowMessageComponent
+   */
+  archiveMessage = (): void => {
+    if (this.currentUser && this.currentUser.isAdmin) { 
+      this.message.archive = true;
+      this.messageService.updateMessage(this.message).subscribe(success => {
+        this.router.navigate(['/']);
+      });
+    }
+  }
+
+  /**
    * @description show action div that contains buttons to do something to the message
    * @memberof ShowMessageComponent
    */
   showActionDiv = (): boolean => {
-    // TODO should return false if it is a normal user (can only see)
+    if (!this.currentUser) {
+      // return false;
+    }
     return true;
+  }
+
+  /**
+   * @description show/hide edit and mark as unavailable buttons specific to current user.
+   * @memberof ShowMessageComponent
+   */
+  showEditChangeButton = (): boolean => {
+    if (this.currentUser && (this.currentUser._id == this.creator._id || this.currentUser.isAdmin)) {
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * @description show/hide delete button only to admins.
+   * @returns {boolean}
+   */
+  showDeleteButton = (): boolean => {
+    if (this.currentUser && this.currentUser.isAdmin) {
+      return true;
+    }
+    return false;
   }
 
   // DUMMY CATEGORIES

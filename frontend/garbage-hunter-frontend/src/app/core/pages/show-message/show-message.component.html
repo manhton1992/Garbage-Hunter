@@ -79,13 +79,13 @@
 
   <div *ngIf="showActionDiv()" class="row text-center my-4">
     <div class="col-lg">
-      <button class="btn btn-outline-primary btn-lg mx-1 my-1 btn-action" id="edit-button">Edit message</button>
+      <button *ngIf="showEditChangeButton()" class="btn btn-outline-primary btn-lg mx-1 my-1 btn-action" id="edit-button">Edit message</button>
     </div>
     <div class="col-lg">
-      <button class="btn btn-outline-warning btn-lg mx-1 my-1 btn-action" id="status-button">Mark as unavailable</button>
+      <button *ngIf="showEditChangeButton()" class="btn btn-outline-warning btn-lg mx-1 my-1 btn-action" id="status-button">Mark as unavailable</button>
     </div>
     <div class="col-lg">
-      <button class="btn btn-outline-danger btn-lg mx-1 my-1 btn-action" id="delete-button">Delete</button>
+      <button *ngIf="showDeleteButton()" class="btn btn-outline-danger btn-lg mx-1 my-1 btn-action" id="delete-button" (click)="archiveMessage()">Delete</button>
     </div>
   </div>
 
