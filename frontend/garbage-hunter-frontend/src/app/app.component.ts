@@ -11,8 +11,21 @@ export class AppComponent implements OnInit{
 
   constructor(private userService: UserService){}
 
+  /** auto login when open the app */
   ngOnInit(): void {
-    this.userService.authenticate();
+    if (localStorage.getItem("currentUser")){
+    this.userService.authenticate()
+    .subscribe(res => {
+      if (res && res != null){
+        if (res.status == 'success'){
+          this.userService.user =  res.docs;
+          console.log("auto login successfully");
+        } else {
+          alert (res.message);
+        }
+      }
+    });
+    }
   }
   title = 'garbage-hunter-frontend';
 }
