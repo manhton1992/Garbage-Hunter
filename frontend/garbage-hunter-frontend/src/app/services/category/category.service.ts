@@ -12,6 +12,32 @@ import { environment } from 'src/environments/environment';
 export class CategoryService {
 
   private categoryUrl = `${environment.baseUrl}/categories`;
+  public categories: Category[] = [
+    {
+      _id: '1',
+      name: 'chair'
+    },
+    {
+      _id: '2',
+      name: 'furniture'
+    },
+    {
+      _id: '3',
+      name: 'electronic'
+    },
+    {
+      _id: '4',
+      name: 'bed'
+    },
+    {
+      _id: '5',
+      name: 'table'
+    },
+    {
+      _id: '6',
+      name: 'sofa'
+    },
+  ];
 
   constructor(private http: HttpClient) { }
 

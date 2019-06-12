@@ -4,6 +4,7 @@ import {Message} from "../../../models/message.model";
 import {MessageService} from "../../../services/message/message.service";
 import { UserService } from 'src/app/services/user/user.service';
 import { Category } from 'src/app/models/category.model';
+import { CategoryService } from 'src/app/services/category/category.service';
 
 /**
  * @description class for the uploaded image
@@ -23,7 +24,10 @@ class ImageSnippet {
 })
 export class CreateMessageComponent implements OnInit {
 
-  constructor(private userService: UserService, private messageService : MessageService, private mapService: MapService) { }
+  constructor(private userService: UserService, 
+    private messageService : MessageService, 
+    private mapService: MapService,
+    private categoryService: CategoryService) { }
 
   /**
    * @description selected image of the input file
@@ -45,32 +49,7 @@ export class CreateMessageComponent implements OnInit {
    * @type {Category[]}
    * @memberof CreateMessageComponent
    */
-  categories: Category[] = [
-    {
-      _id: '1',
-      name: 'chair'
-    },
-    {
-      _id: '2',
-      name: 'furniture'
-    },
-    {
-      _id: '3',
-      name: 'electronic'
-    },
-    {
-      _id: '4',
-      name: 'bed'
-    },
-    {
-      _id: '5',
-      name: 'table'
-    },
-    {
-      _id: '6',
-      name: 'sofa'
-    },
-  ];
+  categories: Category[] = [];
 
   /**
    * @description message that will be created.
@@ -92,6 +71,7 @@ export class CreateMessageComponent implements OnInit {
 
   ngOnInit() {
     this.setCreator();
+    this.categories = this.categoryService.categories;
   }
 
   addNewMessage(){
