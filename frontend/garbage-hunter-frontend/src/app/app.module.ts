@@ -27,7 +27,7 @@ import { AdminNumberBoxComponent } from './core/components/admin-number-box/admi
 import { ChartLineComponent } from './core/components/chart-line/chart-line.component';
 import { ChartPieComponent } from './core/components/chart-pie/chart-pie.component';
 import { CommentListComponent } from './core/components/comment-list/comment-list.component';
-import { ErrorComponent } from './core/pages/error/error.component';
+import { ErrorComponent } from './core/components/error/error.component';
 
 @NgModule({
   declarations: [

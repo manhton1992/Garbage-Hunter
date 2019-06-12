@@ -95,3 +95,7 @@
   <app-comment-list></app-comment-list>
 
 </div>
+
+<div *ngIf="!message && showError">
+  <app-error></app-error>
+</div>

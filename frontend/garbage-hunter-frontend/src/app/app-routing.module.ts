@@ -6,7 +6,6 @@ import { RegisterComponent } from './core/pages/register/register.component';
 import { CreateMessageComponent } from './core/pages/create-message/create-message.component';
 import { ShowMessageComponent } from './core/pages/show-message/show-message.component';
 import { AdminComponent } from './core/pages/admin/admin.component';
-import { ErrorComponent } from './core/pages/error/error.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -15,7 +14,6 @@ const routes: Routes = [
   { path: 'messages/create', component: CreateMessageComponent },
   { path: 'messages/:messageid', component: ShowMessageComponent },
   { path: 'admin', component: AdminComponent },
-  { path: 'error/:status', component: ErrorComponent },
 ];
 
 @NgModule({

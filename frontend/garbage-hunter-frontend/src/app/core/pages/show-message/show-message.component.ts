@@ -50,6 +50,8 @@ export class ShowMessageComponent implements OnInit {
    */
   comments: Comment[] = [];
 
+  showError: boolean = false;
+
   constructor(
     private messageService: MessageService,
     private commentService: CommentService,
@@ -78,7 +80,7 @@ export class ShowMessageComponent implements OnInit {
     this.messageService.getMessageById(messageid).subscribe(message => {
       this.message = message;
     }, error => {
-      this.router.navigate([`/error/${error.status}`]);
+      this.showError = true;
     })
   }
 
