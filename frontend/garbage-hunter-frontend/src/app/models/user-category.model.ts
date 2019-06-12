@@ -3,7 +3,7 @@
  */
 
 export class UserCategory {
-    _id: string;
+    _id?: string;
     userId: string;
     categoryId: string;
 }

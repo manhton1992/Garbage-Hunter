@@ -27,27 +27,29 @@ export class UserCategoryService {
     );
   };
 
-  /**
-   * @description get UserCategory by id.
+
+   /**
+   * @description get UserCategory by category id.
    * @returns {Observable<UserCategory>}
    * @memberof UserCategoryService
    */
-  getUserCategoryById = (usercategoryid: string): Observable<UserCategory> => {
-    const url = `${this.userCategoryUrl}/${usercategoryid}`;
-    return this.http.get<UserCategory>(url).pipe(
-      map((response) => response['data']['docs']),
+  getUserCategoryByCategoryId = (categoryid: string): Observable<UserCategory[]> => {
+    const url = `${this.userCategoryUrl}/${categoryid}`;
+    return this.http.get<UserCategory[]>(url).pipe(
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };
+
 
   /**
    * @description create new UserCategory.
    * @returns {Observable<UserCategory>}
    * @memberof UserCategoryService
    */
-  createUserCategory = (userCategory: UserCategory): Observable<UserCategory> => {
-    return this.http.post<UserCategory>(this.userCategoryUrl, userCategory).pipe(
-      map((response) => response['data']['docs']),
+  createUserCategory = (userCategory: UserCategory): Observable<any> => {
+    return this.http.post<any>(this.userCategoryUrl, userCategory).pipe(
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };

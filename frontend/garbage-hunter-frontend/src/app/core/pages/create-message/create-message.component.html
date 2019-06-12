@@ -56,7 +56,7 @@
               size="6"
               multiple
               >
-              <option *ngFor="let category of categories" [ngValue]="category">
+              <option *ngFor="let category of categoryService.categories" [ngValue]="category">
                 {{category.name | uppercase}}
               </option>
             </select>

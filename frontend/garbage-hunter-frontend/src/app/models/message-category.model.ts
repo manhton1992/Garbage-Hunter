@@ -3,7 +3,7 @@
  */
 
 export class MessageCategory {
-    _id: string;
+    _id?: string;
     messageId: string;
     categoryId: string;
 }

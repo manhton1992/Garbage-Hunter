@@ -10,6 +10,26 @@
       </p>
     </div>
   </div>
+    <!-- Category input -->
+    <div *ngIf="userService.user" class="form-group">
+        <label for="categoryInput"> Subcribe categories to get email when someone post a matching message: </label>
+        <select
+          [(ngModel)]="selectedCategories"
+          [ngModelOptions]="{ standalone: true }"
+          id="categoryInput"
+          class="form-control"
+          size="6"
+          multiple
+          >
+          <option *ngFor="let category of categoryService.categories" [ngValue]="category">
+            {{category.name | uppercase}}
+          </option>
+        </select>
+        <div class="form-group">
+            <button type="submit" (click)="subcribeSubmit()" class="btn btn-primary" id="submitBtn">Submit</button>
+        </div>
+      </div>
+      <!-- End of category input -->
 </div>
 
 <div class="container mb-5" [ngStyle]="{height: '75vh'}">

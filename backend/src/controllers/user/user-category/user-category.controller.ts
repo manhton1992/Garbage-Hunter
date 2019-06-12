@@ -109,6 +109,32 @@ export const getSingleUserCategory = async (req: Request, res: Response) => {
     }
 };
 
+
+/**
+ * Get a single User category by id
+ * @param req
+ * @param res
+ */
+export const getUserCategoryByCategoryId = async (req: Request, res: Response) => {
+    try {
+        const userCategories: IUserCategoryModel[] | null 
+        = await userCategory.find({categoryId : req.params.userCategoryId});
+         res.status(200).send({
+            data: {
+                status: 'success',
+                docs: userCategories,
+            },
+        });
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+};
+
 /**
  * Update a single User category by id
  * @param req

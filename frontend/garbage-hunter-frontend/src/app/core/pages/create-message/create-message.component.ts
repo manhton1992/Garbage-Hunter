@@ -5,6 +5,9 @@ import {MessageService} from "../../../services/message/message.service";
 import { UserService } from 'src/app/services/user/user.service';
 import { Category } from 'src/app/models/category.model';
 import { CategoryService } from 'src/app/services/category/category.service';
+import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
+import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
+import { MessageCategory } from 'src/app/models/message-category.model';
 
 /**
  * @description class for the uploaded image
@@ -27,7 +30,9 @@ export class CreateMessageComponent implements OnInit {
   constructor(private userService: UserService, 
     private messageService : MessageService, 
     private mapService: MapService,
-    private categoryService: CategoryService) { }
+    private categoryService: CategoryService,
+    private messageCategoryService: MessageCategoryService,
+    private userCategoryService: UserCategoryService) { }
 
   /**
    * @description selected image of the input file
@@ -42,14 +47,6 @@ export class CreateMessageComponent implements OnInit {
    * @memberof CreateMessageComponent
    */
   selectedCategories: Category[];
-
-  /**
-   * @description list of categories.
-   * TODO still dummy data, need to fetch from db.
-   * @type {Category[]}
-   * @memberof CreateMessageComponent
-   */
-  categories: Category[] = [];
 
   /**
    * @description message that will be created.
@@ -71,7 +68,16 @@ export class CreateMessageComponent implements OnInit {
 
   ngOnInit() {
     this.setCreator();
-    this.categories = this.categoryService.categories;
+    if (this.categoryService.categories.length == 0){
+      
+      this.categoryService.getAllCategories().subscribe(response => {
+        if (response){
+          //  response = JSON.parse(response);
+          this.categoryService.categories = response;
+          console.log("get categories:  " + JSON.stringify(response));
+        }
+      })
+    }
   }
 
   addNewMessage(){
@@ -79,6 +85,26 @@ export class CreateMessageComponent implements OnInit {
     if(this.userService.user){
       this.messageService.createMessage(newMessage).subscribe(response => {
         if (response){
+          // create message category and find user to send email
+          if (this.selectedCategories.length > 0){
+            this.selectedCategories.forEach((element) => {
+              let messageCategory : MessageCategory = {
+                messageId: response._id,
+                categoryId: element._id 
+              }
+              // send request to create new message category
+              this.messageCategoryService.createMessageCategory(messageCategory)
+              .subscribe(response => {
+                console.log("create message category with category: " + response.categoryId);
+              });
+
+              // find user category , which has the same category
+
+              // send email to this user
+
+
+            })
+          }
           alert ("create message successfully");
         }
       });

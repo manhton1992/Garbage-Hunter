@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { MessageService } from 'src/app/services/message/message.service';
 import { Message } from 'src/app/models/message.model';
+import { CategoryService } from 'src/app/services/category/category.service';
+import { Category } from 'src/app/models/category.model';
+import { UserService } from 'src/app/services/user/user.service';
+import { UserCategory } from 'src/app/models/user-category.model';
+import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
 
 @Component({
   selector: 'app-home',
@@ -15,11 +20,26 @@ export class HomeComponent implements OnInit {
    * @memberof HomeComponent
    */
   messages: Message[] = [];
+  selectedCategories: Category[] = [];
 
-  constructor(private messageService: MessageService) {}
+  constructor(private messageService: MessageService,
+    private categoryService: CategoryService,
+    private userService: UserService,
+    private userCategoryService: UserCategoryService) {}
 
   ngOnInit() {
     this.getMessages();
+    if (this.categoryService.categories.length == 0){
+      
+      this.categoryService.getAllCategories().subscribe(response => {
+        if (response){
+          //  response = JSON.parse(response);
+          this.categoryService.categories = response;
+          console.log("get categories:  " + JSON.stringify(response));
+        }
+      })
+    } 
+
   }
 
   /**
@@ -31,4 +51,23 @@ export class HomeComponent implements OnInit {
        this.messages = messages;
      });
   };
+s
+  subcribeSubmit = (): void => {
+    console.log(this.selectedCategories);
+    this.selectedCategories.forEach((element) => {
+      let userCategory : UserCategory = {
+        userId: this.userService.user._id,
+        categoryId: element._id
+      }
+      this.userCategoryService.createUserCategory(userCategory).subscribe(
+        response => {
+          if (response && response.status == 'success'){
+            alert ("subcribe successfully");
+          } else {
+            alert ("subcribe unsuccessfully. Please try again");
+          }
+        }
+      );
+    })
+  }
 }
