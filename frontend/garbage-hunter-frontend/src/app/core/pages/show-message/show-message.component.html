@@ -51,14 +51,10 @@
         <div class="col-lg-6">
           <dt>Creator:</dt>
           <dd>{{creator?.email}}</dd>
-          <dt>Created at:</dt>
-          <dd>{{message?.created_at | date: 'HH:mm dd.MM.yyyy'}}</dd>
           <div *ngIf="message?.phone">
             <dt>Contact number:</dt>
             <dd>{{message?.phone}}</dd>
           </div>
-        </div>
-        <div class="col-lg-6">
           <dt>Status:</dt>
           <dd *ngIf="message.available"><span class="badge badge-success">Available</span></dd>
           <dd *ngIf="!message.available"><span class="badge badge-danger">Not available</span></dd>
@@ -68,10 +64,16 @@
               <span *ngFor="let cat of messageCategories" class="badge badge-pill badge-info">{{cat?.name}}</span>
             </dd>
           </div>
+        </div>
+        <div class="col-lg-6">
           <dt>Address:</dt>
           <dd>{{message?.address}}</dd>
           <dt>Coordinates:</dt>
           <dd>{{message?.lat}},{{message?.lon}}</dd>
+          <dt>Time:</dt>
+          <dd>{{message?.created_at | date: 'HH:mm'}}</dd>
+          <dt>Date:</dt>
+          <dd>{{message?.created_at | date: 'dd.MM.yyyy'}}</dd>
         </div>
       </div>
     </div>
