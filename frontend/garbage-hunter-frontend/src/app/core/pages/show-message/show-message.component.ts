@@ -3,7 +3,7 @@ import { MessageService } from 'src/app/services/message/message.service';
 import { CommentService } from 'src/app/services/comment/comment.service';
 import { Message } from 'src/app/models/message.model';
 import { Comment } from 'src/app/models/comment.model';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { User } from 'src/app/models/user.model';
 
@@ -40,7 +40,8 @@ export class ShowMessageComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private commentService: CommentService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router,
   ) { }
 
   ngOnInit() {
@@ -60,6 +61,8 @@ export class ShowMessageComponent implements OnInit {
   getMessage = (messageid: string):void => {
     this.messageService.getMessageById(messageid).subscribe(message => {
       this.message = message;
+    }, error => {
+      this.router.navigate([`/error/${error.status}`]);
     })
   }
 
@@ -68,9 +71,11 @@ export class ShowMessageComponent implements OnInit {
    * @param {string} messageid
    */
   getComments = ():void => {
-    this.commentService.getAllComments({ messageId: this.message._id }).subscribe(comments => {
-      this.comments = comments;
-    })
+    if (this.message) { 
+      this.commentService.getAllComments({ messageId: this.message._id }).subscribe(comments => {
+        this.comments = comments;
+      });
+    }
   }
 
   /**

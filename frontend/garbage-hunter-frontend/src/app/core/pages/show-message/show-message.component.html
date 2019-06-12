@@ -1,8 +1,8 @@
-<div class="container mt-5">
+<div *ngIf="message" class="container mt-5">
   <div class="card details-container shadow mb-4">
     <!-- Card Header -->
     <div class="card-header text-center">
-      <h1 class="m-0 font-weight-bold text-primary">{{message?.title}}</h1>
+      <h1 class="m-0 font-weight-bold text-dark">{{message?.title}}</h1>
     </div>
     <!-- Card Body -->
     <div class="card-body">
@@ -19,7 +19,9 @@
         </div>
         <!-- Card Body -->
         <div class="card-body upper-container">
-          <img class="image-fluid garbage-img" src="{{message?.imageUrl}}" alt="Card image" />
+          <a href="{{message?.imageUrl}}" target="_blank">
+            <img class="image-fluid garbage-img" src="{{message?.imageUrl}}" alt="Card image" />
+          </a>
         </div>
       </div>
     </div>
@@ -77,13 +79,13 @@
 
   <div *ngIf="showActionDiv()" class="row text-center my-4">
     <div class="col-lg">
-      <button class="btn btn-primary btn-lg mx-1 my-1 btn-action" id="edit-button">Edit message</button>
+      <button class="btn btn-outline-primary btn-lg mx-1 my-1 btn-action" id="edit-button">Edit message</button>
     </div>
     <div class="col-lg">
-      <button class="btn btn-warning btn-lg mx-1 my-1 btn-action" id="status-button">Mark as unavailble</button>
+      <button class="btn btn-outline-warning btn-lg mx-1 my-1 btn-action" id="status-button">Mark as unavailable</button>
     </div>
     <div class="col-lg">
-      <button class="btn btn-danger btn-lg mx-1 my-1 btn-action" id="delete-button">Delete</button>
+      <button class="btn btn-outline-danger btn-lg mx-1 my-1 btn-action" id="delete-button">Delete</button>
     </div>
   </div>
 
