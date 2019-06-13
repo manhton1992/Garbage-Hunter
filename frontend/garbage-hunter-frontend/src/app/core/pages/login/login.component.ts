@@ -22,28 +22,23 @@ export class LoginComponent implements OnInit {
 
   submitLogin(){
     let response: any ;
-    this.userService.login(this.userLogin.email,this.userLogin.password).subscribe(response => {
-      console.log(response);
-      if (response ){
-        if(response.status != null && response.status == 'success' && response.token){
+    this.userService.login(this.userLogin.email,this.userLogin.password)
+    .subscribe(response => {
           //this.userService.user = response.docs; 
           let user = {
             token: response.token,
           }
           // store user details and jwt token in local storage to keep user logged in between page refreshes
+          localStorage.removeItem('currentUser');
           localStorage.setItem('currentUser', JSON.stringify(user));
+          this.userService.user = response.docs;
+          console.log( this.userService.user)
 
           console.log("login successfully");
           alert ("login successfully");
           
-        } else if (response.status && response.status == '401'){
-          console.log(response.message);
-          alert (response.message);
-        } else {
-          console.log("error when einlogging")
-          alert ("error when einlogging");
-        }
-      }
+    }, error => {
+      alert (error.error['data'].message);
     });
  
   }

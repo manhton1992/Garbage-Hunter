@@ -31,12 +31,12 @@ export class HomeComponent implements OnInit {
     this.getMessages();
     if (this.categoryService.categories.length == 0){
       
-      this.categoryService.getAllCategories().subscribe(response => {
-        if (response && response.status == 'success'){
-          //  response = JSON.parse(response);
-          this.categoryService.categories = response.docs;
+      this.categoryService.getAllCategories()
+      .subscribe(response => {
+          this.categoryService.categories = response;
           console.log("get categories:  " + JSON.stringify(response));
-        }
+      }, error => {
+        console.log("get categories unsuccessfully!");
       })
     } 
 
@@ -57,19 +57,17 @@ export class HomeComponent implements OnInit {
    */
   subcribeSubmit = (): void => {
     console.log(this.selectedCategories);
-    let isSubcribeSuccess: Boolean = false;
-    this.selectedCategories.forEach((element) => {
+    let isSubcribeSuccess: Boolean = true;
+    this.selectedCategories.forEach((category) => {
       let userCategory : UserCategory = {
         userId: this.userService.user._id,
-        categoryId: element._id
+        categoryId: category._id
       }
-      this.userCategoryService.createUserCategory(userCategory).subscribe(
-        response => {
-          if (response && response.status == 'success'){
-            isSubcribeSuccess = true;
-          } else {
-            isSubcribeSuccess = false;
-          }
+      this.userCategoryService.createUserCategory(userCategory)
+      .subscribe(response => {},
+        error => {
+          isSubcribeSuccess = false;
+          alert (error.error['data'].message);
         }
       );
     })

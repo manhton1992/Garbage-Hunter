@@ -68,16 +68,15 @@ export class CreateMessageComponent implements OnInit {
     phone: null,
   }
 
+  listUserIdToSendSubcribeEmail: string[] = [];
+
   ngOnInit() {
     this.setCreator();
     if (this.categoryService.categories.length == 0){
       
       this.categoryService.getAllCategories().subscribe(response => {
-        if (response && response.status == 'success'){
-          //  response = JSON.parse(response);
-          this.categoryService.categories = response.docs;
+          this.categoryService.categories = response;
           console.log("get categories:  " + JSON.stringify(response));
-        }
       })
     }
   }
@@ -90,63 +89,58 @@ export class CreateMessageComponent implements OnInit {
    */
   addNewMessage(){
     let newMessage = Object.assign({},this.newMessage);
+    this.listUserIdToSendSubcribeEmail = [];
     if(this.userService.user){
       // create new message
-      this.messageService.createMessage(newMessage).subscribe(response_message => {
-        if (response_message && response_message.status == 'success'){
+      this.messageService.createMessage(newMessage)
+      .subscribe(response_message => {
 
           if (this.selectedCategories.length > 0){
-            this.selectedCategories.forEach((element) => {
+            this.selectedCategories.forEach((category) => {
               let messageCategory : MessageCategory = {
-                messageId: response_message.docs._id,
-                categoryId: element._id 
+                messageId: response_message._id,
+                categoryId: category._id 
               }
               // create new message category
               this.messageCategoryService.createMessageCategory(messageCategory)
               .subscribe(response_message_category => {
-                if (response_message_category && response_message_category.status == 'success'){
-                  console.log("create message category with category: " + response_message_category.docs.categoryId);
-                } else {
-                  console.log("problem when create message category with category: " + response_message_category.docs.categoryId);
-                }
+                console.log("create message category with category: " + response_message_category.categoryId);
               });
               
               // find user categories , which has the same categoryId
-              this.userCategoryService.getUserCategoryByCategoryId(element._id)
+              this.userCategoryService.getUserCategoryByCategoryId(category._id)
               .subscribe(response_user_category => {
-                if (response_user_category &&  response_user_category.status == 'success'){
-                 
-                  //avoid duplicate userId
-                  let listUserId: string[] = [];
-                  response_user_category.docs.forEach((userCategory) => {
-                    if (!listUserId.includes(userCategory.userId)){
-                      listUserId.push(userCategory.userId);
+
+                  // avoid duplicate userId
+                  response_user_category.forEach( (userCategory) => {
+                    if (!(this.listUserIdToSendSubcribeEmail.includes(userCategory.userId))){
+                      this.listUserIdToSendSubcribeEmail.push(userCategory.userId);
                     }
                   });
-
-                  // send email to each user in the listUserId
-                  if(listUserId.length > 0){
-                    listUserId.forEach((userId) => {
-                      if (this.userService.user._id != userId){
-                        console.log("response user category :" + userId);
-                        console.log("response message category :" + response_message.docs._id);
-                        
-                        this.emailService.sendEmailSubcribe(userId,response_message.docs._id).subscribe( res => {
-                          if (res && res.status == 'success'){
-                            console.log("send a maching message to user: " + userId);
-                          } else {
-                            console.log("problem when sending subcribe email");
-                          }
-                        });
-                      }
-                    });
-                  }
+              });
+            });
+            setTimeout(() => {
+              // send email to each user in the listUserId
+              console.log("soifhoiewhfieh");
+              console.log(this.listUserIdToSendSubcribeEmail);
+              console.log(this.listUserIdToSendSubcribeEmail.length); 
+              this.listUserIdToSendSubcribeEmail.forEach((userId) => {
+                if (this.userService.user._id != userId){
+                  console.log("response user category :" + userId);
+                  console.log("response message category :" + response_message._id);
+                  
+                  this.emailService.sendEmailSubcribe(userId,response_message._id)
+                  .subscribe( res => {
+                    console.log("send a maching message to user: " + userId);
+                  });
                 }
               });
-            })
+            },2000);
           }
           alert ("create message successfully");
-        }
+      },error => {
+        alert (error.error['data'].message);
+        //alert("Fail! Please check input again");
       });
     } else {
       alert ("please login to create new message");

@@ -56,9 +56,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
             });
         } else {
             // this user is not admin
-            res.status(200).send({
+            res.status(400).send({
                 data: {
                     status: 'fail',
+                    message: 'this user is not admin'
                 },
             });
         }
@@ -98,7 +99,7 @@ export const registerUser = async (req: Request, res: Response) => {
                 });
             } 
         } else {
-            res.status(500).send({
+            res.status(400).send({
                 data: {
                     status: 'fail',
                     message: 'this email is already registered'
@@ -197,21 +198,22 @@ export const login = async (req: Request, res: Response) => {
                     res.status(200).send({
                         data: {
                             status: 'success',
+                            docs: singleUser,
                             token: token,
                         },
                     });
                 } else {
-                    res.status(200).send({
+                    res.status(400).send({
                         data: {
-                            status: '401',
+                            status: 'error',
                             message: 'please confirm the email'
                         },
                     });
                 }
             } else {
-                res.status(200).send({
+                res.status(400).send({
                     data: {
-                        status: '401',
+                        status: 'error',
                         message: 'false password. Please try again'
                     },
                 });
@@ -220,9 +222,9 @@ export const login = async (req: Request, res: Response) => {
        } else {
        
         // user does not exist
-        res.status(200).send({
+        res.status(400).send({
             data: {
-                status: '401',
+                status: 'error',
                 message: 'user does not exist'
             },
         });

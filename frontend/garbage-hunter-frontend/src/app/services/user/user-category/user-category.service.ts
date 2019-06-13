@@ -22,7 +22,7 @@ export class UserCategoryService {
    */
   getAllUserCategories = (query: any): Observable<UserCategory[]> => {
     return this.http.get<UserCategory[]>(this.userCategoryUrl, { params: query }).pipe(
-      map((response) => response['data']),
+      map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
   };
@@ -33,10 +33,10 @@ export class UserCategoryService {
    * @returns {Observable<UserCategory>}
    * @memberof UserCategoryService
    */
-  getUserCategoryByCategoryId = (categoryid: string): Observable<any> => {
+  getUserCategoryByCategoryId = (categoryid: string): Observable<UserCategory[]> => {
     const url = `${this.userCategoryUrl}/${categoryid}`;
-    return this.http.get<any>(url).pipe(
-      map((response) => response['data']),
+    return this.http.get<UserCategory[]>(url).pipe(
+      map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
   };
@@ -47,9 +47,9 @@ export class UserCategoryService {
    * @returns {Observable<UserCategory>}
    * @memberof UserCategoryService
    */
-  createUserCategory = (userCategory: UserCategory): Observable<any> => {
-    return this.http.post<any>(this.userCategoryUrl, userCategory).pipe(
-      map((response) => response['data']),
+  createUserCategory = (userCategory: UserCategory): Observable<UserCategory> => {
+    return this.http.post<UserCategory>(this.userCategoryUrl, userCategory).pipe(
+      map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
   };
