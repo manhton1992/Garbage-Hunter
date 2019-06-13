@@ -22,9 +22,9 @@ export class CategoryService {
    * @returns {Observable<Category>[]}
    * @memberof CategoryService
    */
-  getAllCategories = (): Observable<any> => {
-    return this.http.get<any>(this.categoryUrl).pipe(
-      map((response) => response['data']),
+  getAllCategories = (): Observable<Category[]> => {
+    return this.http.get<Category[]>(this.categoryUrl).pipe(
+      map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
   };
@@ -34,10 +34,10 @@ export class CategoryService {
    * @returns {Observable<Message>}
    * @memberof CategoryService
    */
-  getCategoryById = (categoryid: string): Observable<any> => {
+  getCategoryById = (categoryid: string): Observable<Category> => {
     const url = `${this.categoryUrl}/${categoryid}`;
-    return this.http.get<any>(url).pipe(
-      map((response) => response['data']),
+    return this.http.get<Category>(url).pipe(
+      map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
   };
@@ -47,9 +47,9 @@ export class CategoryService {
    * @returns {Observable<Category>}
    * @memberof CategoryService
    */
-  createCategory = (category: Category): Observable<any> => {
-    return this.http.post<any>(this.categoryUrl, category).pipe(
-      map((response) => response['data']),
+  createCategory = (category: Category): Observable<Category> => {
+    return this.http.post<Category>(this.categoryUrl, category).pipe(
+      map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
   };

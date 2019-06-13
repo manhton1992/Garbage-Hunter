@@ -43,7 +43,7 @@ export const getUserCategory = async (req: Request, res: Response) => {
 export const createUserCategory = async (req: Request, res: Response) => {
     try {
         const newUserCategory: IUserCategoryModel = await userCategory.create(req.body);
-        res.status(201).send({
+        res.status(200).send({
             data: {
                 status: 'success',
                 docs: newUserCategory,
