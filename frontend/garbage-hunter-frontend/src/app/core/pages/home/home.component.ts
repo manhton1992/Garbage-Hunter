@@ -32,9 +32,9 @@ export class HomeComponent implements OnInit {
     if (this.categoryService.categories.length == 0){
       
       this.categoryService.getAllCategories().subscribe(response => {
-        if (response){
+        if (response && response.status == 'success'){
           //  response = JSON.parse(response);
-          this.categoryService.categories = response;
+          this.categoryService.categories = response.docs;
           console.log("get categories:  " + JSON.stringify(response));
         }
       })
@@ -51,9 +51,13 @@ export class HomeComponent implements OnInit {
        this.messages = messages;
      });
   };
-s
+
+  /**
+   * create user category for subcribe category
+   */
   subcribeSubmit = (): void => {
     console.log(this.selectedCategories);
+    let isSubcribeSuccess: Boolean = false;
     this.selectedCategories.forEach((element) => {
       let userCategory : UserCategory = {
         userId: this.userService.user._id,
@@ -62,12 +66,18 @@ s
       this.userCategoryService.createUserCategory(userCategory).subscribe(
         response => {
           if (response && response.status == 'success'){
-            alert ("subcribe successfully");
+            isSubcribeSuccess = true;
           } else {
-            alert ("subcribe unsuccessfully. Please try again");
+            isSubcribeSuccess = false;
           }
         }
       );
     })
+
+    if (isSubcribeSuccess){
+      alert ("subcribe successfully");
+    } else {
+      alert ("subcribe unsuccessfully. Please try again");
+    }
   }
 }

@@ -118,7 +118,7 @@ export const getSingleUserCategory = async (req: Request, res: Response) => {
 export const getUserCategoryByCategoryId = async (req: Request, res: Response) => {
     try {
         const userCategories: IUserCategoryModel[] | null 
-        = await userCategory.find({categoryId : req.params.userCategoryId});
+        = await userCategory.find({categoryId : req.params.categoryId});
          res.status(200).send({
             data: {
                 status: 'success',

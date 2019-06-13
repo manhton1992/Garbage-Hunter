@@ -20,9 +20,9 @@ export class MessageCategoryService {
    * @returns {Observable<MessageCategory>[]}
    * @memberof MessageCategoryService
    */
-  getAllMessageCategories = (query: any): Observable<MessageCategory[]> => {
-    return this.http.get<MessageCategory[]>(this.messageCategoryUrl, { params: query }).pipe(
-      map((response) => response['data']['docs']),
+  getAllMessageCategories = (query: any): Observable<any> => {
+    return this.http.get<any>(this.messageCategoryUrl, { params: query }).pipe(
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };
@@ -32,10 +32,10 @@ export class MessageCategoryService {
    * @returns {Observable<MessageCategory>}
    * @memberof MessageCategoryService
    */
-  getMessageCategoryById = (messagecategoryid: string): Observable<MessageCategory> => {
+  getMessageCategoryById = (messagecategoryid: string): Observable<any> => {
     const url = `${this.messageCategoryUrl}/${messagecategoryid}`;
-    return this.http.get<MessageCategory>(url).pipe(
-      map((response) => response['data']['docs']),
+    return this.http.get<any>(url).pipe(
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };
@@ -45,9 +45,9 @@ export class MessageCategoryService {
    * @returns {Observable<MessageCategory>}
    * @memberof MessageCategoryService
    */
-  createMessageCategory = (messageCategory: MessageCategory): Observable<MessageCategory> => {
-    return this.http.post<MessageCategory>(this.messageCategoryUrl, messageCategory).pipe(
-      map((response) => response['data']['docs']),
+  createMessageCategory = (messageCategory: MessageCategory): Observable<any> => {
+    return this.http.post<any>(this.messageCategoryUrl, messageCategory).pipe(
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };

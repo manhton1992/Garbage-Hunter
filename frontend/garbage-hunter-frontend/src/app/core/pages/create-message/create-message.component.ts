@@ -8,6 +8,7 @@ import { CategoryService } from 'src/app/services/category/category.service';
 import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
 import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
 import { MessageCategory } from 'src/app/models/message-category.model';
+import { EmailService } from 'src/app/services/email/email.service';
 
 /**
  * @description class for the uploaded image
@@ -32,7 +33,8 @@ export class CreateMessageComponent implements OnInit {
     private mapService: MapService,
     private categoryService: CategoryService,
     private messageCategoryService: MessageCategoryService,
-    private userCategoryService: UserCategoryService) { }
+    private userCategoryService: UserCategoryService,
+    private emailService: EmailService) { }
 
   /**
    * @description selected image of the input file
@@ -71,38 +73,76 @@ export class CreateMessageComponent implements OnInit {
     if (this.categoryService.categories.length == 0){
       
       this.categoryService.getAllCategories().subscribe(response => {
-        if (response){
+        if (response && response.status == 'success'){
           //  response = JSON.parse(response);
-          this.categoryService.categories = response;
+          this.categoryService.categories = response.docs;
           console.log("get categories:  " + JSON.stringify(response));
         }
       })
     }
   }
-
+  /**
+   * 1.add new message
+   * 2.create new message category
+   * 3.find match user category
+   * 4.avoid duplicate email
+   * 5.send email to subcribe user
+   */
   addNewMessage(){
     let newMessage = Object.assign({},this.newMessage);
     if(this.userService.user){
-      this.messageService.createMessage(newMessage).subscribe(response => {
-        if (response){
-          // create message category and find user to send email
+      // create new message
+      this.messageService.createMessage(newMessage).subscribe(response_message => {
+        if (response_message && response_message.status == 'success'){
+
           if (this.selectedCategories.length > 0){
             this.selectedCategories.forEach((element) => {
               let messageCategory : MessageCategory = {
-                messageId: response._id,
+                messageId: response_message.docs._id,
                 categoryId: element._id 
               }
-              // send request to create new message category
+              // create new message category
               this.messageCategoryService.createMessageCategory(messageCategory)
-              .subscribe(response => {
-                console.log("create message category with category: " + response.categoryId);
+              .subscribe(response_message_category => {
+                if (response_message_category && response_message_category.status == 'success'){
+                  console.log("create message category with category: " + response_message_category.docs.categoryId);
+                } else {
+                  console.log("problem when create message category with category: " + response_message_category.docs.categoryId);
+                }
               });
+              
+              // find user categories , which has the same categoryId
+              this.userCategoryService.getUserCategoryByCategoryId(element._id)
+              .subscribe(response_user_category => {
+                if (response_user_category &&  response_user_category.status == 'success'){
+                 
+                  //avoid duplicate userId
+                  let listUserId: string[] = [];
+                  response_user_category.docs.forEach((userCategory) => {
+                    if (!listUserId.includes(userCategory.userId)){
+                      listUserId.push(userCategory.userId);
+                    }
+                  });
 
-              // find user category , which has the same category
-
-              // send email to this user
-
-
+                  // send email to each user in the listUserId
+                  if(listUserId.length > 0){
+                    listUserId.forEach((userId) => {
+                      if (this.userService.user._id != userId){
+                        console.log("response user category :" + userId);
+                        console.log("response message category :" + response_message.docs._id);
+                        
+                        this.emailService.sendEmailSubcribe(userId,response_message.docs._id).subscribe( res => {
+                          if (res && res.status == 'success'){
+                            console.log("send a maching message to user: " + userId);
+                          } else {
+                            console.log("problem when sending subcribe email");
+                          }
+                        });
+                      }
+                    });
+                  }
+                }
+              });
             })
           }
           alert ("create message successfully");
