@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/internal/operators';
@@ -12,17 +12,19 @@ import { environment } from 'src/environments/environment';
 export class CategoryService {
 
   private categoryUrl = `${environment.baseUrl}/categories`;
+  public categories: Category[] = [];
 
   constructor(private http: HttpClient) { }
+
 
   /**
    * @description get all categories in a message.
    * @returns {Observable<Category>[]}
    * @memberof CategoryService
    */
-  getAllCategories = (query: any): Observable<Category[]> => {
-    return this.http.get<Category[]>(this.categoryUrl,{ params: query }).pipe(
-      map((response) => response['data']['docs']),
+  getAllCategories = (): Observable<any> => {
+    return this.http.get<any>(this.categoryUrl).pipe(
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };
@@ -32,10 +34,10 @@ export class CategoryService {
    * @returns {Observable<Message>}
    * @memberof CategoryService
    */
-  getCategoryById = (categoryid: string): Observable<Category> => {
+  getCategoryById = (categoryid: string): Observable<any> => {
     const url = `${this.categoryUrl}/${categoryid}`;
-    return this.http.get<Category>(url).pipe(
-      map((response) => response['data']['docs']),
+    return this.http.get<any>(url).pipe(
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };
@@ -45,9 +47,9 @@ export class CategoryService {
    * @returns {Observable<Category>}
    * @memberof CategoryService
    */
-  createCategory = (category: Category): Observable<Category> => {
-    return this.http.post<Category>(this.categoryUrl, category).pipe(
-      map((response) => response['data']['docs']),
+  createCategory = (category: Category): Observable<any> => {
+    return this.http.post<any>(this.categoryUrl, category).pipe(
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };

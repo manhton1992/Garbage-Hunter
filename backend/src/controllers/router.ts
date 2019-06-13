@@ -11,6 +11,7 @@ import { commentRouter } from './comment/comment.router';
 import { categoryRouter } from './category/category.router';
 import { messageCategoryRouter } from './message/message-category/message-category.router';
 import { userCategoryRouter } from './user/user-category/user-category.router';
+import { emailRouter } from './email/email.router';
 
 export const globalRouter: express.Router = express.Router({ mergeParams: true });
 
@@ -26,3 +27,5 @@ globalRouter.use('/categories', categoryRouter);
 globalRouter.use('/message_category', messageCategoryRouter);
 /** /api/user_category */
 globalRouter.use('/user_category', userCategoryRouter);
+/** /api/email */
+globalRouter.use('/email', emailRouter);

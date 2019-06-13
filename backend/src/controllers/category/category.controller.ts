@@ -15,14 +15,24 @@ import { ICategoryModel, category } from '../../models/category.model';
 export const getCategories = async (req: Request, res: Response) => {
     try {
 
-        const categories: ICategoryModel[] = await category.find(req.query);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                items: categories.length,
-                docs: categories,
-            },
-        });
+        const categories: ICategoryModel[] = await category.find();
+        if (categories){
+            res.status(200).send({
+                data: {
+                    status: 'success',
+                    items: categories.length,
+                    docs: categories,
+                },
+            });
+        } else {
+            res.status(200).send({
+                data: {
+                    status: 'fail',
+                    message: 'no categories avaiable'
+                },
+            });
+        }
+
     } catch (error) {
         res.status(400).send({
             data: {

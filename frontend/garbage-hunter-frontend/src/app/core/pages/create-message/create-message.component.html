@@ -48,19 +48,24 @@
             [ngModelOptions]="{ standalone: true }" required="required" class="form-control" rows="6"></textarea>
         </div>
         <!-- End of description input -->
-      
-        
-            <!-- Category input -->
-            <div class="form-group">
-              <label for="categoryInput"> Select categories: </label>
-              <select [(ngModel)]="selectedCategories" [ngModelOptions]="{ standalone: true }" id="categoryInput"
-                required="required" class="form-control" size="6" multiple>
-                <option *ngFor="let category of categories" [ngValue]="category">
-                  {{category.name | uppercase}}
-                </option>
-              </select>
-            </div>
-          
+        <!-- Category input -->
+        <div class="form-group">
+            <label for="categoryInput"> Select categories: </label>
+            <select
+              [(ngModel)]="selectedCategories"
+              [ngModelOptions]="{ standalone: true }"
+              id="categoryInput"
+              required="required"
+              class="form-control"
+              size="6"
+              multiple
+              >
+              <option *ngFor="let category of categoryService.categories" [ngValue]="category">
+                {{category.name | uppercase}}
+              </option>
+            </select>
+          </div>
+
           <!-- End of category input -->
           <!-- Address input -->
         

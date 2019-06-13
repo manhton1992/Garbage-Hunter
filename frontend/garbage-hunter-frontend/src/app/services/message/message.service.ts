@@ -27,7 +27,7 @@ export class MessageService {
    */
   getAllMessages = (query: any): Observable<Message[]> => {
     return this.http.get<Message[]>(this.messageUrl, { params: query }).pipe(
-      map((response) => response['data']['docs']),
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };
@@ -37,10 +37,10 @@ export class MessageService {
    * @returns {Observable<Message>}
    * @memberof MessageService
    */
-  getMessageById = (messageid: string): Observable<Message> => {
+  getMessageById = (messageid: string): Observable<any> => {
     const url = `${this.messageUrl}/${messageid}`;
-    return this.http.get<Message>(url).pipe(
-      map((response) => response['data']['docs']),
+    return this.http.get<any>(url).pipe(
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };
@@ -50,9 +50,9 @@ export class MessageService {
    * @returns {Observable<Message>}
    * @memberof MessageService
    */
-  createMessage = (message: Message): Observable<Message> => {
-    return this.http.post<Message>(this.messageUrl, message).pipe(
-      map((response) => response['data']['docs']),
+  createMessage = (message: Message): Observable<any> => {
+    return this.http.post<any>(this.messageUrl, message).pipe(
+      map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
   };

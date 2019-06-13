@@ -3,7 +3,7 @@
         "host" : "mongodb://localhost:27017/test-garbage-hunter"
     },
     "server": {
-        "port" : 3009
+        "port" : 3000
     },
     "email": {
         "service-name": "gmail",
@@ -17,7 +17,8 @@
         "secret-key": "my-secret-key-from-linh"
     },
     "url": {
-        "confirm-email": "http://localhost:3000/api/users/confirm_email"
+        "confirm-email": "http://localhost:3000/api/users/confirm_email",
+        "show-message": "http://localhost:4200/messages"
     },
     "aws": {
         "AWS_SECRET_ACCESS": "fTwsNe2ZEwVhScNVMJgRkcG2lulemr2KApB950Vh",

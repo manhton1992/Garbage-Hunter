@@ -4,6 +4,11 @@ import {Message} from "../../../models/message.model";
 import {MessageService} from "../../../services/message/message.service";
 import { UserService } from 'src/app/services/user/user.service';
 import { Category } from 'src/app/models/category.model';
+import { CategoryService } from 'src/app/services/category/category.service';
+import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
+import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
+import { MessageCategory } from 'src/app/models/message-category.model';
+import { EmailService } from 'src/app/services/email/email.service';
 
 /**
  * @description class for the uploaded image
@@ -23,6 +28,14 @@ class ImageSnippet {
 })
 export class CreateMessageComponent implements OnInit {
 
+  constructor(private userService: UserService, 
+    private messageService : MessageService, 
+    private mapService: MapService,
+    private categoryService: CategoryService,
+    private messageCategoryService: MessageCategoryService,
+    private userCategoryService: UserCategoryService,
+    private emailService: EmailService) { }
+
   /**
    * @description selected image of the input file
    * @type {ImageSnippet}
@@ -38,39 +51,6 @@ export class CreateMessageComponent implements OnInit {
   selectedCategories: Category[];
 
   /**
-   * @description list of categories.
-   * TODO still dummy data, need to fetch from db.
-   * @type {Category[]}
-   * @memberof CreateMessageComponent
-   */
-  categories: Category[] = [
-    {
-      _id: '1',
-      name: 'chair'
-    },
-    {
-      _id: '2',
-      name: 'furniture'
-    },
-    {
-      _id: '3',
-      name: 'electronic'
-    },
-    {
-      _id: '4',
-      name: 'bed'
-    },
-    {
-      _id: '5',
-      name: 'table'
-    },
-    {
-      _id: '6',
-      name: 'sofa'
-    },
-  ];
-
-  /**
    * @description message that will be created.
    * @type {Message}
    * @memberof CreateMessageComponent
@@ -78,7 +58,7 @@ export class CreateMessageComponent implements OnInit {
   newMessage: Message = {
     title: '',
     description: '',
-    creatorId: '12345',
+    creatorId: this.userService.user ? this.userService.user._id : "12345",
     lon: null,
     lat: null,
     address: '',
@@ -87,15 +67,91 @@ export class CreateMessageComponent implements OnInit {
     imageUrl: 'https://cdn1.stuttgarter-zeitung.de/media.media.ec722513-be5c-474a-88d9-db2b05e31ccb.original1024.jpg',
     phone: null,
   }
-  constructor(private userService: UserService, private messageService : MessageService, private mapService: MapService) { }
 
   ngOnInit() {
     this.setCreator();
+    if (this.categoryService.categories.length == 0){
+      
+      this.categoryService.getAllCategories().subscribe(response => {
+        if (response && response.status == 'success'){
+          //  response = JSON.parse(response);
+          this.categoryService.categories = response.docs;
+          console.log("get categories:  " + JSON.stringify(response));
+        }
+      })
+    }
   }
-
+  /**
+   * 1.add new message
+   * 2.create new message category
+   * 3.find match user category
+   * 4.avoid duplicate email
+   * 5.send email to subcribe user
+   */
   addNewMessage(){
     let newMessage = Object.assign({},this.newMessage);
-    this.messageService.createMessage(newMessage).subscribe();
+    if(this.userService.user){
+      // create new message
+      this.messageService.createMessage(newMessage).subscribe(response_message => {
+        if (response_message && response_message.status == 'success'){
+
+          if (this.selectedCategories.length > 0){
+            this.selectedCategories.forEach((element) => {
+              let messageCategory : MessageCategory = {
+                messageId: response_message.docs._id,
+                categoryId: element._id 
+              }
+              // create new message category
+              this.messageCategoryService.createMessageCategory(messageCategory)
+              .subscribe(response_message_category => {
+                if (response_message_category && response_message_category.status == 'success'){
+                  console.log("create message category with category: " + response_message_category.docs.categoryId);
+                } else {
+                  console.log("problem when create message category with category: " + response_message_category.docs.categoryId);
+                }
+              });
+              
+              // find user categories , which has the same categoryId
+              this.userCategoryService.getUserCategoryByCategoryId(element._id)
+              .subscribe(response_user_category => {
+                if (response_user_category &&  response_user_category.status == 'success'){
+                 
+                  //avoid duplicate userId
+                  let listUserId: string[] = [];
+                  response_user_category.docs.forEach((userCategory) => {
+                    if (!listUserId.includes(userCategory.userId)){
+                      listUserId.push(userCategory.userId);
+                    }
+                  });
+
+                  // send email to each user in the listUserId
+                  if(listUserId.length > 0){
+                    listUserId.forEach((userId) => {
+                      if (this.userService.user._id != userId){
+                        console.log("response user category :" + userId);
+                        console.log("response message category :" + response_message.docs._id);
+                        
+                        this.emailService.sendEmailSubcribe(userId,response_message.docs._id).subscribe( res => {
+                          if (res && res.status == 'success'){
+                            console.log("send a maching message to user: " + userId);
+                          } else {
+                            console.log("problem when sending subcribe email");
+                          }
+                        });
+                      }
+                    });
+                  }
+                }
+              });
+            })
+          }
+          alert ("create message successfully");
+        }
+      });
+    } else {
+      alert ("please login to create new message");
+    }
+
   }
 
   /**
