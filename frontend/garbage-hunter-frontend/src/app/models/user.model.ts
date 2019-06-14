@@ -10,6 +10,6 @@ export class User{
     passwordHash: string;
     isAdmin: boolean;
     isConfirm: boolean;
-    profileImageUrl: string;
+    profileImageUrl?: string;
     created_at: Date;
 }

@@ -146,7 +146,7 @@ export const deleteSingleMessageCategory = async (req: Request, res: Response) =
         res.status(200).send({
             data: {
                 status: 'success',
-                docs: deleteAllMessageCategory,
+                docs: deleteMessageCategory,
             },
         });
     } catch (error) {

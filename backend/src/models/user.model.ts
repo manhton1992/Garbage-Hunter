@@ -14,13 +14,13 @@ import uniqueValidator from 'mongoose-unique-validator';
  */
 export interface IUserModel extends mongoose.Document {
     email: string;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
+    firstName?: string;
+    lastName?: string;
+    phoneNumber?: string;
     passwordHash: string;
     isAdmin: boolean;
     isConfirm: boolean;
-    profileImageUrl: string;
+    profileImageUrl?: string;
     created_at: Date;
 }
 

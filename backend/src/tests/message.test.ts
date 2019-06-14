@@ -263,6 +263,7 @@ describe('Message API', () => {
         });
     });
 
+    // TODO find out how to send image file
     /**
      * Test the POST /api/messages/image_upload
      */

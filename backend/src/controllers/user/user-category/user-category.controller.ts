@@ -43,7 +43,7 @@ export const getUserCategory = async (req: Request, res: Response) => {
 export const createUserCategory = async (req: Request, res: Response) => {
     try {
         const newUserCategory: IUserCategoryModel = await userCategory.create(req.body);
-        res.status(200).send({
+        res.status(201).send({
             data: {
                 status: 'success',
                 docs: newUserCategory,
@@ -68,7 +68,7 @@ export const createUserCategory = async (req: Request, res: Response) => {
 export const deleteAllUserCategory = async (req: Request, res: Response) => {
     try {
         await userCategory.deleteMany({});
-        res.send({
+        res.status(200).send({
             data: {
                 status: 'success',
                 message: 'all User category are deleted',
@@ -117,8 +117,7 @@ export const getSingleUserCategory = async (req: Request, res: Response) => {
  */
 export const getUserCategoryByCategoryId = async (req: Request, res: Response) => {
     try {
-        const userCategories: IUserCategoryModel[] | null 
-        = await userCategory.find({categoryId : req.params.categoryId});
+        const userCategories: IUserCategoryModel | null = await userCategory.findById(req.params.categoryId);
          res.status(200).send({
             data: {
                 status: 'success',
@@ -173,7 +172,7 @@ export const deleteSingleUserCategory = async (req: Request, res: Response) => {
         res.status(200).send({
             data: {
                 status: 'success',
-                docs: deleteAllUserCategory,
+                docs: deleteUserCategory,
             },
         });
     } catch (error) {

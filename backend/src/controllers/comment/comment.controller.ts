@@ -1,5 +1,5 @@
 /**
- * Controller for /api/messages/:messageid/comments
+ * Controller for /api/comments
  */
 
 /** Package imports */
@@ -66,7 +66,7 @@ export const deleteAllComments = async (req: Request, res: Response) => {
         res.send({
             data: {
                 status: 'success',
-                message: `all comments in messageid:${req.params.messageid} are deleted`,
+                message: `all comments are deleted`,
             },
         });
     } catch (error) {
@@ -86,7 +86,7 @@ export const deleteAllComments = async (req: Request, res: Response) => {
  */
 export const getSingleComment = async (req: Request, res: Response) => {
     try {
-        const singleComment: ICommentModel | null = await comment.findById(req.params.messageid);
+        const singleComment: ICommentModel | null = await comment.findById(req.params.commentid);
         res.status(200).send({
             data: {
                 status: 'success',

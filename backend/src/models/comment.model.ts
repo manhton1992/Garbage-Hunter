@@ -16,7 +16,7 @@ export interface ICommentModel extends mongoose.Document {
     creatorId: string;
     parentId: string;
     messageId: string;
-    imageUrl: string;
+    imageUrl?: string;
     archive: boolean;
     created_at: Date;
 }
@@ -49,6 +49,11 @@ export const CommentSchema: mongoose.Schema = new mongoose.Schema(
             required: true,
             default: false,
         },
+        imageUrl: {
+            type: String,
+            required: false,
+            default: '',
+        }
     },
     {
         timestamps: {

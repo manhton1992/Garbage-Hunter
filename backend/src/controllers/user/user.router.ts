@@ -18,7 +18,6 @@ import {
     deleteSingleUserWithToken,
     registerUser,
     confirmEmail,
-
     createUser,
     getSingleUser,
     updateSingleUser,

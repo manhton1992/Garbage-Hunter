@@ -8,7 +8,7 @@ export class Comment{
     creatorId: string;
     parentId: string;
     messageId: string;
-    imageUrl: string;
+    imageUrl?: string;
     archive: boolean;
     created_at?: Date;
 }
