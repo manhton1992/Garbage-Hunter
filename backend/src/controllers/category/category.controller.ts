@@ -14,25 +14,14 @@ import { ICategoryModel, category } from '../../models/category.model';
  */
 export const getCategories = async (req: Request, res: Response) => {
     try {
-
         const categories: ICategoryModel[] = await category.find();
-        if (categories){
-            res.status(200).send({
-                data: {
-                    status: 'success',
-                    items: categories.length,
-                    docs: categories,
-                },
-            });
-        } else {
-            res.status(200).send({
-                data: {
-                    status: 'fail',
-                    message: 'no categories avaiable'
-                },
-            });
-        }
-
+        res.status(200).send({
+            data: {
+                status: 'success',
+                items: categories.length,
+                docs: categories,
+            },
+        });
     } catch (error) {
         res.status(400).send({
             data: {
@@ -67,7 +56,6 @@ export const createCategory = async (req: Request, res: Response) => {
     }
 };
 
-
 /**
  * Delete all categories
  * @param req
@@ -76,7 +64,7 @@ export const createCategory = async (req: Request, res: Response) => {
 export const deleteAllCategories = async (req: Request, res: Response) => {
     try {
         await category.deleteMany({});
-        res.send({
+        res.status(200).send({
             data: {
                 status: 'success',
                 message: 'all categories are deleted',
@@ -123,9 +111,13 @@ export const getSingleCategory = async (req: Request, res: Response) => {
  */
 export const updateSingleCategory = async (req: Request, res: Response) => {
     try {
-        const updateCategory: ICategoryModel | null = await category.findByIdAndUpdate(req.params.categoryId, req.body, {
-            new: true,
-        });
+        const updateCategory: ICategoryModel | null = await category.findByIdAndUpdate(
+            req.params.categoryId,
+            req.body,
+            {
+                new: true,
+            }
+        );
         res.status(200).send({
             data: {
                 status: 'success',
@@ -165,4 +157,3 @@ export const deleteSingleCategory = async (req: Request, res: Response) => {
         });
     }
 };
-

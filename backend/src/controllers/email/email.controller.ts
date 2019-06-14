@@ -21,7 +21,12 @@ export const sendEmailSubcribe = async (req: Request, res: Response) => {
                 }
             });
         } else {
-            throw ("userId or messageId underfind");
+            res.status(400).send({
+                data: {
+                    status: 'error',
+                    message: 'userId or messageId is undefined',
+                },
+            });
         }
 
     } catch (error) {

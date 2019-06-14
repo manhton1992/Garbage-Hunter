@@ -160,7 +160,7 @@ export const exportUsersAsCsv = async (req: Request, res: Response) => {
 export const deleteAllUsers = async (req: Request, res: Response) => {
     try {
         await user.deleteMany({});
-        res.send({
+        res.status(200).send({
             data: {
                 status: 'success',
                 message: 'all users are deleted',
@@ -222,7 +222,7 @@ export const login = async (req: Request, res: Response) => {
        } else {
        
         // user does not exist
-        res.status(400).send({
+        res.status(404).send({
             data: {
                 status: 'error',
                 message: 'user does not exist'
@@ -437,8 +437,9 @@ export const createUser = async (req: Request, res: Response) => {
 export const getSingleUser = async (req: Request, res: Response) => {
     try {
         const singleUser: IUserModel | null = await user.findById(req.params.userid);
-        if (singleUser)
-             sendMailRegister(singleUser);
+        if (singleUser) {
+            sendMailRegister(singleUser);
+        }
         res.status(200).send({
             data: {
                 status: 'success',
@@ -521,6 +522,7 @@ export const confirmEmail = async (req: Request, res: Response) => {
             res.status(200).send({
                 data: {
                     status: 'success',
+                    docs: updateUser,
                 },
             });
         }

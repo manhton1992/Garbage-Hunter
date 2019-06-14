@@ -68,7 +68,7 @@ export const createMessageCategory = async (req: Request, res: Response) => {
 export const deleteAllMessageCategory = async (req: Request, res: Response) => {
     try {
         await messageCategory.deleteMany({});
-        res.send({
+        res.status(200).send({
             data: {
                 status: 'success',
                 message: 'all message category are deleted',

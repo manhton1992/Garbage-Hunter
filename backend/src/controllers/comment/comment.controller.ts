@@ -63,7 +63,7 @@ export const createComment = async (req: Request, res: Response) => {
 export const deleteAllComments = async (req: Request, res: Response) => {
     try {
         await comment.deleteMany({});
-        res.send({
+        res.status(200).send({
             data: {
                 status: 'success',
                 message: `all comments are deleted`,

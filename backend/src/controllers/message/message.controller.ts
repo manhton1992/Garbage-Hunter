@@ -108,7 +108,7 @@ export const exportMessagesAsCsv = async (req: Request, res: Response) => {
 export const deleteAllMessages = async (req: Request, res: Response) => {
     try {
         await message.deleteMany({});
-        res.send({
+        res.status(200).send({
             data: {
                 status: 'success',
                 message: 'all messages are deleted',
