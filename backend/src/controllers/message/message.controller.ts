@@ -215,7 +215,6 @@ export const uploadImage = async (req: any, res: Response) => {
                     },
                 });
             } else {
-                console.log(req.file.location);
                 res.status(200).send({
                     data: {
                         status: 'success',

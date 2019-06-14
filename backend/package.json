@@ -4,7 +4,7 @@
   "description": "backend part of the app",
   "main": "server.js",
   "scripts": {
-    "test": "NODE_ENV=test mocha -r ts-node/register src/test/*.ts --exit",
+    "test": "NODE_ENV=test mocha -r ts-node/register src/tests/*.ts --exit",
     "lint": "tslint -c tslint.json 'src/**/*.ts' --project tsconfig.json",
     "build": "tsc",
     "watch": "tsc --sourceMap -w &",
