@@ -1,0 +1,26 @@
+image: node:latest
+
+stages:
+    - build_backend
+    - test_backend
+
+services:
+    - mongo
+
+prepare_backend:
+    stage: build_backend
+    script:
+        - cd backend
+        - npm ci
+    cache:
+        paths:
+            - backend/node_modules/
+    artifacts:
+        paths:
+            - backend/node_modules/
+
+test_backend:
+    stage: test_backend
+    script:
+        - cd backend
+        - npm test
