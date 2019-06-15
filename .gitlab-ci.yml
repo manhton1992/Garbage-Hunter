@@ -1,17 +1,18 @@
 image: node:latest
 
 stages:
-    - build_backend
     - test_backend
+    - test_frontend
 
 services:
     - mongo
 
-prepare_backend:
-    stage: build_backend
+test_backend:
+    stage: test_backend
     script:
         - cd backend
         - npm ci
+        - npm test
     cache:
         paths:
             - backend/node_modules/
@@ -19,8 +20,16 @@ prepare_backend:
         paths:
             - backend/node_modules/
 
-test_backend:
-    stage: test_backend
+test_frontend:
+    stage: test_frontend
+    image: trion/ng-cli-karma
     script:
-        - cd backend
-        - npm test
+        - cd frontend/garbage-hunter-frontend
+        - npm ci
+        - npm run test-ci
+    cache:
+        paths:
+            - frontend/garbage-hunter-frontend/node_modules/
+    artifacts:
+        paths:
+            - frontend/garbage-hunter-frontend/node_modules/
