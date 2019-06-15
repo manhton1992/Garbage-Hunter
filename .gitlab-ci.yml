@@ -16,9 +16,6 @@ test_backend:
     cache:
         paths:
             - backend/node_modules/
-    artifacts:
-        paths:
-            - backend/node_modules/
 
 test_frontend:
     stage: test_frontend
@@ -28,8 +25,5 @@ test_frontend:
         - npm ci
         - npm run test-ci
     cache:
-        paths:
-            - frontend/garbage-hunter-frontend/node_modules/
-    artifacts:
         paths:
             - frontend/garbage-hunter-frontend/node_modules/
