@@ -5,7 +5,7 @@ stages:
     - test_frontend
 
 services:
-    - mongo
+    - mongo:latest
 
 test_backend:
     stage: test_backend
@@ -16,7 +16,7 @@ test_backend:
 
 test_frontend:
     stage: test_frontend
-    image: trion/ng-cli-karma
+    image: trion/ng-cli-karma:latest
     script:
         - cd frontend/garbage-hunter-frontend
         - npm install
