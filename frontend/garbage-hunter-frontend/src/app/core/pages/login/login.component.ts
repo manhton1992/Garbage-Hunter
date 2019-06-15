@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
+import { Router } from '@angular/router';
+import { headersToString } from 'selenium-webdriver/http';
+import { HeaderComponent } from '../../components/header/header.component';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +17,7 @@ export class LoginComponent implements OnInit {
   };
   passwordType: string = 'password';
   passwordShow: boolean = false;
-  constructor(private userService : UserService) { }
+  constructor(private userService : UserService, private router : Router) { }
 
    
   ngOnInit() {
@@ -36,6 +39,7 @@ export class LoginComponent implements OnInit {
 
           console.log("login successfully");
           alert ("login successfully");
+          this.router.navigate(['/']);
           
     }, error => {
       alert (error.error['data'].message);

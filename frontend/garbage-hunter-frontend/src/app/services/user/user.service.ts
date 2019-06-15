@@ -103,6 +103,13 @@ authenticate(){
   return null;
 }
 
+logout(){
+  this.user = null;
+  localStorage.removeItem("currentUser");
+  alert("Successfully logged out!")
+}
+
+
 }
 
 

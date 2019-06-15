@@ -15,7 +15,8 @@
             <div class="form-group">
                 <label for="passwordLogin">Password</label>
                 <div class="input-group">
-                  <input [type]="passwordType" id="passwordLogin" class="form-control" placeholder="Enter Password" [(ngModel)]="userLogin.password" [ngModelOptions]="{standalone: true}">
+                  <input [type]="passwordType" id="passwordLogin" class="form-control" 
+                          placeholder="Enter Password" [(ngModel)]="userLogin.password" [ngModelOptions]="{standalone: true}" (keyup.enter)="submitLogin()">
                   <div class="input-group-prepend">
                     <div class="input-group-text" (click)="togglePassword()"><i class="fa fa-eye"></i></div>
                   </div>

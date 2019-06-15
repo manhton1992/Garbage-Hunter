@@ -28,6 +28,7 @@ import { ChartLineComponent } from './core/components/chart-line/chart-line.comp
 import { ChartPieComponent } from './core/components/chart-pie/chart-pie.component';
 import { CommentListComponent } from './core/components/comment-list/comment-list.component';
 import { ErrorComponent } from './core/components/error/error.component';
+import { EditComponent } from './core/pages/edit/edit.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +48,8 @@ import { ErrorComponent } from './core/components/error/error.component';
     ChartLineComponent,
     ChartPieComponent,
     CommentListComponent,
-    ErrorComponent
+    ErrorComponent,
+    EditComponent
   ],
   imports: [
     BrowserModule,
