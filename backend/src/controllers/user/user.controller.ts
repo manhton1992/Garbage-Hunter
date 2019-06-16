@@ -438,7 +438,8 @@ export const getSingleUser = async (req: Request, res: Response) => {
     try {
         const singleUser: IUserModel | null = await user.findById(req.params.userid);
         if (singleUser) {
-            sendMailRegister(singleUser);
+            // TODO what for send mail?
+            // sendMailRegister(singleUser);
         }
         res.status(200).send({
             data: {

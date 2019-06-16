@@ -39,7 +39,14 @@ export class CommentComponent implements OnInit {
   }
 
   getComments(): void {
-    this.commentService.getCommentByMessageId(this.thisMessageID).subscribe((comments) => (this.comments = comments));
+    this.commentService.getCommentByMessageId(this.thisMessageID).subscribe((comments) => {
+      comments.forEach( comment => {
+        this.userService.getUserById(comment.creatorId).subscribe(user => {
+          comment.creatorId = user.email;
+        })
+      })
+      this.comments = comments;
+    });
   }
   getMessageId(): void {
     this.route.params.subscribe((params) => {

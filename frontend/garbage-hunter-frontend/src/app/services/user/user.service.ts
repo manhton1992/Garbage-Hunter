@@ -38,6 +38,14 @@ getAllUser(token: string){
       catchError((err) => observableHandleError(err)));
 }
 
+getUserById = (userid: string): Observable<User> => {
+  const url = `${this.userUrl}/${userid}`;
+  return this.http.get<User>(url).pipe(
+    map((response) => response['data']['docs']),
+    catchError((err) => observableHandleError(err))
+  );
+};
+
 /**
  * get user/ login
  * @param email 
