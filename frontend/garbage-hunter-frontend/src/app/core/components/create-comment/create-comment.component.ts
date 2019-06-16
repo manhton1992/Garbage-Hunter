@@ -37,12 +37,13 @@ export class CreateCommentComponent implements OnInit {
         setTimeout(() => {
          console.log("Request time out new Comment!");
         },2000);
-        alert("create message successfully");
+        window.location.reload();
+        alert("COMMENT CREATED! RELOADING PAGE!");
       }, error => {
         alert (error.error['data'].message);
       });
     } else {
-      alert ("please login to create new message");
+      alert ("PLEASE LOGIN TO CREATE COMMENT");
     }
   }
 }

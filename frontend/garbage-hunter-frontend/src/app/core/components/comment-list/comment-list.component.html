@@ -1,7 +1,4 @@
-<div class="">
-  <div *ngFor="let comment of comments">
-    <span class="userNameComment badge badge-pill badge-info"> {{userService.user.email}} : </span>
-    <span> {{comment.text}} </span> <br>
-    <hr>
-  </div>
+<div class="alert alert-light" *ngFor="let comment of comments">
+  <span class="userNameComment badge badge-primary mr-1">{{userService.user.email}} </span>
+  <span> {{comment.text}} </span> <br>
 </div>
