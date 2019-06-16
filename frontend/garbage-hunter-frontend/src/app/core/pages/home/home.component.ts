@@ -13,7 +13,6 @@ import { UserCategoryService } from 'src/app/services/user/user-category/user-ca
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-
   /**
    * @description messages that will be shown.
    * @type {Message[]}
@@ -24,27 +23,32 @@ export class HomeComponent implements OnInit {
   /** all user categories we get at begin */
   userCategories: UserCategory[] = [];
 
+  /** followed categories for subcribe */
+  followedCategories: Category[] = [];
+
   /** selected categories for subcribe */
   selectedCategories: Category[] = [];
 
-
-  constructor(private messageService: MessageService,
+  constructor(
+    private messageService: MessageService,
     private categoryService: CategoryService,
     private userService: UserService,
-    private userCategoryService: UserCategoryService) {}
+    private userCategoryService: UserCategoryService
+  ) {}
 
   ngOnInit() {
     this.getMessages();
-    if (this.categoryService.categories.length == 0){
-      
-      this.categoryService.getAllCategories()
-      .subscribe(response => {
+    if (this.categoryService.categories.length == 0) {
+      this.categoryService.getAllCategories().subscribe(
+        (response) => {
           this.categoryService.categories = response;
           this.getUserCategoriesAndPutInLayout();
-          console.log("get categories:  " + JSON.stringify(response));
-      }, error => {
-        console.log("get categories unsuccessfully!");
-      })
+          // console.log('get categories:  ' + JSON.stringify(response));
+        },
+        (error) => {
+          // console.log('get categories unsuccessfully!');
+        }
+      );
     } else {
       this.getUserCategoriesAndPutInLayout();
     }
@@ -55,9 +59,9 @@ export class HomeComponent implements OnInit {
    * @memberof HomeComponent
    */
   getMessages = (): void => {
-     this.messageService.getAllMessages({"available":true}).subscribe((messages) => {
-       this.messages = messages;
-     });
+    this.messageService.getAllMessages({ available: true }).subscribe((messages) => {
+      this.messages = messages;
+    });
   };
 
   /**
@@ -65,13 +69,12 @@ export class HomeComponent implements OnInit {
    * create user category for subcribe category
    */
   subcribeSubmit = (): void => {
-
     // delete alt user categories
-    if (this.userCategories.length > 0){
+    if (this.userCategories.length > 0) {
       this.userCategories.forEach((userCategory) => {
-        this.userCategoryService.deleteUserCategoryById(userCategory._id).subscribe(response => {
-          console.log("delete alt usercategory");
-        })
+        this.userCategoryService.deleteUserCategoryById(userCategory._id).subscribe((response) => {
+          // console.log('delete alt usercategory');
+        });
       });
     }
 
@@ -81,51 +84,53 @@ export class HomeComponent implements OnInit {
     console.log(this.selectedCategories);
     let isSubcribeSuccess: Boolean = true;
     this.selectedCategories.forEach((category) => {
-      let userCategory : UserCategory = {
+      let userCategory: UserCategory = {
         userId: this.userService.user._id,
-        categoryId: category._id
-      }
-      this.userCategoryService.getUserCategoryByCategoryId
-      this.userCategoryService.createUserCategory(userCategory)
-      .subscribe(response => {
-        this.userCategories.push(response);
-      },
-        error => {
+        categoryId: category._id,
+      };
+      this.userCategoryService.getUserCategoryByCategoryId;
+      this.userCategoryService.createUserCategory(userCategory).subscribe(
+        (response) => {
+          this.userCategories.push(response);
+        },
+        (error) => {
           isSubcribeSuccess = false;
-          alert (error.error['data'].message);
+          alert(error.error['data'].message);
         }
       );
-    })
+    });
 
-    if (isSubcribeSuccess){
-      alert ("subcribe successfully");
+    // set the followed categories to the selected categories
+    this.followedCategories = this.selectedCategories;
+
+    if (isSubcribeSuccess) {
+      alert('SUBSCRIBE SUCCESSFUL!');
     } else {
-      alert ("subcribe unsuccessfully. Please try again");
+      alert('ERROR BY SUBSCRIBING! PLEASE TRY AGAIN!');
     }
-  }
+  };
 
   /**
-   * get user categories 
+   * get user categories
    * put it in this.usercategories
    * and put categories in selected categories
    */
   getUserCategoriesAndPutInLayout = (): void => {
-   this.userCategoryService.getUserCategoryByUserId(this.userService.user._id)
-   .subscribe(response => {
-      if (response && response.length > 0){
-         this.userCategories = response;
-         console.log("user categories size: " + this.userCategories.length);
+    this.userCategoryService.getUserCategoryByUserId(this.userService.user._id).subscribe((response) => {
+      if (response && response.length > 0) {
+        this.userCategories = response;
+        // console.log('user categories size: ' + this.userCategories.length);
 
-        this.userCategories.forEach(userCategory => {
-          this.categoryService.categories.some(category => {
-            if (category._id == userCategory.categoryId){
-              this.selectedCategories.push(category);
+        this.userCategories.forEach((userCategory) => {
+          this.categoryService.categories.some((category) => {
+            if (category._id == userCategory.categoryId) {
+              this.followedCategories.push(category);
               return true;
             }
             return false;
           });
-          });
+        });
       }
     });
-  }
+  };
 }

@@ -24,48 +24,53 @@
         <div class="card-body">
           <div class="row">
             <div class="col-4">
-              <img
-                class="garbage-img"
-                src="{{m?.imageUrl}}"
-                alt="{{m?.imageUrl}}"
-              />
+              <img class="garbage-img" src="{{m?.imageUrl}}" alt="{{m?.imageUrl}}" />
             </div>
             <div class="col-8">
-              <h6 class="card-title">{{(m?.description?.length>200)? (m?.description | slice:0:200)+'...':(m?.description)}}</h6>
+              <h6 class="card-title">
+                {{(m?.description?.length>200)? (m?.description | slice:0:200)+'...':(m?.description)}}</h6>
             </div>
           </div>
         </div>
         <div class="card-footer text-muted">
-            <span>{{m?.address}}</span>&nbsp;<span [ngStyle]="{'font-size': '0.8rem'}"> at {{m?.created_at | date: 'HH:mm on dd.MM.yyyy'}}</span>
-         </div>
+          <span>{{m?.address}}</span>&nbsp;<span [ngStyle]="{'font-size': '0.8rem'}"> at
+            {{m?.created_at | date: 'HH:mm on dd.MM.yyyy'}}</span>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<div class="container my-2">
-    <!-- Category input -->
-    <div *ngIf="userService.user" class="form-group">
-     <label class="display-3" for="categoryInput"> Subcribe categories to get email when someone post a matching message: </label>
-     <div class="display-4">
-       <span>Your followed categories at the moment: </span> 
-      <div class="d-inline px-2 mx-1 badge badge-pill badge-info" *ngFor="let category of selectedCategories">{{category.name}} </div>
-    </div>
-     <select
-        [(ngModel)]="selectedCategories"
-        [ngModelOptions]="{ standalone: true }"
-        id="categoryInput"
-        class="form-control my-2"
-        size="6"
-        multiple
-        >
-        <option *ngFor="let category of categoryService.categories" [ngValue]="category">
-          {{category.name | uppercase}}
-        </option>
-      </select>
-      <div class="form-group my-1">
-          <button type="submit" (click)="subcribeSubmit()" class="btn btn-primary" id="submitBtn">Submit</button>
+<div *ngIf="userService.user" class="container my-2">
+  <hr class="my-5">
+  <div class="card shadow">
+    <h4 class="card-header">Subcribe categories to get email when someone post a matching message:</h4>
+    <div class="card-body">
+      <div class="display-4">
+        <span>Your currently followed categories: </span>
+        <div class="d-inline px-2 mx-1 badge badge-pill badge-info" *ngFor="let category of followedCategories">
+          {{category.name}} </div>
       </div>
+      <br>
+      <div class="display-4 mb-3">
+        <span>Your selected categories: </span>
+        <div class="d-inline px-2 mx-1 badge badge-pill badge-info" *ngFor="let category of selectedCategories">
+          {{category.name}} </div>
+      </div>
+      <!-- Category input -->
+      <div class="form-group">
+        <select [(ngModel)]="selectedCategories" [ngModelOptions]="{ standalone: true }" id="categoryInput"
+          class="form-control my-2" size="6" multiple>
+          <option *ngFor="let category of categoryService.categories" [ngValue]="category">
+            {{category.name | uppercase}}
+          </option>
+        </select>
+        <div class="form-group my-1">
+          <button type="submit" (click)="subcribeSubmit()" class="btn btn-primary" id="submitBtn">Subscribe!</button>
+        </div>
+        <span class="text-muted" [ngStyle]="{'font-size': '0.6rem'}">*By clicking on the button, you are overwriting your followed categories with the selected categories.</span>
+      </div>
+      <!-- End of category input -->
     </div>
-    <!-- End of category input -->
+  </div>
 </div>
