@@ -1,3 +1,8 @@
-<p>
-  comment-list works!
-</p>
+
+<div class="">
+  <div *ngFor="let comment of comments">
+    <span class="userNameComment badge badge-pill badge-info"> {{userService.user.email}} : </span>
+    <span> {{comment.text}} </span> <br>
+    <hr>
+  </div>
+</div>
