@@ -17,7 +17,7 @@ export class CreateCommentComponent implements OnInit {
 
   newComment : Comment = {
     text: '',
-    creatorId: this.userService.user._id ? this.userService.user._id : null,
+    creatorId: (this.userService.user && this.userService.user._id) ? this.userService.user._id : null,
     parentId: '',
     messageId: '',
     imageUrl: '',
