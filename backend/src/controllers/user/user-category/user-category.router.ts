@@ -16,6 +16,7 @@ import {
     updateSingleUserCategory,
     deleteSingleUserCategory,
     getUserCategoryByCategoryId,
+    getUserCategoryByUserId,
 } from './user-category.controller';
 
 export const userCategoryRouter: express.Router = express.Router({ mergeParams: true });
@@ -31,10 +32,14 @@ userCategoryRouter.post('/', logTime, wrapAsync(createUserCategory));
 userCategoryRouter.delete('/delete_all', logTime, wrapAsync(deleteAllUserCategory));
 
 /** READ BY Category ID */
-userCategoryRouter.get('/:categoryId', logTime, wrapAsync(getUserCategoryByCategoryId));
+userCategoryRouter.get('/get_by_categoryid/:categoryId', logTime, wrapAsync(getUserCategoryByCategoryId));
+
+/** READ BY User ID */
+userCategoryRouter.get('/get_by_userid/:userId', logTime, wrapAsync(getUserCategoryByUserId));
+
 
 /** READ BY ID */
-//userCategoryRouter.get('/:userCategoryId', logTime, wrapAsync(getSingleUserCategory));
+userCategoryRouter.get('/:userCategoryId', logTime, wrapAsync(getSingleUserCategory));
 
 /** UPDATE */
 userCategoryRouter.put('/:userCategoryId', logTime, wrapAsync(updateSingleUserCategory));

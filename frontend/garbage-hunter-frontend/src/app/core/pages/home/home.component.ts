@@ -20,7 +20,13 @@ export class HomeComponent implements OnInit {
    * @memberof HomeComponent
    */
   messages: Message[] = [];
+
+  /** all user categories we get at begin */
+  userCategories: UserCategory[] = [];
+
+  /** selected categories for subcribe */
   selectedCategories: Category[] = [];
+
 
   constructor(private messageService: MessageService,
     private categoryService: CategoryService,
@@ -34,12 +40,14 @@ export class HomeComponent implements OnInit {
       this.categoryService.getAllCategories()
       .subscribe(response => {
           this.categoryService.categories = response;
+          this.getUserCategoriesAndPutInLayout();
           console.log("get categories:  " + JSON.stringify(response));
       }, error => {
         console.log("get categories unsuccessfully!");
       })
-    } 
-
+    } else {
+      this.getUserCategoriesAndPutInLayout();
+    }
   }
 
   /**
@@ -53,9 +61,23 @@ export class HomeComponent implements OnInit {
   };
 
   /**
+   * delete all alt user categories
    * create user category for subcribe category
    */
   subcribeSubmit = (): void => {
+
+    // delete alt user categories
+    if (this.userCategories.length > 0){
+      this.userCategories.forEach((userCategory) => {
+        this.userCategoryService.deleteUserCategoryById(userCategory._id).subscribe(response => {
+          console.log("delete alt usercategory");
+        })
+      });
+    }
+
+    this.userCategories = [];
+
+    // create new user categories
     console.log(this.selectedCategories);
     let isSubcribeSuccess: Boolean = true;
     this.selectedCategories.forEach((category) => {
@@ -63,8 +85,11 @@ export class HomeComponent implements OnInit {
         userId: this.userService.user._id,
         categoryId: category._id
       }
+      this.userCategoryService.getUserCategoryByCategoryId
       this.userCategoryService.createUserCategory(userCategory)
-      .subscribe(response => {},
+      .subscribe(response => {
+        this.userCategories.push(response);
+      },
         error => {
           isSubcribeSuccess = false;
           alert (error.error['data'].message);
@@ -77,5 +102,30 @@ export class HomeComponent implements OnInit {
     } else {
       alert ("subcribe unsuccessfully. Please try again");
     }
+  }
+
+  /**
+   * get user categories 
+   * put it in this.usercategories
+   * and put categories in selected categories
+   */
+  getUserCategoriesAndPutInLayout = (): void => {
+   this.userCategoryService.getUserCategoryByUserId(this.userService.user._id)
+   .subscribe(response => {
+      if (response && response.length > 0){
+         this.userCategories = response;
+         console.log("user categories size: " + this.userCategories.length);
+
+        this.userCategories.forEach(userCategory => {
+          this.categoryService.categories.some(category => {
+            if (category._id == userCategory.categoryId){
+              this.selectedCategories.push(category);
+              return true;
+            }
+            return false;
+          });
+          });
+      }
+    });
   }
 }
