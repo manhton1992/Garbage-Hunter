@@ -45,6 +45,19 @@ export class CommentService {
   };
 
   /**
+   * @description get comment by message id.
+   * @returns {Observable<Message>}
+   * @memberof CommentService
+   */
+  getCommentByMessageId = (messageId: string): Observable<Comment[]> => {
+    const url = `${this.commentUrl}/get_by_messageid/${messageId}`;
+    return this.http.get<Comment[]>(url).pipe(
+      map((response) => response['data']['docs']),
+      catchError((err) => observableHandleError(err))
+    );
+  };
+
+  /**
    * @description create new comment.
    * @returns {Observable<Comment>}
    * @memberof CommentService
