@@ -10,26 +10,6 @@
       </p>
     </div>
   </div>
-    <!-- Category input -->
-    <div *ngIf="userService.user" class="form-group">
-        <label for="categoryInput"> Subcribe categories to get email when someone post a matching message: </label>
-        <select
-          [(ngModel)]="selectedCategories"
-          [ngModelOptions]="{ standalone: true }"
-          id="categoryInput"
-          class="form-control"
-          size="6"
-          multiple
-          >
-          <option *ngFor="let category of categoryService.categories" [ngValue]="category">
-            {{category.name | uppercase}}
-          </option>
-        </select>
-        <div class="form-group">
-            <button type="submit" (click)="subcribeSubmit()" class="btn btn-primary" id="submitBtn">Submit</button>
-        </div>
-      </div>
-      <!-- End of category input -->
 </div>
 
 <div class="container mb-5" [ngStyle]="{height: '75vh'}">
@@ -61,4 +41,31 @@
       </div>
     </div>
   </div>
+</div>
+
+<div class="container my-2">
+    <!-- Category input -->
+    <div *ngIf="userService.user" class="form-group">
+     <label class="display-3" for="categoryInput"> Subcribe categories to get email when someone post a matching message: </label>
+     <div class="display-4">
+       <span>Your followed categories at the moment: </span> 
+      <div class="d-inline px-2 mx-1 badge badge-pill badge-info" *ngFor="let category of selectedCategories">{{category.name}} </div>
+    </div>
+     <select
+        [(ngModel)]="selectedCategories"
+        [ngModelOptions]="{ standalone: true }"
+        id="categoryInput"
+        class="form-control my-2"
+        size="6"
+        multiple
+        >
+        <option *ngFor="let category of categoryService.categories" [ngValue]="category">
+          {{category.name | uppercase}}
+        </option>
+      </select>
+      <div class="form-group my-1">
+          <button type="submit" (click)="subcribeSubmit()" class="btn btn-primary" id="submitBtn">Submit</button>
+      </div>
+    </div>
+    <!-- End of category input -->
 </div>

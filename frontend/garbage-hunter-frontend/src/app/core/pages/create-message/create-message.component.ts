@@ -112,11 +112,13 @@ export class CreateMessageComponent implements OnInit {
               .subscribe(response_user_category => {
 
                   // avoid duplicate userId
-                  response_user_category.forEach( (userCategory) => {
-                    if (!(this.listUserIdToSendSubcribeEmail.includes(userCategory.userId))){
-                      this.listUserIdToSendSubcribeEmail.push(userCategory.userId);
-                    }
-                  });
+                  if (response_user_category != null && response_user_category.length > 0){
+                    response_user_category.forEach( (userCategory) => {
+                      if (!(this.listUserIdToSendSubcribeEmail.includes(userCategory.userId))){
+                        this.listUserIdToSendSubcribeEmail.push(userCategory.userId);
+                      }
+                    });
+                  }
               });
             });
             setTimeout(() => {
