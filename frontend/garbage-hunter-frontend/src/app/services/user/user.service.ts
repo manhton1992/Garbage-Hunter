@@ -39,6 +39,19 @@ getAllUser(token: string){
 }
 
 /**
+ * get all users. 
+ * Just feature just for admin. 
+ * We need compare this user id with admin id in backend.
+ * @param token 
+ */
+getUserById(userId: string){
+
+  const url = `${this.userUrl}/${userId}`; 
+  return this.http.get<User>(url).pipe(map(response => response['data']),
+      catchError((err) => observableHandleError(err)));
+}
+
+/**
  * get user/ login
  * @param email 
  * @param password 

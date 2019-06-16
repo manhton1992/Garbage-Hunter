@@ -60,16 +60,14 @@ export class ShowMessageComponent implements OnInit {
     private router: Router,
   ) { }
 
-  ngOnInit() {
+   ngOnInit() {
     this.currentUser = this.userService.user;
-    this.route.params.subscribe(params => {
+    this.route.params.subscribe( async (params) =>  {
       let messageid = params['messageid'];
       this.getMessage(messageid);
-      this.getCreator();
-      this.getComments();
     });
     this.messageCategories = this.dummyCategories;  // test dummy
-    this.creator = this.dummyCreator;  // test dummy
+    // this.creator = this.dummyCreator;  // test dummy
   }
 
   /**
@@ -79,7 +77,12 @@ export class ShowMessageComponent implements OnInit {
   getMessage = (messageid: string):void => {
     this.messageService.getMessageById(messageid).subscribe(message => {
       this.message = message;
-    }, error => {
+      if(this.message ) {
+        this.getCreator();
+        this.getComments();
+      }
+    }
+    , error => {
       this.showError = true;
     })
   }
@@ -89,8 +92,12 @@ export class ShowMessageComponent implements OnInit {
    * @memberof ShowMessageComponent
    */
   getCreator = (): void => {
+    console.log(this.message);
     if (this.message) {
-      
+      this.userService.getUserById(this.message.creatorId).subscribe(user => {
+        this.creator = user.docs; 
+        console.log(this.creator);
+      })
     }
   }
   /**

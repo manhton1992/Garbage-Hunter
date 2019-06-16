@@ -7,6 +7,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user/user.service';
+import { MapService } from 'src/app/services/map/map.service';
+import { CategoryService } from 'src/app/services/category/category.service';
+import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
+import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
 
 @Component({
   selector: 'app-edit',
@@ -57,6 +61,10 @@ export class EditComponent implements OnInit {
     private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
+    private mapService: MapService,
+    private categoryService: CategoryService,
+    private messageCategoryService: MessageCategoryService,
+    private userCategoryService: UserCategoryService,
   ) { }
 
   ngOnInit() {
@@ -78,6 +86,7 @@ export class EditComponent implements OnInit {
   getMessage = (messageid: string):void => {
     this.messageService.getMessageById(messageid).subscribe(message => {
       this.message = message;
+      console.log(this.message);
     }, error => {
       this.showError = true;
     })
@@ -151,11 +160,50 @@ export class EditComponent implements OnInit {
   }
 
   editMessage(message: Message){
-    let url = '/messages/' + message._id;
-    this.messageService.updateMessage(message).subscribe();
+    let url = '/messages/' + this.message._id;
+    this.messageService.updateMessage(this.message).subscribe();
     alert("Message successfully edited");
     this.router.navigate[url];
   }
+
+
+  /**
+   * @description handle the latlon being passed from map component
+   * @memberof CreateMessageComponent
+   */
+  handleMapCoordinateChange = (latlon: any): void => {
+    this.changeLatLon(latlon);
+    this.changeAddress(latlon);
+  }
+
+  /**
+   * @description change the latlon of message.
+   * @memberof CreateMessageComponent
+   */
+  changeLatLon = (latlon: any): void => {
+    this.message.lat = latlon.lat;
+    this.message.lon = latlon.lng;
+  }
+
+  /**
+   * @description change the address of message.
+   * @memberof CreateMessageComponent
+   */
+  changeAddress = (latlon: any): void => {
+    this.mapService.getAddressfromLatLon(latlon.lat, latlon.lng).subscribe(
+      (data) => {
+        let road = data.road ? data.road : '';
+        let house_number = data.house_number ? data.house_number : '';
+        let postcode = data.postcode ? data.postcode : '';
+        let city = data.city ? data.city : '';
+        this.message.address = `${road} ${house_number}, ${postcode} ${city}`;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
 
   // DUMMY CATEGORIES
   dummyCategories: Category[] = [
