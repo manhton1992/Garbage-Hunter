@@ -14,11 +14,9 @@ import { AdminComponent } from '../admin/admin.component';
 import { CreateMessageComponent } from '../create-message/create-message.component';
 import { ShowMessageComponent } from '../show-message/show-message.component';
 import { CommentComponent } from '../../components/comment/comment.component';
-import { CreateCommentComponent } from '../../components/create-comment/create-comment.component';
 import { AdminNumberBoxComponent } from '../../components/admin-number-box/admin-number-box.component';
 import { ChartLineComponent } from '../../components/chart-line/chart-line.component';
 import { ChartPieComponent } from '../../components/chart-pie/chart-pie.component';
-import { CommentListComponent } from '../../components/comment-list/comment-list.component';
 import { ErrorComponent } from '../../components/error/error.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
@@ -41,11 +39,9 @@ describe('HomeComponent', () => {
         RegisterComponent,
         MapComponent,
         CommentComponent,
-        CreateCommentComponent,
         AdminNumberBoxComponent,
         ChartLineComponent,
         ChartPieComponent,
-        CommentListComponent,
         ErrorComponent
       ],
       imports: [

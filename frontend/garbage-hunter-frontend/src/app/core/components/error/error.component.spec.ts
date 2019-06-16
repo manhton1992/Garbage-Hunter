@@ -10,8 +10,6 @@ import { ShowMessageComponent } from '../../pages/show-message/show-message.comp
 import { AdminComponent } from '../../pages/admin/admin.component';
 import { FormsModule } from '@angular/forms';
 import { MapComponent } from '../map/map.component';
-import { CreateCommentComponent } from '../create-comment/create-comment.component';
-import { CommentListComponent } from '../comment-list/comment-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
@@ -42,11 +40,9 @@ describe('ErrorComponent', () => {
         RegisterComponent,
         MapComponent,
         CommentComponent,
-        CreateCommentComponent,
         AdminNumberBoxComponent,
         ChartLineComponent,
         ChartPieComponent,
-        CommentListComponent,
         ErrorComponent,
       ],
       imports: [

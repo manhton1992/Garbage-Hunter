@@ -1,4 +1,0 @@
-<div *ngIf="userService.user" class="form-group">
-  <input [(ngModel)]="newComment.text" [ngModelOptions]="{standalone: true}" (keyup.enter)="addNewComment()" type="text"
-    class="form-control" placeholder="Write a comment...">
-</div>

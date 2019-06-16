@@ -9,11 +9,9 @@ import { ShowMessageComponent } from '../show-message/show-message.component';
 import { HomeComponent } from '../home/home.component';
 import { RegisterComponent } from '../register/register.component';
 import { MapComponent } from '../../components/map/map.component';
-import { CreateCommentComponent } from '../../components/create-comment/create-comment.component';
 import { AdminNumberBoxComponent } from '../../components/admin-number-box/admin-number-box.component';
 import { ChartLineComponent } from '../../components/chart-line/chart-line.component';
 import { ChartPieComponent } from '../../components/chart-pie/chart-pie.component';
-import { CommentListComponent } from '../../components/comment-list/comment-list.component';
 import { ErrorComponent } from '../../components/error/error.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
@@ -35,8 +33,6 @@ describe('LoginComponent', () => {
         ShowMessageComponent,
         AdminComponent,
         MapComponent,
-        CreateCommentComponent,
-        CommentListComponent,
         ErrorComponent,
         AdminNumberBoxComponent,
         ChartLineComponent,

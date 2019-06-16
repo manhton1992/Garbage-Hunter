@@ -3,8 +3,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { ShowMessageComponent } from './show-message.component';
 import { MapComponent } from '../../components/map/map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { CreateCommentComponent } from '../../components/create-comment/create-comment.component';
-import { CommentListComponent } from '../../components/comment-list/comment-list.component';
 import { CommentComponent } from '../../components/comment/comment.component';
 import { ErrorComponent } from '../../components/error/error.component';
 import { AppComponent } from 'src/app/app.component';
@@ -45,11 +43,9 @@ describe('ShowMessageComponent', () => {
         RegisterComponent,
         MapComponent,
         CommentComponent,
-        CreateCommentComponent,
         AdminNumberBoxComponent,
         ChartLineComponent,
         ChartPieComponent,
-        CommentListComponent,
         ErrorComponent
       ],
       imports: [
