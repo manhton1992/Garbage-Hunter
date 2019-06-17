@@ -13,6 +13,9 @@ import { UserCategoryService } from 'src/app/services/user/user-category/user-ca
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  page: number = 1;
+  pageSize: number = 6;
+
   /**
    * @description messages that will be shown.
    * @type {Message[]}

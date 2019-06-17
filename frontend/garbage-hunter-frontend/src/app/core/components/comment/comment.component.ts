@@ -12,6 +12,9 @@ import { Comment } from 'src/app/models/comment.model';
 })
 export class CommentComponent implements OnInit {
 
+  page: number = 1;
+  pageSize: number = 4;
+
   comments: Comment[] = [];
   thisMessageID = '';
 
