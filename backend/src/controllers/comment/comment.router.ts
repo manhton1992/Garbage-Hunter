@@ -1,5 +1,5 @@
 /**
- * Router for /api/messages
+ * Router for /api/comments
  */
 
 /** Package imports */
@@ -8,7 +8,7 @@ import express from 'express';
 /** Module imports */
 import { logTime } from '../../middlewares/timelogger.middleware';
 import { wrapAsync } from '../../middlewares/errorhandler.middleware';
-import { getComments, createComment, deleteAllComments, getSingleComment, updateSingleComment, deleteSingleComment } from './comment.controller';
+import { getComments, createComment, deleteAllComments, getSingleComment, updateSingleComment, deleteSingleComment, getCommentsWithMessageId } from './comment.controller';
 
 
 export const commentRouter: express.Router = express.Router({ mergeParams: true });
@@ -24,6 +24,9 @@ commentRouter.delete('/delete_all', logTime, wrapAsync(deleteAllComments));
 
 /** READ BY ID */
 commentRouter.get('/:commentid', logTime, wrapAsync(getSingleComment));
+
+/** READ BY ID */
+commentRouter.get('/get_by_messageid/:messageId', logTime, wrapAsync(getCommentsWithMessageId));
 
 /** UPDATE */
 commentRouter.put('/:commentid', logTime, wrapAsync(updateSingleComment));

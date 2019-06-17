@@ -96,7 +96,7 @@ export class ShowMessageComponent implements OnInit {
   getCreator = (): void => {
     if (this.message) {
       this.userService.getUserById(this.message.creatorId).subscribe(user => {
-        this.creator = user.docs; 
+        this.creator = user; 
       })
     }
   }

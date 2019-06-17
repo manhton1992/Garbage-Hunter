@@ -22,11 +22,9 @@ import { MapComponent } from './core/components/map/map.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { CommentComponent } from './core/components/comment/comment.component';
-import { CreateCommentComponent } from './core/components/create-comment/create-comment.component';
 import { AdminNumberBoxComponent } from './core/components/admin-number-box/admin-number-box.component';
 import { ChartLineComponent } from './core/components/chart-line/chart-line.component';
 import { ChartPieComponent } from './core/components/chart-pie/chart-pie.component';
-import { CommentListComponent } from './core/components/comment-list/comment-list.component';
 import { ErrorComponent } from './core/components/error/error.component';
 import { EditComponent } from './core/pages/edit/edit.component';
 
@@ -43,13 +41,12 @@ import { EditComponent } from './core/pages/edit/edit.component';
     RegisterComponent,
     MapComponent,
     CommentComponent,
-    CreateCommentComponent,
     AdminNumberBoxComponent,
     ChartLineComponent,
     ChartPieComponent,
-    CommentListComponent,
     ErrorComponent,
     EditComponent
+    
   ],
   imports: [
     BrowserModule,

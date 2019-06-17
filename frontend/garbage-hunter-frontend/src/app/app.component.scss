@@ -6,3 +6,13 @@
 .content{
     min-height: 100%;
 }
+
+/deep/ .page-item.active .page-link {
+    background-color: #28a746 !important;
+    border-color: #28a746 !important;
+    color: white !important;
+}
+
+/deep/ .page-link {
+    color: #495057 !important;
+}

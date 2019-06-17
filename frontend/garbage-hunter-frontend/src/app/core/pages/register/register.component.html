@@ -8,15 +8,16 @@
       </div>
       <div>
         <div class="form-group">
-          <label for="emailRegister">Email Address</label>
-          <input type="email" id="emailRegister" class="form-control" placeholder="Enter Email"
-                 [(ngModel)]="userRegister.email" [ngModelOptions]="{standalone: true}">
+          <label for="emailRegister">Email address</label>
+          <input type="email" id="emailRegister" class="form-control" placeholder="Your email"
+            (keyup.enter)="submitRegister()" [(ngModel)]="userRegister.email" [ngModelOptions]="{standalone: true}">
         </div>
         <div class="form-group">
           <label for="passwordRegister">Password</label>
           <div class="input-group">
-            <input [type]="passwordType" id="passwordRegister" class="form-control" placeholder="Password"
-                   [(ngModel)]="userRegister.password" [ngModelOptions]="{standalone: true}">
+            <input [type]="passwordType" id="passwordRegister" class="form-control" placeholder="New password"
+              (keyup.enter)="submitRegister()" [(ngModel)]="userRegister.password"
+              [ngModelOptions]="{standalone: true}">
             <div class="input-group-prepend">
               <div class="input-group-text" (click)="togglePassword()">
                 <i class="fa fa-eye"></i>
@@ -25,10 +26,11 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="passwordRegisterConfirm">Password Confirm</label>
+          <label for="passwordRegisterConfirm">Password confirm</label>
           <div class="input-group">
-            <input [type]="passwordType" id="passwordRegisterConfirm" class="form-control" placeholder="Password Confirm"
-                   [(ngModel)]="passwordConfirm" [ngModelOptions]="{standalone: true}">
+            <input [type]="passwordType" id="passwordRegisterConfirm" class="form-control"
+              placeholder="Confirm password" (keyup.enter)="submitRegister()" [(ngModel)]="passwordConfirm"
+              [ngModelOptions]="{standalone: true}">
             <div class="input-group-prepend">
               <div class="input-group-text" (click)="togglePassword()">
                 <i class="fa fa-eye"></i>
@@ -36,15 +38,15 @@
             </div>
           </div>
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
           <p class="text-center"> By signing up you accept our <a href="#"> Terms Of User</a></p>
-        </div>
+        </div> -->
         <div class=" form-group col-md-12 text-center">
-          <button class="btn btn-primary" (click)="submitRegister()">Create Account</button>
+          <button class="btn btn-primary" (click)="submitRegister()">Create account</button>
         </div>
         <div class="form-group ">
           <p class="text-center">
-            Already have account:  <a [routerLink]="['/login']"> Login </a>
+            Already have account: <a [routerLink]="['/login']"> Login </a>
           </p>
         </div>
       </div>

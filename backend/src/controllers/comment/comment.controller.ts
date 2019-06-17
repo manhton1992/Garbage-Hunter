@@ -152,3 +152,23 @@ export const deleteSingleComment = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const getCommentsWithMessageId = async (req: Request, res: Response) => {
+    try {
+        const Comments :  ICommentModel[] | null = await comment.find({messageId: req.params.messageId});
+        res.status(200).send({
+            data: {
+                status: 'success',
+                docs: Comments,
+            },
+        });
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+
+}
