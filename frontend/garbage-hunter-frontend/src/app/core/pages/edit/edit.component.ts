@@ -197,11 +197,10 @@ export class EditComponent implements OnInit {
 
   editMessage(message: Message){
     let url = '/messages/' + this.message._id;
-    this.messageService.updateMessage(this.message).subscribe();
+    this.messageService.updateMessage(this.message).subscribe( updatedMessage => {
+      this.router.navigate([`/messages/${this.message._id}`])
+    });
     alert("Message successfully edited");
-    this.router.navigate([url]).then(() => {
-      window.location.reload();
-    });;
   }
 
 

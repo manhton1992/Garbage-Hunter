@@ -8,7 +8,13 @@
 
   <div class="collapse navbar-collapse" id="navbarColor03" [ngbCollapse]="isCollapsed">
     <div class="navbar-nav mr-auto">
-      <!-- empty for purpose -->
+        <ul class="navbar-nav">
+        <li *ngIf="userService.user != null" class="nav-item">
+            <a class="nav-link">
+              <fa name="user" size="lg"></fa> {{userService.user?.email}}
+            </a>
+          </li>
+          </ul>
     </div>
 
     <ul class="navbar-nav">
@@ -24,12 +30,7 @@
           <fa name="plus-square" size="lg"></fa> Create
         </a>
       </li>
-      <li *ngIf="userService.user != null" class="nav-item" [routerLinkActive]="['active']">
-        <a class="nav-link" [routerLink]="['/']">
-          <fa name="user" size="lg"></fa> {{userService.user?.email}}
-        </a>
-      </li>
-      <li *ngIf="userService.user != null" class="nav-item" [routerLinkActive]="['active']">
+      <li *ngIf="userService.user != null" class="nav-item">
         <a class="nav-link" [routerLink]="['/']" (click)="logout()">
           <fa name="minus-square" size="lg"></fa> Logout
         </a>
