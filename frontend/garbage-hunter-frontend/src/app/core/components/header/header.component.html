@@ -7,20 +7,48 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarColor03" [ngbCollapse]="isCollapsed">
-      <div class="navbar-nav mr-auto">
-        <!-- empty for purpose -->
-      </div>
+    <div class="navbar-nav mr-auto">
       <ul class="navbar-nav">
-        <li class="nav-item" [routerLinkActive]="['active']">
-          <a class="nav-link" [routerLink]="['/messages/create']"><fa name="plus-square" size="lg"></fa> Create</a>
-        </li>
-        <li class="nav-item" [routerLinkActive]="['active']">
-          <a class="nav-link" [routerLink]="['/login']"><fa name="sign-in" size="lg"></fa> Login/Register</a>
-        </li>
-        <li class="nav-item" [routerLinkActive]="['active']">
-          <a class="nav-link" [routerLink]="['/admin']"><fa name="user" size="lg"></fa> Admin</a>
+        <li *ngIf="userService.user != null" class="nav-item">
+          <span [ngStyle]="{color: 'rgba(255, 255, 255, 0.5)'}">
+            <fa name="user" size="lg"></fa> {{userService.user?.email}}
+          </span>
         </li>
       </ul>
     </div>
-  
-  </nav>
+
+    <ul class="navbar-nav">
+      <!-- if user is not logged in -->
+      <li *ngIf="userService.user == null" class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['/login']">
+          <fa name="sign-in" size="lg"></fa> Login
+        </a>
+      </li>
+      <!-- if user is not logged in -->
+      <li *ngIf="userService.user == null" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/register']">
+            <fa name="user-plus" size="lg"></fa> Register
+          </a>
+        </li>
+      <!-- if user is logged in and is not admin -->
+      <li *ngIf="userService.user != null" class="nav-item" [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['/messages/create']">
+          <fa name="plus-square" size="lg"></fa> Create
+        </a>
+      </li>
+      <!-- if user is logged in and is admin -->
+      <li *ngIf="userService.user != null && userService.user.isAdmin == true" class="nav-item"
+        [routerLinkActive]="['active']">
+        <a class="nav-link" [routerLink]="['/admin']">
+          <fa name="user" size="lg"></fa> Admin
+        </a>
+      </li>
+      <li *ngIf="userService.user != null" class="nav-item">
+        <a class="nav-link" [routerLink]="['/']" (click)="logout()">
+          <fa name="sign-out" size="lg"></fa> Logout
+        </a>
+      </li>
+    </ul>
+  </div>
+
+</nav>

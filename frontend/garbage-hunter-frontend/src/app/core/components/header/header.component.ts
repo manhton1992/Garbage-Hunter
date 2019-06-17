@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from 'src/app/services/user/user.service';
+import { User } from 'src/app/models/user.model';
 
 @Component({
   selector: 'app-header',
@@ -13,9 +15,13 @@ export class HeaderComponent implements OnInit {
    */
   isCollapsed = true;
 
-  constructor() { }
+
+  constructor(private userService: UserService) { }
 
   ngOnInit() {
   }
 
+  logout(){
+    this.userService.logout();
+  }
 }

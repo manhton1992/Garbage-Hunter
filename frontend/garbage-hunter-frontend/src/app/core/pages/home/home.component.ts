@@ -13,6 +13,9 @@ import { UserCategoryService } from 'src/app/services/user/user-category/user-ca
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
+  page: number = 1;
+  pageSize: number = 6;
+
   /**
    * @description messages that will be shown.
    * @type {Message[]}
@@ -59,7 +62,7 @@ export class HomeComponent implements OnInit {
    * @memberof HomeComponent
    */
   getMessages = (): void => {
-    this.messageService.getAllMessages({ available: true }).subscribe((messages) => {
+    this.messageService.getAllMessages({ available: true, archive: false }).subscribe((messages) => {
       this.messages = messages;
     });
   };
@@ -116,6 +119,7 @@ export class HomeComponent implements OnInit {
    * and put categories in selected categories
    */
   getUserCategoriesAndPutInLayout = (): void => {
+    if (this.userService.user) {
     this.userCategoryService.getUserCategoryByUserId(this.userService.user._id).subscribe((response) => {
       if (response && response.length > 0) {
         this.userCategories = response;
@@ -132,5 +136,6 @@ export class HomeComponent implements OnInit {
         });
       }
     });
+  }
   };
 }

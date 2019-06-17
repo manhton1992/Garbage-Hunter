@@ -26,6 +26,7 @@ import { AdminNumberBoxComponent } from './core/components/admin-number-box/admi
 import { ChartLineComponent } from './core/components/chart-line/chart-line.component';
 import { ChartPieComponent } from './core/components/chart-pie/chart-pie.component';
 import { ErrorComponent } from './core/components/error/error.component';
+import { EditComponent } from './core/pages/edit/edit.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,9 @@ import { ErrorComponent } from './core/components/error/error.component';
     AdminNumberBoxComponent,
     ChartLineComponent,
     ChartPieComponent,
-    ErrorComponent
+    ErrorComponent,
+    EditComponent
+    
   ],
   imports: [
     BrowserModule,

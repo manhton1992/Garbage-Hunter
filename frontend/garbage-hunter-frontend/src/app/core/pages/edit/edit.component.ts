@@ -7,16 +7,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user/user.service';
-import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
-import { MessageCategory } from 'src/app/models/message-category.model';
+import { MapService } from 'src/app/services/map/map.service';
 import { CategoryService } from 'src/app/services/category/category.service';
+import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
+import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
+import { MessageCategory } from 'src/app/models/message-category.model';
 
 @Component({
-  selector: 'app-show-message',
-  templateUrl: './show-message.component.html',
-  styleUrls: ['./show-message.component.scss']
+  selector: 'app-edit',
+  templateUrl: './edit.component.html',
+  styleUrls: ['./edit.component.scss']
 })
-export class ShowMessageComponent implements OnInit {
+export class EditComponent implements OnInit {
+/**
+   * @description current user that accessing the page.
+   * @type {User}
+   * @memberof ShowMessageComponent
+   */
+  currentUser: User = null;
+
   /**
    * @description the main message.
    * @type {Message}
@@ -56,15 +65,22 @@ export class ShowMessageComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
-    private messageCategoryService: MessageCategoryService,
-    private categoryService: CategoryService,
     private commentService: CommentService,
     private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
+    private mapService: MapService,
+    private categoryService: CategoryService,
+    private messageCategoryService: MessageCategoryService,
+    private userCategoryService: UserCategoryService,
   ) { }
 
-   ngOnInit() {
+  ngOnInit() {
+    if (this.categoryService.categories.length == 0){      
+      this.categoryService.getAllCategories().subscribe(response => {
+          this.categoryService.categories = response;
+      })
+    }
     this.route.params.subscribe( async (params) =>  {
       let messageid = params['messageid'];
       this.getMessage(messageid);
@@ -133,29 +149,28 @@ export class ShowMessageComponent implements OnInit {
     }
  }
 
- /**
-  * @description set as unavailable.
-  * @memberof ShowMessageComponent
-  */
- setAsUnavailable = (): void => {
-   this.message.available = false;
-   this.messageService.updateMessage(this.message).subscribe(success => {
-     alert('MESSAGE IS MARKED AS UNAVAILABLE!');
-    this.router.navigate(['/']);
-  });
- }
-
   /**
    * @description delete the message.
    * @memberof ShowMessageComponent
    */
-  archiveMessage = (): void => { 
+  archiveMessage = (): void => {
+    if (this.currentUser && this.currentUser.isAdmin) { 
       this.message.archive = true;
-      this.message.available = false;
       this.messageService.updateMessage(this.message).subscribe(success => {
-        alert('MESSAGE IS ARCHIVED!');
         this.router.navigate(['/']);
       });
+    }
+  }
+
+  /**
+   * @description show action div that contains buttons to do something to the message
+   * @memberof ShowMessageComponent
+   */
+  showActionDiv = (): boolean => {
+    if (!this.currentUser) {
+      // return false;
+    }
+    return true;
   }
 
   /**
@@ -163,7 +178,7 @@ export class ShowMessageComponent implements OnInit {
    * @memberof ShowMessageComponent
    */
   showEditChangeButton = (): boolean => {
-    if (this.userService.user && (this.userService.user.isAdmin || this.userService.user._id == this.creator._id)) {
+    if (this.currentUser && (this.currentUser._id == this.creator._id || this.currentUser.isAdmin)) {
       return true;
     }
     return false;
@@ -174,9 +189,67 @@ export class ShowMessageComponent implements OnInit {
    * @returns {boolean}
    */
   showDeleteButton = (): boolean => {
-    if (this.userService.user && this.userService.user.isAdmin) {
+    if (this.currentUser && this.currentUser.isAdmin) {
+      return true;
+    }
+    return false;
+  }
+
+  editMessage(message: Message){
+    let url = '/messages/' + this.message._id;
+    this.messageService.updateMessage(this.message).subscribe( updatedMessage => {
+      this.router.navigate([`/messages/${this.message._id}`])
+    });
+    alert("Message successfully edited");
+  }
+
+
+  /**
+   * @description handle the latlon being passed from map component
+   * @memberof CreateMessageComponent
+   */
+  handleMapCoordinateChange = (latlon: any): void => {
+    this.changeLatLon(latlon);
+    this.changeAddress(latlon);
+  }
+
+  /**
+   * @description change the latlon of message.
+   * @memberof CreateMessageComponent
+   */
+  changeLatLon = (latlon: any): void => {
+    this.message.lat = latlon.lat;
+    this.message.lon = latlon.lng;
+  }
+
+  /**
+   * @description change the address of message.
+   * @memberof CreateMessageComponent
+   */
+  changeAddress = (latlon: any): void => {
+    this.mapService.getAddressfromLatLon(latlon.lat, latlon.lng).subscribe(
+      (data) => {
+        let road = data.road ? data.road : '';
+        let house_number = data.house_number ? data.house_number : '';
+        let postcode = data.postcode ? data.postcode : '';
+        let city = data.city ? data.city : '';
+        this.message.address = `${road} ${house_number}, ${postcode} ${city}`;
+      },
+      (err) => {
+        console.error(err);
+      }
+    );
+  }
+
+  /**
+   * @description check if user is the creator of message.
+   * @memberof EditComponent
+   */
+  canEdit = (): boolean => {
+    if (this.userService.user && this.message && (this.userService.user.isAdmin || this.userService.user._id == this.message.creatorId)) {
       return true;
     }
     return false;
   }
 }
+

@@ -100,4 +100,18 @@ export class MessageService {
       catchError((err) => observableHandleError(err))
     );
   }
+
+  /**
+   * @description upload image to AWS S3
+   * @param {File} image
+   * @returns {Observable<string>}
+   * @memberof MessageService
+   */
+  deleteUploadedImage(imageKey: string): Observable<{}> {
+    const url = `${this.messageUrl}/delete_image`;
+    return this.http.post<string>(url, {key: imageKey}).pipe(
+      map((response) => response['data']),
+      catchError((err) => observableHandleError(err))
+    );
+  }
 }

@@ -18,7 +18,7 @@
 
 <div class="container">
   <div class="row">
-    <div class="col-lg-6" *ngFor="let m of messages">
+    <div class="col-lg-6" *ngFor="let m of messages | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
       <div class="card card-item shadow mb-3">
         <h4 class="card-header"><a class="text-success" [routerLink]="['/messages/' + m?._id]">{{m?.title}}</a></h4>
         <div class="card-body">
@@ -39,10 +39,14 @@
       </div>
     </div>
   </div>
+
+  <ngb-pagination class="my-2 d-flex justify-content-center" [(page)]="page" [pageSize]="pageSize"
+    [collectionSize]="messages?.length" size="sm"></ngb-pagination>
+
 </div>
 
 <div *ngIf="userService.user" class="container my-2">
-  <hr class="my-5">
+  <hr class="my-3">
   <div class="card shadow">
     <h4 class="card-header">Subcribe categories to get email when someone post a matching message:</h4>
     <div class="card-body">
@@ -66,9 +70,10 @@
           </option>
         </select>
         <div class="form-group my-1">
-          <button type="submit" (click)="subcribeSubmit()" class="btn btn-primary" id="submitBtn">Subscribe!</button>
+          <button type="submit" (click)="subcribeSubmit()" class="btn btn-success" id="submitBtn">Subscribe!</button>
         </div>
-        <span class="text-muted" [ngStyle]="{'font-size': '0.6rem'}">*By clicking on the button, you are overwriting your followed categories with the selected categories.</span>
+        <span class="text-muted" [ngStyle]="{'font-size': '0.6rem'}">*By clicking on the button, you are overwriting
+          your followed categories with the selected categories.</span>
       </div>
       <!-- End of category input -->
     </div>
