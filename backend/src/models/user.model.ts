@@ -14,12 +14,13 @@ import uniqueValidator from 'mongoose-unique-validator';
  */
 export interface IUserModel extends mongoose.Document {
     email: string;
-    firstName: string;
-    lastName: string;
-    phoneNumber: string;
+    firstName?: string;
+    lastName?: string;
+    phoneNumber?: string;
     passwordHash: string;
     isAdmin: boolean;
     isConfirm: boolean;
+    profileImageUrl?: string;
     created_at: Date;
 }
 
@@ -62,6 +63,10 @@ export const UserSchema: mongoose.Schema = new mongoose.Schema(
             required: true,
             default: false,
         },
+        profileImageUrl: {
+            type: String,
+            required: false,
+        }
     },
     {
         timestamps: {

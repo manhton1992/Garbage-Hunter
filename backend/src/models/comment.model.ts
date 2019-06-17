@@ -13,8 +13,10 @@ import * as mongoose from 'mongoose';
  */
 export interface ICommentModel extends mongoose.Document {
     text: string;
-    creatorid: number;
-    messageid: string;
+    creatorId: string;
+    parentId: string;
+    messageId: string;
+    imageUrl?: string;
     archive: boolean;
     created_at: Date;
 }
@@ -30,11 +32,15 @@ export const CommentSchema: mongoose.Schema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        creatorid: {
-            type: Number,
+        creatorId: {
+            type: String,
             required: true,
         },
-        messageid: {
+        parentId: {
+            type: String,
+            required: false,
+        },
+        messageId: {
             type: String,
             required: true,
         },
@@ -43,6 +49,11 @@ export const CommentSchema: mongoose.Schema = new mongoose.Schema(
             required: true,
             default: false,
         },
+        imageUrl: {
+            type: String,
+            required: false,
+            default: '',
+        }
     },
     {
         timestamps: {

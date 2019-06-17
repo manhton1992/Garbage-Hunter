@@ -7,7 +7,7 @@ import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IUserModel, user } from '../../models/user.model';
 import * as jwt from "jsonwebtoken";
-import { sendMailRegister } from '../../_helpers/email-helper/send-email';
+import { sendMailRegister } from '../../helpers/email-helper/send-email';
 import config from "config";
 
 // use to hash the password
@@ -56,9 +56,10 @@ export const getAllUsers = async (req: Request, res: Response) => {
             });
         } else {
             // this user is not admin
-            res.status(200).send({
+            res.status(400).send({
                 data: {
                     status: 'fail',
+                    message: 'this user is not admin'
                 },
             });
         }
@@ -98,7 +99,7 @@ export const registerUser = async (req: Request, res: Response) => {
                 });
             } 
         } else {
-            res.status(500).send({
+            res.status(400).send({
                 data: {
                     status: 'fail',
                     message: 'this email is already registered'
@@ -159,7 +160,7 @@ export const exportUsersAsCsv = async (req: Request, res: Response) => {
 export const deleteAllUsers = async (req: Request, res: Response) => {
     try {
         await user.deleteMany({});
-        res.send({
+        res.status(200).send({
             data: {
                 status: 'success',
                 message: 'all users are deleted',
@@ -187,24 +188,33 @@ export const login = async (req: Request, res: Response) => {
         const singleUser: IUserModel | null = await user.findOne({email: req.query.email});
         
         // compare password with hashpassword
-        if (myJWTSecretKey && singleUser && bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
+        if (myJWTSecretKey && singleUser ){
 
-            if (singleUser.isConfirm){
-                // create a token. With this token, client can communite with server of the user
-                // sign with default (HMAC SHA256) 
-                const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey);
-                res.status(200).send({
-                    data: {
-                        status: 'success',
-                        docs: singleUser,
-                        token: token,
-                    },
-                });
+            if (bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
+                if (singleUser.isConfirm){
+                    // create a token. With this token, client can communite with server of the user
+                    // sign with default (HMAC SHA256) 
+                    const token = jwt.sign(singleUser.toJSON(), myJWTSecretKey);
+                    res.status(200).send({
+                        data: {
+                            status: 'success',
+                            docs: singleUser,
+                            token: token,
+                        },
+                    });
+                } else {
+                    res.status(400).send({
+                        data: {
+                            status: 'error',
+                            message: 'please confirm the email'
+                        },
+                    });
+                }
             } else {
-                res.status(500).send({
+                res.status(400).send({
                     data: {
-                        status: 'fail',
-                        message: 'please confirm the email'
+                        status: 'error',
+                        message: 'false password. Please try again'
                     },
                 });
             }
@@ -212,9 +222,9 @@ export const login = async (req: Request, res: Response) => {
        } else {
        
         // user does not exist
-        res.status(500).send({
+        res.status(404).send({
             data: {
-                status: 'fail',
+                status: 'error',
                 message: 'user does not exist'
             },
         });
@@ -224,6 +234,42 @@ export const login = async (req: Request, res: Response) => {
         res.status(400).send({
             data: {
                 status: 'error',
+                message: error.message,
+            },
+        });
+    }
+};
+
+
+/**
+ * Get a single user by token
+ * get email and password from request query
+ * @param req
+ * @param res
+ */
+export const loginByToken = async (req: Request, res: Response) => {
+    try {
+        let checkedUser = checkJwt(req.params.token);
+        if (checkedUser){
+            res.status(200).send({
+                data: {
+                    status: 'success',
+                    docs: checkedUser,
+                },
+            });
+        } else {
+            res.status(200).send({
+                data: {
+                    status: '401',
+                    message: 'token are not avaiable. please log in again'
+                },
+            });
+        }
+
+    } catch (error) {
+        res.status(200).send({
+            data: {
+                status: '401',
                 message: error.message,
             },
         });
@@ -391,8 +437,10 @@ export const createUser = async (req: Request, res: Response) => {
 export const getSingleUser = async (req: Request, res: Response) => {
     try {
         const singleUser: IUserModel | null = await user.findById(req.params.userid);
-        if (singleUser)
-             sendMailRegister(singleUser);
+        if (singleUser) {
+            // TODO what for send mail?
+            // sendMailRegister(singleUser);
+        }
         res.status(200).send({
             data: {
                 status: 'success',
@@ -475,6 +523,7 @@ export const confirmEmail = async (req: Request, res: Response) => {
             res.status(200).send({
                 data: {
                     status: 'success',
+                    docs: updateUser,
                 },
             });
         }

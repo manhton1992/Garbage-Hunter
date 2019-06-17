@@ -6,13 +6,13 @@ export class Message{
     _id?: string;
     title: string;
     description: string;
-    creatorid: number;
+    creatorId: string;
     lon: number;
     lat: number;
     address: string;
     available: boolean;
     archive: boolean;
-    image: string;
+    imageUrl: string;
     phone?: number;
     created_at?: Date;
     updated_at?: Date;

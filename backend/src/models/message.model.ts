@@ -14,13 +14,13 @@ import * as mongoose from 'mongoose';
 export interface IMessageModel extends mongoose.Document {
     title: string;
     description: string;
-    creatorid: number;
+    creatorId: string;
     lon: number;
     lat: number;
     address: string;
     available: boolean;
     archive: boolean;
-    image: string;
+    imageUrl: string;
     phone?: number;
     created_at: Date;
     updated_at: Date;
@@ -41,8 +41,8 @@ export const MessageSchema: mongoose.Schema = new mongoose.Schema(
             type: String,
             required: true,
         },
-        creatorid: {
-            type: Number,
+        creatorId: {
+            type: String,
             required: true,
         },
         lon: {
@@ -62,12 +62,14 @@ export const MessageSchema: mongoose.Schema = new mongoose.Schema(
         available: {
             type: Boolean,
             required: true,
+            default: true,
         },
         archive: {
             type: Boolean,
             required: true,
+            default: false,
         },
-        image: {
+        imageUrl: {
             type: String,
             required: true,
         },
@@ -87,6 +89,6 @@ export const MessageSchema: mongoose.Schema = new mongoose.Schema(
 /**
  * @description Export the message mongoose Schema.
  * @export
- * @Model message 
+ * @Model messageSchema 
  */
 export const message: mongoose.Model<IMessageModel> = mongoose.model<IMessageModel>('Message', MessageSchema);

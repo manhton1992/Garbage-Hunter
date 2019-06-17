@@ -1,3 +1,11 @@
-<p>
-  comment works!
-</p>
+<!-- Create new comment -->
+<div *ngIf="userService.user" class="form-group">
+  <input [(ngModel)]="newComment.text" [ngModelOptions]="{standalone: true}" (keyup.enter)="addNewComment($event)"
+    type="text" class="form-control" placeholder="Write a comment...">
+</div>
+
+<!-- Comments -->
+<div class="alert alert-light" *ngFor="let comment of comments">
+  <span class="userNameComment badge badge-primary mr-1">{{comment?.creatorId}} </span>
+  <span> {{comment.text}} </span> <br>
+</div>

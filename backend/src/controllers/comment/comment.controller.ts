@@ -1,10 +1,10 @@
 /**
- * Controller for /api/messages/:messageid/comments
+ * Controller for /api/comments
  */
 
 /** Package imports */
 import { Request, Response } from 'express';
-import { ICommentModel, comment } from '../../../models/comment.model';
+import { ICommentModel, comment } from '../../models/comment.model';
 
 /**
  * Get all comments in a message.
@@ -13,7 +13,7 @@ import { ICommentModel, comment } from '../../../models/comment.model';
  */
 export const getComments = async (req: Request, res: Response) => {
     try {
-        const comments: ICommentModel[] = await comment.find({messageid: req.params.messageid});
+        const comments: ICommentModel[] = await comment.find(req.query);
         res.status(200).send({
             data: {
                 status: 'success',
@@ -63,10 +63,10 @@ export const createComment = async (req: Request, res: Response) => {
 export const deleteAllComments = async (req: Request, res: Response) => {
     try {
         await comment.deleteMany({});
-        res.send({
+        res.status(200).send({
             data: {
                 status: 'success',
-                message: `all comments in messageid:${req.params.messageid} are deleted`,
+                message: `all comments are deleted`,
             },
         });
     } catch (error) {
@@ -86,7 +86,7 @@ export const deleteAllComments = async (req: Request, res: Response) => {
  */
 export const getSingleComment = async (req: Request, res: Response) => {
     try {
-        const singleComment: ICommentModel | null = await comment.findById(req.params.messageid);
+        const singleComment: ICommentModel | null = await comment.findById(req.params.commentid);
         res.status(200).send({
             data: {
                 status: 'success',
@@ -152,3 +152,23 @@ export const deleteSingleComment = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const getCommentsWithMessageId = async (req: Request, res: Response) => {
+    try {
+        const Comments :  ICommentModel[] | null = await comment.find({messageId: req.params.messageId});
+        res.status(200).send({
+            data: {
+                status: 'success',
+                docs: Comments,
+            },
+        });
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+
+}

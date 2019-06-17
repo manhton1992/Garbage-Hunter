@@ -16,6 +16,7 @@ import {
     updateSingleMessage,
     deleteSingleMessage,
     exportMessagesAsCsv,
+    uploadImage,
 } from './message.controller';
 
 export const messageRouter: express.Router = express.Router({ mergeParams: true });
@@ -28,6 +29,9 @@ messageRouter.post('/', logTime, wrapAsync(createMessage));
 
 /** Download as CSV data */
 messageRouter.get('/download', logTime, wrapAsync(exportMessagesAsCsv));
+
+/** Upload image to AWS S3 */
+messageRouter.post('/image_upload', logTime, wrapAsync(uploadImage));
 
 /** Delete all activities in the database */
 messageRouter.delete('/delete_all', logTime, wrapAsync(deleteAllMessages));

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from './services/user/user.service';
+import { CategoryService } from './services/category/category.service';
 
 @Component({
   selector: 'app-root',
@@ -9,10 +10,26 @@ import { UserService } from './services/user/user.service';
 export class AppComponent implements OnInit{
 
 
-  constructor(private userService: UserService){}
+  constructor(private userService: UserService,
+    private categoryService: CategoryService){}
 
+  /** auto login when open the app */
   ngOnInit(): void {
-    this.userService.authenticate();
+    if (localStorage.getItem("currentUser")){
+    this.userService.authenticate()
+    .subscribe(res => {
+      if (res && res != null){
+        if (res.status == 'success'){
+          this.userService.user =  res.docs;
+          console.log("auto login successfully");
+        } else {
+          alert (res.message);
+        }
+      }
+    });
+    }
+    
+    
   }
   title = 'garbage-hunter-frontend';
 }

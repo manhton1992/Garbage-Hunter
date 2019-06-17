@@ -1,16 +1,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
-import { map } from 'rxjs/internal/operators';
+import { map, catchError } from 'rxjs/internal/operators';
 import { User } from 'src/app/models/user.model';
+import { environment } from 'src/environments/environment';
+import { observableHandleError } from 'src/app/middlewares/errorhandler.middleware';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
-  private userUrl = "http://localhost:3000/api/users";
+  private userUrl = `${environment.baseUrl}/users`;
   private userLoginUrl = `${this.userUrl}/login`;
+  private userLoginByTokenUrl = `${this.userUrl}/login`;
   private userRegisterUrl = `${this.userUrl}/register`;
   private userUpdateUrl = `${this.userUrl}/update`;
   private userDeleleUrl = `${this.userUrl}/delete`;
@@ -31,8 +34,17 @@ export class UserService {
 getAllUser(token: string){
 
   const url = `${this.userUrl}/get_all/${token}`; 
-  return this.http.get<User[]>(url).pipe(map(response => response['data']));
+  return this.http.get<User[]>(url).pipe(map(response => response['data']),
+      catchError((err) => observableHandleError(err)));
 }
+
+getUserById = (userid: string): Observable<User> => {
+  const url = `${this.userUrl}/${userid}`;
+  return this.http.get<User>(url).pipe(
+    map((response) => response['data']['docs']),
+    catchError((err) => observableHandleError(err))
+  );
+};
 
 /**
  * get user/ login
@@ -42,7 +54,8 @@ getAllUser(token: string){
 login(email: string, password: string){
 
   const url = `${this.userLoginUrl}?email=${email}&&password=${password}`; 
-  return this.http.get<User>(url).pipe(map(response => response['data']));
+  return this.http.get<User>(url).pipe(map(response => response['data'],
+  catchError((err) => observableHandleError(err))));
 }
 
   /**
@@ -52,7 +65,8 @@ login(email: string, password: string){
  */
 register(user: any){
   return this.http.post<string>(this.userRegisterUrl,user)
-  .pipe(map(response => response['data']));
+  .pipe(map(response => response['data']),
+  catchError((err) => observableHandleError(err)));
 
 }
 
@@ -74,7 +88,8 @@ updateUserWithToken(token: string, user: User): Observable<{}>{
 deleteUserWithToken(token: string): Observable<{}>{
   const url = `${this.userDeleleUrl}/${token}`;
   return this.http.delete<User>(url)
-  .pipe(map(response => response['data']));
+  .pipe(map(response => response['data']),
+  catchError((err) => observableHandleError(err)));
 }
 
 /**
@@ -86,10 +101,16 @@ authenticate(){
   let userDataString = localStorage.getItem("currentUser");
   if (userDataString){
     let userData = JSON.parse(userDataString);
-    this.user = userData.docs;
-    console.log("this user: " + JSON.stringify(this.user));
-    } 
+    if(userData.token){
+      const url = `${this.userLoginByTokenUrl}/${userData.token}`;
+      return this.http.get<User>(url)
+      .pipe(map(response => response['data']),
+      catchError((err) => observableHandleError(err)));
+    }
   }
+  return null;
+}
+
 }
 
 

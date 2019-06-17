@@ -23,11 +23,28 @@ module.exports.ViewOption = (transport: any, hbs: any) => {
     transport.use('compile', hbs({
         viewEngine: {
             extName: '.hbs',
-            partialsDir: 'src/_helpers/email-helper/email_layout',
-            layoutsDir: 'src/_helpers/email-helper/email_layout',
+            partialsDir: 'src/helpers/email-helper/email_layout',
+            layoutsDir: 'src/helpers/email-helper/email_layout',
             defaultLayout: 'register-email.hbs',
           },
-            viewPath: 'src/_helpers/email-helper/email_layout',
+            viewPath: 'src/helpers/email-helper/email_layout',
+            extName: '.hbs'
+    }));
+}
+
+/**
+ * compile hbs file (template) into the created Transport
+ * 
+ */
+module.exports.ViewOptionForSubcribeEmail = (transport: any, hbs: any) => {
+    transport.use('compile', hbs({
+        viewEngine: {
+            extName: '.hbs',
+            partialsDir: 'src/helpers/email-helper/email_layout',
+            layoutsDir: 'src/helpers/email-helper/email_layout',
+            defaultLayout: 'subcribe-email.hbs',
+          },
+            viewPath: 'src/helpers/email-helper/email_layout',
             extName: '.hbs'
     }));
 }

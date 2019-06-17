@@ -6,6 +6,7 @@
 import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IMessageModel, message } from '../../models/message.model';
+import { upload } from '../../helpers/image-upload-helper/image-upload';
 
 /**
  * Get all messages.
@@ -14,9 +15,6 @@ import { IMessageModel, message } from '../../models/message.model';
  */
 export const getMessages = async (req: Request, res: Response) => {
     try {
-        /** Process queries to check for dates*/
-        req.query = processQueries(req.query);
-
         const messages: IMessageModel[] = await message.find(req.query);
         res.status(200).send({
             data: {
@@ -73,13 +71,13 @@ export const exportMessagesAsCsv = async (req: Request, res: Response) => {
                 id: item.id,
                 title: item.title,
                 description: item.description,
-                creatorid: item.creatorid,
+                creatorid: item.creatorId,
                 lon: item.lon,
                 lat: item.lat,
                 address: item.address,
                 available: item.available,
                 archive: item.archive,
-                image: item.image,
+                image: item.imageUrl,
                 phone: item.phone,
                 created: item.created_at,
             };
@@ -110,7 +108,7 @@ export const exportMessagesAsCsv = async (req: Request, res: Response) => {
 export const deleteAllMessages = async (req: Request, res: Response) => {
     try {
         await message.deleteMany({});
-        res.send({
+        res.status(200).send({
             data: {
                 status: 'success',
                 message: 'all messages are deleted',
@@ -189,6 +187,43 @@ export const deleteSingleMessage = async (req: Request, res: Response) => {
                 status: 'success',
                 docs: deleteMessage,
             },
+        });
+    } catch (error) {
+        res.status(400).send({
+            data: {
+                status: 'error',
+                message: error.message,
+            },
+        });
+    }
+};
+
+/**
+ * Upload image to AWS S3
+ * @param req
+ * @param res
+ */
+export const uploadImage = async (req: any, res: Response) => {
+    try {
+        const singleUpload = upload.single('image');
+        singleUpload(req, res, (error) => {
+            if (error) {
+                res.status(422).send({
+                    data: {
+                        status: 'error',
+                        message: error.message,
+                    },
+                });
+            } else {
+                res.status(200).send({
+                    data: {
+                        status: 'success',
+                        docs: {
+                            imageUrl: req.file.location,
+                        },
+                    },
+                });
+            }
         });
     } catch (error) {
         res.status(400).send({

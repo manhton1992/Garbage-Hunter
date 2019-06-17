@@ -1,51 +1,117 @@
 <div class="container">
-  <div class="page-header">
-    <h1 id="big-title">Create a Message</h1>
-  </div>
-  <!-- TODO change the place of the map and resize the div if necessary -->
-  <div class="row">
-    
-  <div class="mx-auto col-6">
-    <app-map [pageType]="'create'" (createPageLatLon)="handleMapCoordinateChange($event)"></app-map>
-  </div>
-  <div class="bs-component col-6">
-    <form (ngSubmit)="addNewMessage()">
-      <div class="form-group">
-        <label for="createNewMessageTitle"> Title : </label>
-        <input id="createNewMessageTitle" [(ngModel)]="newMessage.title" [ngModelOptions]="{standalone: true}"
-          required="required" type="text" class="form-control" placeholder="Please enter a title">
-      </div>
-      <div class="form-group>">
-        <label for="createNewMessageDescription"> Description : </label>
-        <textarea id="createNewMessageDescription" [(ngModel)]="newMessage.description"
-          [ngModelOptions]="{standalone: true}" required="required" class="form-control" rows="6"
-          placeholder="Please enter a description"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="createNewMessageAddress">Address : </label>
-        <input id="createNewMessageAddress" [(ngModel)]="newMessage.address" [ngModelOptions]="{standalone: true}"
-          type="text" class="form-control" placeholder="Please enter address">
-      </div>
-      <div class="form-group">
-        <label for="createNewMessageTelephone">Telephone Number : </label>
-        <input id="createNewMessageTelephone" [(ngModel)]="newMessage.phone" [ngModelOptions]="{standalone: true}"
-          required="required" type="tel" class="form-control" placeholder="Please enter your phone number">
-      </div>
-      <div class="form-group">
-        <div class="input-group mb-3">
-          <div class="custom-file">
-            <input [ngModel]="newMessage.image" [ngModelOptions]="{standalone:true}" type="text"
-              class="custom-file-input" id="inputGroupFile02">
-            <label class="custom-file-label" for="inputGroupFile02">Choose file</label>
-          </div>
-          <div class="input-group-append">
-            <span class="input-group-text" id="">Upload</span>
-          </div>
+    <div class="jumbotron jumbotron-fluid pt-5 pb-0">
+        <div class="text-center container">
+          <h1 class="display-3">Report a garbage!</h1>
+          <p class="lead">
+            Follow these two steps, to report a garbage in your area!
+          </p>
         </div>
       </div>
-      <button type="submit" class="btn btn-primary" id="submitBtn">Submit</button>
-    </form>
+  <div class="card details-container shadow mb-4">
+    <!-- Card Header -->
+    <div class="card-header text-center">
+      <h1 class="text-dark">1. Pick a location!</h1>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+      <div class="alert alert-info text-center" role="alert">
+        Choose the location of the garbage and the address below will be automatically filled for you!
+      </div>
+      <div class="map-input-container">
+        <app-map [pageType]="'create'" (createPageLatLon)="handleMapCoordinateChange($event)"></app-map>
+      </div>
+    </div>
   </div>
 
-</div>
+  <div class="card form-input-container details-container shadow mb-4">
+    <!-- Card Header -->
+    <div class="card-header text-center">
+      <h1 class="text-dark">2. Fill in the information!</h1>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+      <div class="alert alert-info text-center" role="alert">
+          Fields with (*) are required!
+        </div>
+      <form (ngSubmit)="addNewMessage()">
+        <!-- Title input -->
+        <div class="form-group">
+          <label for="createNewMessageTitle"> Title: *</label>
+          <input id="createNewMessageTitle" [(ngModel)]="newMessage.title" [ngModelOptions]="{ standalone: true }"
+            required="required" type="text" class="form-control" />
+        </div>
+        <!-- End of title input -->
+        <!-- Description input -->
+        <div class="form-group">
+          <label for="createNewMessageDescription"> Description: *</label>
+          <textarea id="createNewMessageDescription" [(ngModel)]="newMessage.description"
+            [ngModelOptions]="{ standalone: true }" required="required" class="form-control" rows="6"></textarea>
+        </div>
+        <!-- End of description input -->
+        <!-- Category input -->
+        <div class="form-group">
+            <label for="categoryInput"> Select categories: </label>
+            <select
+              [(ngModel)]="selectedCategories"
+              [ngModelOptions]="{ standalone: true }"
+              id="categoryInput"
+              required="required"
+              class="form-control"
+              size="6"
+              multiple
+              >
+              <option *ngFor="let category of categoryService.categories" [ngValue]="category">
+                {{category.name | uppercase}}
+              </option>
+            </select>
+          </div>
+
+          <!-- End of category input -->
+          <!-- Address input -->
+        
+            <div class="form-group">
+              <label for="createNewMessageAddress">Address of the garbage: *</label>
+              <input id="createNewMessageAddress" [(ngModel)]="newMessage.address"
+                [ngModelOptions]="{ standalone: true }" type="text" class="form-control" />
+            </div>
+        
+          <!-- End of address input -->
+
+          <!-- Telephone input -->
+            <div class="form-group">
+              <label for="createNewMessageTelephone">Contact number: </label>
+              <input id="createNewMessageTelephone" [(ngModel)]="newMessage.phone"
+                [ngModelOptions]="{ standalone: true }" required="required" type="tel" class="form-control"
+                placeholder="Please enter your phone number" />
+            </div>
+          <!-- End of telephone input -->
+        
+        <!-- File upload input -->
+        <div class="form-group">
+          <label for="fileUploadCustom">Upload image: *</label>
+          <div class="custom-file" id="fileUploadCustom">
+            <input class="custom-file-input" (change)="onFileChange($event)" type="file" accept="image/*"
+              id="fileUpload" [ngStyle]="{ cursor: 'pointer' }" />
+            <label class="custom-file-label font-weight-normal" for="fileUpload">{{ selectedFile?.file?.name }}</label>
+          </div>
+        </div>
+        <!-- End of file upload input -->
+        <!-- Container for image upload -->
+        <div *ngIf="selectedFile" class="img-preview-container">
+          <div class="img-preview" [ngStyle]="{ 'background-image': 'url(' + selectedFile.src + ')' }"></div>
+          <div *ngIf="selectedFile.pending" class="img-loading-overlay">
+            <div class="img-spinning-circle"></div>
+          </div>
+          <div *ngIf="selectedFile.status === 'ok'" class="alert alert-success" role="alert">
+            Image uploaded successfully!
+          </div>
+          <div *ngIf="selectedFile.status === 'fail'" class="alert alert-danger" role="alert">Image upload failed!</div>
+        </div>
+        <!-- End of container for image upload -->
+        <div class="form-group">
+          <button type="submit" class="btn btn-primary btn-lg" id="submitBtn" [ngStyle]="{width: '100%'}">Create!</button>
+        </div>
+      </form>
+    </div>
+  </div>
 </div>

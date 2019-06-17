@@ -59,3 +59,42 @@ export const sendMailRegister = async (user: IUserModel) => {
  
 
 }
+
+/**
+ * send subcribe email
+ * @param userId 
+ * @param messageId 
+ */
+export const sendMailSubcribe = async (userId : string, messageId: string) => {
+  try {
+    let urlMessage = config.get("url.show-message");
+    let singleUser: IUserModel | null = await user.findById(userId);
+
+    if (singleUser){
+
+     mailConfig.ViewOptionForSubcribeEmail(gmailTransport,hbs);
+     let HelperOptions = {
+       from: '"Garbage Hunter Team" <garbage.hunter.2019@gmail.com>',
+       to: singleUser.email,
+       subject: 'New matching Message',
+       template: 'subcribe-email',
+       context: {
+         url: urlMessage,
+         messageId: messageId
+       }
+       };
+   
+       gmailTransport.sendMail(HelperOptions, (error: any,info: any) => {
+           if(error) {
+             console.log(error);
+           }
+           console.log("email is send");
+           console.log(info);
+       });
+   
+    }
+  } catch (error) {
+    console.log(error)
+  }
+ 
+}

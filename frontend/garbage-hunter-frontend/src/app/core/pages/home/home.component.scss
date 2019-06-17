@@ -11,8 +11,28 @@
 }
 
 .garbage-img{
-    height: 200px; 
-    width: 100%; 
-    display: block;
-    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.card-item {
+    transition: transform .2s; /* Animation */
+}
+
+.card-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0.5rem 1rem #28a74694 !important;
+}
+
+.display-3{
+    font-size: 1.5rem;
+    font-weight: 300;
+    line-height: 1.2;
+}
+
+.display-4{
+    font-size: 1.2rem;
+    font-weight: 300;
+    line-height: 1.2;
 }

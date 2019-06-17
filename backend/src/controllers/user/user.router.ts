@@ -12,12 +12,12 @@ import {
     getAllUsers,
     deleteAllUsers,
     login,
+    loginByToken,
     exportUsersAsCsv,
     updateSingleUserWithToken,
     deleteSingleUserWithToken,
     registerUser,
     confirmEmail,
-
     createUser,
     getSingleUser,
     updateSingleUser,
@@ -43,12 +43,16 @@ userRouter.delete('/delete_all', logTime, wrapAsync(deleteAllUsers));
 /** READ BY email and address with query ?email=..&&address=.. */
 userRouter.get('/login', logTime, wrapAsync(login));
 
+/** AUTO LOGIN WITH TOKEN */
+userRouter.get('/login/:token', logTime, wrapAsync(loginByToken));
+
 /** UPDATE */
 userRouter.put('/update/:token', logTime, wrapAsync(updateSingleUserWithToken));
 
 /** DELETE */
 userRouter.delete('/delete/:token', logTime, wrapAsync(deleteSingleUserWithToken));
 
+/** CONFIRM EMAIL */
 userRouter.get('/confirm_email/:token', logTime, wrapAsync(confirmEmail))
 
 /**For Testing*/

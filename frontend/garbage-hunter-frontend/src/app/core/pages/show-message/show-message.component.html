@@ -1,44 +1,109 @@
-<div class="container">
-  <div class="page-header">
-    <h1 id="big-title">{{message?.title}}</h1>
+<div *ngIf="message" class="container mt-5">
+  <div class="card details-container shadow mb-4">
+    <!-- Card Header -->
+    <div class="card-header text-center">
+      <h1 class="m-0 font-weight-bold text-dark">{{message?.title}}</h1>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+      <h5>{{message?.description}}</h5>
+    </div>
   </div>
-  <div class="bs-docs-section">
-  <div class="row">
-    <div class="col-lg-6">
-      <div class="bs-component">
-        <form>
-          <div class="form-group">
-            <h4> Description : </h4>
-            <div class="text-body">
-            <p>{{message?.description}}</p>
-          </div>
-          </div>
-          <div class="form-group">
-            <h4>Address : </h4>
-            <div class="text-body">
-                <p>{{message?.address}}</p>
-              </div>
-            <!-- TODO change the place of the map and resize the div if necessary -->
-            <div [ngStyle]="{height: '50vh'}">
-              <app-map [pageType]="'show'" [messages]=[this.message]></app-map>
-            </div>
-          </div>
-          <div class="form-group">
-            <h4>Telephone Number : </h4>
-            <div class="text-body">
-                <p>{{message?.phone}}</p>
-              </div>
-          </div>
-          
-          <button class="btn btn-primary" id="editBtn">Edit Message</button>
 
-        </form>
+  <div class="row">
+    <div class="col-lg-8">
+      <div class="card shadow mb-4">
+        <!-- Card Header -->
+        <div class="card-header">
+          <h5 class="m-0 font-weight-bold text-secondary">Photo</h5>
+        </div>
+        <!-- Card Body -->
+        <div class="card-body upper-container">
+          <a href="{{message?.imageUrl}}" target="_blank">
+            <img class="image-fluid garbage-img" src="{{message?.imageUrl}}" alt="Card image" />
+          </a>
+        </div>
       </div>
     </div>
-    <div class="col-lg-4 offset-lg-1">
-        <div class="bs-component">
-          <img class="garbage-img" src="{{message?.image}}" alt="Card image"/>
+    <div class="col-lg-4">
+
+      <div class="card shadow mb-4">
+        <!-- Card Header -->
+        <div class="card-header">
+          <h5 class="m-0 font-weight-bold text-secondary">Position</h5>
         </div>
+        <!-- Card Body -->
+        <div class="card-body upper-container">
+          <app-map [pageType]="'show'" [messages]=[this.message]></app-map>
+        </div>
+      </div>
     </div>
   </div>
+
+  <div class="card details-container shadow mb-4">
+    <!-- Card Header -->
+    <div class="card-header">
+      <h5 class="m-0 font-weight-bold text-secondary">Details</h5>
+    </div>
+    <!-- Card Body -->
+    <div class="card-body">
+      <div class="row">
+        <div class="col-lg-6">
+          <dt>Creator:</dt>
+          <dd>{{creator?.email}}</dd>
+          <div *ngIf="message?.phone">
+            <dt>Contact number:</dt>
+            <dd>{{message?.phone}}</dd>
+          </div>
+          <dt>Status:</dt>
+          <dd *ngIf="message.available"><span class="badge badge-success">Available</span></dd>
+          <dd *ngIf="!message.available"><span class="badge badge-danger">Not available</span></dd>
+          <div *ngIf="messageCategories?.length > 0">
+            <dt>Category:</dt>
+            <dd>
+              <span *ngFor="let cat of messageCategories" class="badge badge-pill badge-info">{{cat?.name}}</span>
+            </dd>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <dt>Address:</dt>
+          <dd>{{message?.address}}</dd>
+          <dt>Coordinates:</dt>
+          <dd>{{message?.lat}},{{message?.lon}}</dd>
+          <dt>Time:</dt>
+          <dd>{{message?.created_at | date: 'HH:mm'}}</dd>
+          <dt>Date:</dt>
+          <dd>{{message?.created_at | date: 'dd.MM.yyyy'}}</dd>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="showActionDiv()" class="row text-center my-4">
+    <div class="col-lg">
+      <button *ngIf="showEditChangeButton()" class="btn btn-outline-primary btn-lg mx-1 my-1 btn-action" id="edit-button">Edit message</button>
+    </div>
+    <div class="col-lg">
+      <button *ngIf="showEditChangeButton()" class="btn btn-outline-warning btn-lg mx-1 my-1 btn-action" id="status-button">Mark as unavailable</button>
+    </div>
+    <div class="col-lg">
+      <button *ngIf="showDeleteButton()" class="btn btn-outline-danger btn-lg mx-1 my-1 btn-action" id="delete-button" (click)="archiveMessage()">Delete</button>
+    </div>
+  </div>
+
+  <div class="card details-container shadow mb-4">
+      <!-- Card Header -->
+      <div class="card-header">
+          <h5 class="m-0 font-weight-bold text-secondary">Comments</h5>
+      </div>
+      <!-- Card Body -->
+      <div class="card-body">
+        <app-comment></app-comment>
+      </div>
+    </div>
+
+</div>
+
+<div *ngIf="!message && showError">
+  <app-error></app-error>
 </div>
