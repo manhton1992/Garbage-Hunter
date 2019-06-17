@@ -9,6 +9,7 @@ import { MessageCategoryService } from 'src/app/services/message/message-categor
 import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
 import { MessageCategory } from 'src/app/models/message-category.model';
 import { EmailService } from 'src/app/services/email/email.service';
+import { Router } from '@angular/router';
 
 /**
  * @description class for the uploaded image
@@ -34,7 +35,8 @@ export class CreateMessageComponent implements OnInit {
     private categoryService: CategoryService,
     private messageCategoryService: MessageCategoryService,
     private userCategoryService: UserCategoryService,
-    private emailService: EmailService) { }
+    private emailService: EmailService,
+    private router: Router) { }
 
   /**
    * @description selected image of the input file
@@ -138,6 +140,9 @@ export class CreateMessageComponent implements OnInit {
             },2000);
           }
           alert ("create message successfully");
+           this.router.navigate(['/']).then(() => {
+            window.location.reload();
+          });;
       },error => {
         alert (error.error['data'].message);
         //alert("Fail! Please check input again");

@@ -7,6 +7,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'src/app/models/category.model';
 import { User } from 'src/app/models/user.model';
 import { UserService } from 'src/app/services/user/user.service';
+import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
+import { MessageCategory } from 'src/app/models/message-category.model';
+import { CategoryService } from 'src/app/services/category/category.service';
 
 @Component({
   selector: 'app-show-message',
@@ -14,14 +17,6 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./show-message.component.scss']
 })
 export class ShowMessageComponent implements OnInit {
-
-  /**
-   * @description current user that accessing the page.
-   * @type {User}
-   * @memberof ShowMessageComponent
-   */
-  currentUser: User = null;
-
   /**
    * @description the main message.
    * @type {Message}
@@ -31,10 +26,17 @@ export class ShowMessageComponent implements OnInit {
 
   /**
    * @description all categories of the main message.
+   * @type {MessageCategory[]}
+   * @memberof ShowMessageComponent
+   */
+  messageCategories: MessageCategory[] = [];
+
+/**
+   * @description all categories in the main message.
    * @type {Category[]}
    * @memberof ShowMessageComponent
    */
-  messageCategories: Category[] = [];
+  category: Category[] = [];
 
   /**
    * @description creator of the main message
@@ -54,6 +56,8 @@ export class ShowMessageComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
+    private messageCategoryService: MessageCategoryService,
+    private categoryService: CategoryService,
     private commentService: CommentService,
     private userService: UserService,
     private route: ActivatedRoute,
@@ -61,13 +65,10 @@ export class ShowMessageComponent implements OnInit {
   ) { }
 
    ngOnInit() {
-    this.currentUser = this.userService.user;
     this.route.params.subscribe( async (params) =>  {
       let messageid = params['messageid'];
       this.getMessage(messageid);
     });
-    this.messageCategories = this.dummyCategories;  // test dummy
-    // this.creator = this.dummyCreator;  // test dummy
   }
 
   /**
@@ -80,6 +81,7 @@ export class ShowMessageComponent implements OnInit {
       if(this.message ) {
         this.getCreator();
         this.getComments();
+        this.getMessageCategories();
       }
     }
     , error => {
@@ -92,11 +94,9 @@ export class ShowMessageComponent implements OnInit {
    * @memberof ShowMessageComponent
    */
   getCreator = (): void => {
-    console.log(this.message);
     if (this.message) {
       this.userService.getUserById(this.message.creatorId).subscribe(user => {
         this.creator = user.docs; 
-        console.log(this.creator);
       })
     }
   }
@@ -113,11 +113,32 @@ export class ShowMessageComponent implements OnInit {
   }
 
   /**
+   * @description get all available messages.
+   * @memberof HomeComponent
+   */
+  getMessageCategories = (): void => {
+    this.messageCategoryService.getAllMessageCategories({messageId: this.message._id}).subscribe((messages) => {
+      this.messageCategories = messages;
+      if(this.messageCategories){
+        this.getCategoryNames();
+      }
+    });
+ };
+
+ getCategoryNames = (): void => {
+   for (let i = 0; i < this.messageCategories.length; i++){
+     this.categoryService.getCategoryById(this.messageCategories[i].categoryId).subscribe((messages) =>{
+       this.category.push(messages);
+      })
+    }
+ }
+
+  /**
    * @description delete the message.
    * @memberof ShowMessageComponent
    */
   archiveMessage = (): void => {
-    if (this.currentUser && this.currentUser.isAdmin) { 
+    if (this.userService.user && this.userService.user.isAdmin) { 
       this.message.archive = true;
       this.messageService.updateMessage(this.message).subscribe(success => {
         this.router.navigate(['/']);
@@ -130,7 +151,7 @@ export class ShowMessageComponent implements OnInit {
    * @memberof ShowMessageComponent
    */
   showActionDiv = (): boolean => {
-    if (!this.currentUser) {
+    if (!this.userService.user) {
       // return false;
     }
     return true;
@@ -141,7 +162,7 @@ export class ShowMessageComponent implements OnInit {
    * @memberof ShowMessageComponent
    */
   showEditChangeButton = (): boolean => {
-    if (this.currentUser && (this.currentUser._id == this.creator._id || this.currentUser.isAdmin)) {
+    if (this.userService.user && (this.userService.user._id == this.creator._id || this.userService.user.isAdmin)) {
       return true;
     }
     return false;
@@ -152,34 +173,9 @@ export class ShowMessageComponent implements OnInit {
    * @returns {boolean}
    */
   showDeleteButton = (): boolean => {
-    if (this.currentUser && this.currentUser.isAdmin) {
+    if (this.userService.user && this.userService.user.isAdmin) {
       return true;
     }
     return false;
-  }
-
-  // DUMMY CATEGORIES
-  dummyCategories: Category[] = [
-    {
-      _id: 'cat1',
-      name: 'chair'
-    },
-    {
-      _id: 'cat2',
-      name: 'furniture'
-    }
-  ]
-
-  dummyCreator: User = {
-    _id: 'user1',
-    email: 'bagusnanda@test.com',
-    firstName: 'Bagus',
-    lastName: 'Nanda',
-    phoneNumber: '015628374',
-    passwordHash: 'string',
-    isAdmin: true,
-    isConfirm: true,
-    profileImageUrl: 'string',
-    created_at: new Date('2019-02-12'),
   }
 }

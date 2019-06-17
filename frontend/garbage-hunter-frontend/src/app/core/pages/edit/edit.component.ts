@@ -11,6 +11,7 @@ import { MapService } from 'src/app/services/map/map.service';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
 import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
+import { MessageCategory } from 'src/app/models/message-category.model';
 
 @Component({
   selector: 'app-edit',
@@ -34,10 +35,17 @@ export class EditComponent implements OnInit {
 
   /**
    * @description all categories of the main message.
+   * @type {MessageCategory[]}
+   * @memberof ShowMessageComponent
+   */
+  messageCategories: MessageCategory[] = [];
+
+/**
+   * @description all categories in the main message.
    * @type {Category[]}
    * @memberof ShowMessageComponent
    */
-  messageCategories: Category[] = [];
+  category: Category[] = [];
 
   /**
    * @description creator of the main message
@@ -68,15 +76,15 @@ export class EditComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.currentUser = this.userService.user;
-    this.route.params.subscribe(params => {
+    if (this.categoryService.categories.length == 0){      
+      this.categoryService.getAllCategories().subscribe(response => {
+          this.categoryService.categories = response;
+      })
+    }
+    this.route.params.subscribe( async (params) =>  {
       let messageid = params['messageid'];
       this.getMessage(messageid);
-      this.getCreator();
-      this.getComments();
     });
-    this.messageCategories = this.dummyCategories;  // test dummy
-    this.creator = this.dummyCreator;  // test dummy
   }
 
   /**
@@ -86,8 +94,13 @@ export class EditComponent implements OnInit {
   getMessage = (messageid: string):void => {
     this.messageService.getMessageById(messageid).subscribe(message => {
       this.message = message;
-      console.log(this.message);
-    }, error => {
+      if(this.message ) {
+        this.getCreator();
+        this.getComments();
+        this.getMessageCategories();
+      }
+    }
+    , error => {
       this.showError = true;
     })
   }
@@ -98,7 +111,9 @@ export class EditComponent implements OnInit {
    */
   getCreator = (): void => {
     if (this.message) {
-      
+      this.userService.getUserById(this.message.creatorId).subscribe(user => {
+        this.creator = user.docs; 
+      })
     }
   }
   /**
@@ -112,6 +127,27 @@ export class EditComponent implements OnInit {
       });
     }
   }
+
+  /**
+   * @description get all available messages.
+   * @memberof HomeComponent
+   */
+  getMessageCategories = (): void => {
+    this.messageCategoryService.getAllMessageCategories({messageId: this.message._id}).subscribe((messages) => {
+      this.messageCategories = messages;
+      if(this.messageCategories){
+        this.getCategoryNames();
+      }
+    });
+ };
+
+ getCategoryNames = (): void => {
+   for (let i = 0; i < this.messageCategories.length; i++){
+     this.categoryService.getCategoryById(this.messageCategories[i].categoryId).subscribe((messages) =>{
+       this.category.push(messages);
+      })
+    }
+ }
 
   /**
    * @description delete the message.
@@ -163,7 +199,9 @@ export class EditComponent implements OnInit {
     let url = '/messages/' + this.message._id;
     this.messageService.updateMessage(this.message).subscribe();
     alert("Message successfully edited");
-    this.router.navigate[url];
+    this.router.navigate([url]).then(() => {
+      window.location.reload();
+    });;
   }
 
 
@@ -202,32 +240,6 @@ export class EditComponent implements OnInit {
         console.error(err);
       }
     );
-  }
-
-
-  // DUMMY CATEGORIES
-  dummyCategories: Category[] = [
-    {
-      _id: 'cat1',
-      name: 'chair'
-    },
-    {
-      _id: 'cat2',
-      name: 'furniture'
-    }
-  ]
-
-  dummyCreator: User = {
-    _id: 'user1',
-    email: 'bagusnanda@test.com',
-    firstName: 'Bagus',
-    lastName: 'Nanda',
-    phoneNumber: '015628374',
-    passwordHash: 'string',
-    isAdmin: true,
-    isConfirm: true,
-    profileImageUrl: 'string',
-    created_at: new Date('2019-02-12'),
   }
 }
 
