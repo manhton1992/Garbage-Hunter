@@ -62,6 +62,7 @@ export class CommentComponent implements OnInit {
     if (this.userService.user) {
       this.commentService.createComment(thisNewComment).subscribe(
         (reponseCommnet) => {
+          this.newComment.creatorId = this.userService.user.email;
           this.comments.push(this.newComment);
           // alert('COMMENT CREATED! RELOADING PAGE!');
         },
