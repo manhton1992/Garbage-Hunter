@@ -183,7 +183,7 @@ export class MapComponent implements OnInit {
   setMarker = (map: Map): void => {
     if (this.messages.length > 0) { 
       this.messages.forEach((message) => {
-        if (message) {    
+        if (message && message.lat && message.lon) {    
           marker([message.lat, message.lon], this.map_conf_marker)
           .addTo(map)
           .bindPopup(`<a href="messages/${message._id}">${message.title}</a>`);
@@ -197,10 +197,19 @@ export class MapComponent implements OnInit {
    * @memberof MapComponent
    */
   centerMap = (): void => {
-    if (this.pageType == 'show') {
-      this.centerToMessage();
-    } else {
-      this.getUserLocation();
+    switch (this.pageType) {
+      case 'show':
+        this.centerToMessage();
+        break;
+      case 'create':
+        this.getUserLocation();
+        setTimeout(() => {
+          this.centerToMessage();
+        }, 1000);
+        break;
+      default:
+        this.getUserLocation();
+        break;
     }
   }
 
@@ -228,11 +237,11 @@ export class MapComponent implements OnInit {
 
   /**
    * @description center by the message.
-   * SHOW-MESSAGE
+   * SHOW-MESSAGE, CREATE-MESSAGE
    * @memberof MapComponent
    */
   centerToMessage = (): void => {
-    if (this.messages.length > 0 && this.messages[0]) { 
+    if (this.messages.length > 0 && this.messages[0] && this.messages[0].lat && this.messages[0].lon ) { 
       this.myMap.setView(new LatLng(this.messages[0].lat, this.messages[0].lon), 17);
     }
   }
