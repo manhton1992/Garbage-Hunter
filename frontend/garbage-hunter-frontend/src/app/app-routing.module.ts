@@ -8,12 +8,13 @@ import { ShowMessageComponent } from './core/pages/show-message/show-message.com
 import { AdminComponent } from './core/pages/admin/admin.component';
 import { EditComponent } from './core/pages/edit/edit.component';
 import { AuthAdminService } from './services/auth/auth-admin/auth-admin.service';
+import { LeaveCreateMessageService } from './services/leave/leave-create-message.service';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'messages/create', component: CreateMessageComponent },
+  { path: 'messages/create', component: CreateMessageComponent, canDeactivate: [LeaveCreateMessageService] },
   { path: 'messages/:messageid', component: ShowMessageComponent },
   { path: 'messages/:messageid/edit', component: EditComponent },
   { path: 'admin', canActivate: [AuthAdminService], component: AdminComponent, },

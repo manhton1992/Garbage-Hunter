@@ -83,6 +83,7 @@ export class CreateMessageComponent implements OnInit {
         // console.log("get categories:  " + JSON.stringify(response));
       });
     }
+    this.addDeleteUploadedImageListener();
   }
 
   processQueryParams = (): void => {
@@ -109,7 +110,7 @@ export class CreateMessageComponent implements OnInit {
       // create new message
       this.messageService.createMessage(newMessage).subscribe(
         (response_message) => {
-          if (this.selectedCategories.length > 0) {
+          if (this.selectedCategories && this.selectedCategories.length > 0) {
             this.selectedCategories.forEach((category) => {
               let messageCategory: MessageCategory = {
                 messageId: response_message._id,
@@ -150,6 +151,7 @@ export class CreateMessageComponent implements OnInit {
             }, 2000);
           }
           alert('MESSAGE CREATED!');
+          localStorage.removeItem('imgUrl');
           this.router.navigate([`/messages/${response_message._id}`]);
         },
         (error) => {
@@ -227,6 +229,7 @@ export class CreateMessageComponent implements OnInit {
           this.selectedFile.pending = false;
           this.selectedFile.status = 'ok';
           this.newMessage.imageUrl = imageUrl;
+          localStorage.setItem('imgUrl', imageUrl);
         },
         (error) => {
           this.selectedFile.pending = false;
@@ -238,4 +241,20 @@ export class CreateMessageComponent implements OnInit {
 
     reader.readAsDataURL(file);
   };
+
+  /**
+   * @description delete uploaded image that has not yet submitted on refresh.
+   * @memberof CreateMessageComponent
+   */
+  addDeleteUploadedImageListener = () => {
+    window.onbeforeunload = () => {
+      let imgUrl = localStorage.getItem('imgUrl');
+      if (imgUrl) {
+        let imageKey = imgUrl.split('/').pop();
+        this.messageService.deleteUploadedImage(imageKey).subscribe((result) => {
+          localStorage.removeItem('imgUrl');
+        });
+      }
+    };
+  }
 }

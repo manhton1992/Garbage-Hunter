@@ -37,3 +37,17 @@ export const upload = multer({
         },
     }),
 });
+
+/** delete function for aws s3 */
+export const deleteFile = (key: string) => {
+    s3.deleteObject({
+        Bucket: config.get('aws.AWS_S3_BUCKET_NAME'),
+        Key: key
+    }, (error, data) => {
+        if (error) {
+            console.error('error when removing file');
+        } else {
+            console.log(key + ' is removed!');
+        }
+    });
+}
