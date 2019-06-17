@@ -21,9 +21,15 @@
       <!-- if user is not logged in -->
       <li *ngIf="userService.user == null" class="nav-item" [routerLinkActive]="['active']">
         <a class="nav-link" [routerLink]="['/login']">
-          <fa name="sign-in" size="lg"></fa> Login/Register
+          <fa name="sign-in" size="lg"></fa> Login
         </a>
       </li>
+      <!-- if user is not logged in -->
+      <li *ngIf="userService.user == null" class="nav-item" [routerLinkActive]="['active']">
+          <a class="nav-link" [routerLink]="['/register']">
+            <fa name="user-plus" size="lg"></fa> Register
+          </a>
+        </li>
       <!-- if user is logged in and is not admin -->
       <li *ngIf="userService.user != null" class="nav-item" [routerLinkActive]="['active']">
         <a class="nav-link" [routerLink]="['/messages/create']">

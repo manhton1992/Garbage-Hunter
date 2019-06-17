@@ -1,4 +1,4 @@
-<div class="container">
+<div *ngIf="canEdit()" class="container">
   <!-- <div class="jumbotron jumbotron-fluid pt-5 pb-0">
         <div class="text-center container">
           <h1 class="display-3">Report a garbage!</h1>
@@ -118,3 +118,7 @@
     </div>
   </div>
 </div>
+
+<div *ngIf="!canEdit()">
+    <app-error [code]="401" [message]="'Not authorized!'"></app-error>
+  </div>

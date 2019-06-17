@@ -133,28 +133,29 @@ export class ShowMessageComponent implements OnInit {
     }
  }
 
+ /**
+  * @description set as unavailable.
+  * @memberof ShowMessageComponent
+  */
+ setAsUnavailable = (): void => {
+   this.message.available = false;
+   this.messageService.updateMessage(this.message).subscribe(success => {
+     alert('MESSAGE IS MARKED AS UNAVAILABLE!');
+    this.router.navigate(['/']);
+  });
+ }
+
   /**
    * @description delete the message.
    * @memberof ShowMessageComponent
    */
-  archiveMessage = (): void => {
-    if (this.userService.user && this.userService.user.isAdmin) { 
+  archiveMessage = (): void => { 
       this.message.archive = true;
+      this.message.available = false;
       this.messageService.updateMessage(this.message).subscribe(success => {
+        alert('MESSAGE IS ARCHIVED!');
         this.router.navigate(['/']);
       });
-    }
-  }
-
-  /**
-   * @description show action div that contains buttons to do something to the message
-   * @memberof ShowMessageComponent
-   */
-  showActionDiv = (): boolean => {
-    if (!this.userService.user) {
-      // return false;
-    }
-    return true;
   }
 
   /**
@@ -162,7 +163,7 @@ export class ShowMessageComponent implements OnInit {
    * @memberof ShowMessageComponent
    */
   showEditChangeButton = (): boolean => {
-    if (this.userService.user && (this.userService.user._id == this.creator._id || this.userService.user.isAdmin)) {
+    if (this.userService.user && (this.userService.user.isAdmin || this.userService.user._id == this.creator._id)) {
       return true;
     }
     return false;

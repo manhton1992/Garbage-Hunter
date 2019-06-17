@@ -240,5 +240,16 @@ export class EditComponent implements OnInit {
       }
     );
   }
+
+  /**
+   * @description check if user is the creator of message.
+   * @memberof EditComponent
+   */
+  canEdit = (): boolean => {
+    if (this.userService.user && this.message && (this.userService.user.isAdmin || this.userService.user._id == this.message.creatorId)) {
+      return true;
+    }
+    return false;
+  }
 }
 
