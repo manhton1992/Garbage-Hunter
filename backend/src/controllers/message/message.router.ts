@@ -39,7 +39,7 @@ messageRouter.post('/image_upload', logTime, wrapAsync(uploadImage));
 messageRouter.post('/delete_image', logTime, verifyToken, wrapAsync(deleteImage));
 
 /** Delete all activities in the database */
-messageRouter.delete('/delete_all', logTime, wrapAsync(deleteAllMessages));
+messageRouter.delete('/delete_all', logTime,  verifyToken, wrapAsync(deleteAllMessages));
 
 /** READ BY ID */
 messageRouter.get('/:messageid', logTime, wrapAsync(getSingleMessage));
