@@ -26,34 +26,6 @@ export class UserCategoryService {
     );
   };
 
-
-   /**
-   * @description get UserCategory by category id.
-   * @returns {Observable<UserCategory>}
-   * @memberof UserCategoryService
-   */
-  getUserCategoryByCategoryId = (categoryid: string): Observable<UserCategory[]> => {
-    const url = `${this.userCategoryUrl}/get_by_categoryid/${categoryid}`;
-    return this.http.get<UserCategory[]>(url).pipe(
-      map((response) => response['data']['docs']),
-      catchError((err) => observableHandleError(err))
-    );
-  };
-
-     /**
-   * @description get UserCategory by userId.
-   * @returns {Observable<UserCategory>}
-   * @memberof UserCategoryService
-   */
-  getUserCategoryByUserId = (userId: string): Observable<UserCategory[]> => {
-    const url = `${this.userCategoryUrl}/get_by_userid/${userId}`;
-    return this.http.get<UserCategory[]>(url).pipe(
-      map((response) => response['data']['docs']),
-      catchError((err) => observableHandleError(err))
-    );
-  };
-
-
   /**
    * @description create new UserCategory.
    * @returns {Observable<UserCategory>}
