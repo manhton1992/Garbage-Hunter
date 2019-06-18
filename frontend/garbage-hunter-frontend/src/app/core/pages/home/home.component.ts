@@ -91,7 +91,6 @@ export class HomeComponent implements OnInit {
         userId: this.userService.user._id,
         categoryId: category._id,
       };
-      this.userCategoryService.getUserCategoryByCategoryId;
       this.userCategoryService.createUserCategory(userCategory).subscribe(
         (response) => {
           this.userCategories.push(response);
@@ -120,7 +119,9 @@ export class HomeComponent implements OnInit {
    */
   getUserCategoriesAndPutInLayout = (): void => {
     if (this.userService.user) {
-    this.userCategoryService.getUserCategoryByUserId(this.userService.user._id).subscribe((response) => {
+    this.userCategoryService.getAllUserCategories({userId: this.userService.user._id})
+    .subscribe(
+      (response) => {
       if (response && response.length > 0) {
         this.userCategories = response;
         // console.log('user categories size: ' + this.userCategories.length);
