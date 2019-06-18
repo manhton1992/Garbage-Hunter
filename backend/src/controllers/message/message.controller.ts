@@ -7,6 +7,18 @@ import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IMessageModel, message } from '../../models/message.model';
 import { upload, deleteFile } from '../../helpers/image-upload-helper/image-upload';
+import * as jwt from 'jsonwebtoken';
+import config from 'config';
+import {
+    sendSuccess,
+    sendBadRequest,
+    sendForbidden,
+    sendCreated,
+    sendUnprocessable,
+} from '../../helpers/request-response-helper/response-status';
+
+/** Secret key to verify API callers */
+const myJWTSecretKey = config.get<string>('jwt.secret-key');
 
 /**
  * Get all messages.
@@ -16,20 +28,9 @@ import { upload, deleteFile } from '../../helpers/image-upload-helper/image-uplo
 export const getMessages = async (req: Request, res: Response) => {
     try {
         const messages: IMessageModel[] = await message.find(req.query);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                items: messages.length,
-                docs: messages,
-            },
-        });
+        sendSuccess(res, messages);
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -40,20 +41,16 @@ export const getMessages = async (req: Request, res: Response) => {
  */
 export const createMessage = async (req: Request, res: Response) => {
     try {
-        const newMessage: IMessageModel = await message.create(req.body);
-        res.status(201).send({
-            data: {
-                status: 'success',
-                docs: newMessage,
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const newMessage: IMessageModel = await message.create(req.body);
+                sendCreated(res, newMessage);
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -91,12 +88,7 @@ export const exportMessagesAsCsv = async (req: Request, res: Response) => {
             res.status(200).send(csv);
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -107,20 +99,16 @@ export const exportMessagesAsCsv = async (req: Request, res: Response) => {
  */
 export const deleteAllMessages = async (req: Request, res: Response) => {
     try {
-        await message.deleteMany({});
-        res.status(200).send({
-            data: {
-                status: 'success',
-                message: 'all messages are deleted',
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                await message.deleteMany({});
+                sendSuccess(res, null, 'all messages are deleted');
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -132,19 +120,9 @@ export const deleteAllMessages = async (req: Request, res: Response) => {
 export const getSingleMessage = async (req: Request, res: Response) => {
     try {
         const singleMessage: IMessageModel | null = await message.findById(req.params.messageid);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: singleMessage,
-            },
-        });
+        sendSuccess(res, singleMessage);
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -155,22 +133,22 @@ export const getSingleMessage = async (req: Request, res: Response) => {
  */
 export const updateSingleMessage = async (req: Request, res: Response) => {
     try {
-        const updateMessage: IMessageModel | null = await message.findByIdAndUpdate(req.params.messageid, req.body, {
-            new: true,
-        });
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: updateMessage,
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const updateMessage: IMessageModel | null = await message.findByIdAndUpdate(
+                    req.params.messageid,
+                    req.body,
+                    {
+                        new: true,
+                    }
+                );
+                sendSuccess(res, updateMessage, undefined);
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -181,20 +159,16 @@ export const updateSingleMessage = async (req: Request, res: Response) => {
  */
 export const deleteSingleMessage = async (req: Request, res: Response) => {
     try {
-        const deleteMessage: IMessageModel | null = await message.findByIdAndDelete(req.params.messageid);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: deleteMessage,
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const deleteMessage: IMessageModel | null = await message.findByIdAndDelete(req.params.messageid);
+                sendSuccess(res, deleteMessage, undefined);
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -208,30 +182,13 @@ export const uploadImage = async (req: any, res: Response) => {
         const singleUpload = upload.single('image');
         singleUpload(req, res, (error) => {
             if (error) {
-                res.status(422).send({
-                    data: {
-                        status: 'error',
-                        message: error.message,
-                    },
-                });
+                sendUnprocessable(res, error.message);
             } else {
-                res.status(200).send({
-                    data: {
-                        status: 'success',
-                        docs: {
-                            imageUrl: req.file.location,
-                        },
-                    },
-                });
+                sendSuccess(res, { imageUrl: req.file.location });
             }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -242,55 +199,15 @@ export const uploadImage = async (req: any, res: Response) => {
  */
 export const deleteImage = async (req: Request, res: Response) => {
     try {
-        deleteFile(req.body.key);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                message: 'image is removed'
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                deleteFile(req.body.key);
+                sendSuccess(res, null, 'image is removed');
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
-};
-
-/**
- * ======================================================================================
- * Functions
- * ======================================================================================
- */
-
-/**
- * @description Process the queries for showing activities
- * @param {*} queries
- * @returns {object}
- */
-const processQueries = (queries: any): object => {
-    /** regex the params search for not dates */
-    for (let key of Object.keys(queries)) {
-        if (key != 'start_at' && key != 'end_at' && key != 'from' && key != 'until') {
-            queries[key] = new RegExp(queries[key], 'i');
-        }
-    }
-    /** handle from and until params */
-    let fromQuery = queries.from;
-    let untilQuery = queries.until;
-    if (fromQuery || untilQuery) {
-        let newQuery: object = {};
-        if (fromQuery) {
-            Object.assign(newQuery, { $gte: fromQuery });
-            delete queries.from;
-        }
-        if (untilQuery) {
-            Object.assign(newQuery, { $lte: untilQuery });
-            delete queries.until;
-        }
-        queries.start_at = newQuery;
-    }
-    return queries;
 };

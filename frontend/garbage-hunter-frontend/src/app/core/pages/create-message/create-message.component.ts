@@ -234,7 +234,7 @@ export class CreateMessageComponent implements OnInit {
         (error) => {
           this.selectedFile.pending = false;
           this.selectedFile.status = 'fail';
-          this.selectedFile.src = 'https://www.shareicon.net/data/128x128/2015/09/22/105437_cloud_512x512.png';
+          this.selectedFile.src = '';
         }
       );
     });
