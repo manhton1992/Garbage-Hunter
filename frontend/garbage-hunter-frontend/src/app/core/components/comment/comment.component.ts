@@ -36,9 +36,6 @@ export class CommentComponent implements OnInit {
   ngOnInit() {
     this.getMessageId();
     this.getComments();
-    this.route.params.subscribe((params) => {
-      this.newComment.messageId = params['messageid'];
-    });
   }
 
   getComments(): void {
@@ -54,6 +51,7 @@ export class CommentComponent implements OnInit {
   getMessageId(): void {
     this.route.params.subscribe((params) => {
       this.thisMessageID = params['messageid'];
+      this.newComment.messageId = params['messageid'];
     });
   }
 
@@ -62,8 +60,8 @@ export class CommentComponent implements OnInit {
     if (this.userService.user) {
       this.commentService.createComment(thisNewComment).subscribe(
         (reponseCommnet) => {
-          this.newComment.creatorId = this.userService.user.email;
-          this.comments.unshift(this.newComment);
+          thisNewComment.creatorId = this.userService.user.email;
+          this.comments.unshift(thisNewComment);
           // alert('COMMENT CREATED! RELOADING PAGE!');
         },
         (error) => {

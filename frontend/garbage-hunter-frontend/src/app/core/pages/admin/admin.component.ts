@@ -43,10 +43,33 @@ export class AdminComponent implements OnInit {
    */
   archivedMessages: Message[] = [];
 
+  /**
+   * @description all categories in database.
+   * @type {Category[]}
+   * @memberof AdminComponent
+   */
   categories: Category[];
 
+  /**
+   * @description data that will be sent to the line chart component.
+   * @type {*}
+   * @memberof AdminComponent
+   */
   lineData: any = [];
+
+  /**
+   * @description data that will be sent to the pie chart component.
+   * @type {*}
+   * @memberof AdminComponent
+   */
   pieData: any = [];
+
+  /**
+   * @description collapse messages table div
+   * @type {boolean}
+   * @memberof AdminComponent
+   */
+  isCollapsed: boolean = false;
 
   constructor(private messageService: MessageService, private categoryService: CategoryService, private messageCategoryService: MessageCategoryService, private userService: UserService) {}
 
@@ -143,7 +166,7 @@ export class AdminComponent implements OnInit {
    */
   dataTotalBox = (): object => {
     return {
-      heading: 'Total',
+      heading: 'Total messages',
       type: 1,
       value: this.messages.length,
       maxValue: this.messages.length,
