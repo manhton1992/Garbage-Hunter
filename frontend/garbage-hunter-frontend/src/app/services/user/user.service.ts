@@ -53,8 +53,9 @@ getUserById = (userid: string): Observable<User> => {
  */
 login(email: string, password: string){
 
-  const url = `${this.userLoginUrl}?email=${email}&&password=${password}`; 
-  return this.http.get<User>(url).pipe(map(response => response['data'],
+  const url = `${this.userLoginUrl}`; 
+  return this.http.post<User>(url, {email: email, password: password})
+  .pipe(map(response => response['data'],
   catchError((err) => observableHandleError(err))));
 }
 
