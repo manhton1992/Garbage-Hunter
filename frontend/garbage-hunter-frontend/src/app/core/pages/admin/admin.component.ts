@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Message } from 'src/app/models/message.model';
 import { MessageService } from 'src/app/services/message/message.service';
+import { Category } from 'src/app/models/category.model';
+import { CategoryService } from 'src/app/services/category/category.service';
+import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
+import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
   selector: 'app-admin',
@@ -8,6 +12,9 @@ import { MessageService } from 'src/app/services/message/message.service';
   styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent implements OnInit {
+
+  page: number = 1;
+  pageSize: number = 15;
   /**
    * @description all messages.
    * @type {Message[]}
@@ -36,10 +43,16 @@ export class AdminComponent implements OnInit {
    */
   archivedMessages: Message[] = [];
 
-  constructor(private messageService: MessageService) {}
+  categories: Category[];
+
+  lineData: any = [];
+  pieData: any = [];
+
+  constructor(private messageService: MessageService, private categoryService: CategoryService, private messageCategoryService: MessageCategoryService, private userService: UserService) {}
 
   ngOnInit() {
     this.getAllMessages();
+    this.getCategories();
   }
 
   /**
@@ -48,10 +61,16 @@ export class AdminComponent implements OnInit {
    */
   getAllMessages = (): void => {
     this.messageService.getAllMessages({}).subscribe((messages) => {
-      this.messages = messages;
+      messages.forEach(message => {
+        this.userService.getUserById(message.creatorId).subscribe(user => {
+          message.creatorId = user.email;
+        })
+      })
+      this.messages = this.sortDateDesc(messages);
       this.availableMessages = this.getAvailableMessages();
       this.unavailableMessages = this.getUnavailableMessages();
       this.archivedMessages = this.getArchivedMessages();
+      this.processDataMonthly();
     });
   };
 
@@ -96,6 +115,13 @@ export class AdminComponent implements OnInit {
     });
     return items;
   };
+
+  getCategories = (): void => {
+    this.categoryService.getAllCategories().subscribe(categories => {
+      this.categories = categories;
+      this.processDataCategory();
+    })
+  }
 
   /**
    * @description download all messages
@@ -164,97 +190,49 @@ export class AdminComponent implements OnInit {
   };
 
   /**
-   * @description object that is sent to chart-line component
+   * @description Process the data to pass to line-chart component.
+   * Format: { label: 'label, y; value}
    * @memberof AdminComponent
    */
-  dataMonthly = (): any => {
-    return this.dummyMonthlyStats;
+  processDataMonthly = (): any => {
+    const months: string[] = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    for (let monthNum = 0; monthNum <= 11; monthNum++) {
+      let totalNum: number = 0;
+      this.messages.forEach(message => {
+        if (new Date(message.created_at).getMonth() == monthNum) {
+          totalNum++;
+        }
+      });
+      this.lineData.push({label: months[monthNum], y:totalNum});
+    }
   };
 
   /**
-   * @description object that is sent to chart-pie component
+   * @description Process the data to pass to pie-chart component.
+   * Format: { label: 'label, y; value}
    * @memberof AdminComponent
    */
-  dataCategory = (): any => {
-    return this.dummyCategoryStats;
+  processDataCategory = (): void => {
+    this.categories.forEach(category => {
+      this.messageCategoryService.getAllMessageCategories({categoryId: category._id}).subscribe(results => {
+        this.pieData.push({label: category.name, y: results.length});
+      })
+    });
   };
 
-  /** DUMMIES */
-  dummyMonthlyStats = [
-    {
-      name: 'Number of create messages',
-      series: [
-        {
-          name: 'January',
-          value: 13,
-        },
-        {
-          name: 'February',
-          value: 2,
-        },
-        {
-          name: 'March',
-          value: 15,
-        },
-        {
-          name: 'April',
-          value: 8,
-        },
-        {
-          name: 'May',
-          value: 7,
-        },
-        {
-          name: 'June',
-          value: 11,
-        },
-        {
-          name: 'July',
-          value: 6,
-        },
-        {
-          name: 'August',
-          value: 2,
-        },
-        {
-          name: 'September',
-          value: 4,
-        },
-        {
-          name: 'October',
-          value: 14,
-        },
-        {
-          name: 'November',
-          value: 10,
-        },
-        {
-          name: 'December',
-          value: 1,
-        },
-      ],
-    },
-  ];
-  dummyCategoryStats = [
-    {
-      name: 'Furniture',
-      value: 12,
-    },
-    {
-      name: 'Table',
-      value: 3,
-    },
-    {
-      name: 'Chair',
-      value: 10,
-    },
-    {
-      name: 'Electronic',
-      value: 5,
-    },
-    {
-      name: 'Bed',
-      value: 7,
-    },
-  ]
+  /**
+   * @description sort messages based on the newest date first
+   * @memberof AdminComponent
+   */
+  sortDateDesc = (array: Message[]): Message[] => {
+    return array.sort((a,b) => {
+      if (new Date(a.created_at) < new Date(b.created_at)) {
+        return 1;
+      } else if (new Date(a.created_at) > new Date(b.created_at)) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
 }

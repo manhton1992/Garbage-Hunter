@@ -3,10 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
-
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -55,7 +52,6 @@ import { EditComponent } from './core/pages/edit/edit.component';
     FormsModule,
     HttpClientModule,
     AngularFontAwesomeModule,
-    NgxChartsModule,
     LeafletModule.forRoot(),
     NgbModule.forRoot(),
   ],
