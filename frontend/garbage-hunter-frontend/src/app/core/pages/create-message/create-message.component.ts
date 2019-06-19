@@ -124,7 +124,7 @@ export class CreateMessageComponent implements OnInit {
                 });
 
               // find user categories , which has the same categoryId
-              this.userCategoryService.getUserCategoryByCategoryId(category._id).subscribe((response_user_category) => {
+              this.userCategoryService.getAllUserCategories({categoryId: category._id}).subscribe((response_user_category) => {
                 // avoid duplicate userId
                 if (response_user_category != null && response_user_category.length > 0) {
                   response_user_category.forEach((userCategory) => {

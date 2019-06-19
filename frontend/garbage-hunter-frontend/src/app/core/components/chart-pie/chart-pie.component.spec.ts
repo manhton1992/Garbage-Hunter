@@ -1,7 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ChartPieComponent } from './chart-pie.component';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('ChartPieComponent', () => {
@@ -12,7 +11,6 @@ describe('ChartPieComponent', () => {
     TestBed.configureTestingModule({
       declarations: [ ChartPieComponent ],
       imports: [
-        NgxChartsModule,
         BrowserAnimationsModule
       ]
     })

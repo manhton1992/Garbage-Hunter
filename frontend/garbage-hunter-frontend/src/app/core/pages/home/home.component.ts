@@ -63,7 +63,7 @@ export class HomeComponent implements OnInit {
    */
   getMessages = (): void => {
     this.messageService.getAllMessages({ available: true, archive: false }).subscribe((messages) => {
-      this.messages = messages;
+      this.messages = this.sortDateDesc(messages);
     });
   };
 
@@ -91,7 +91,6 @@ export class HomeComponent implements OnInit {
         userId: this.userService.user._id,
         categoryId: category._id,
       };
-      this.userCategoryService.getUserCategoryByCategoryId;
       this.userCategoryService.createUserCategory(userCategory).subscribe(
         (response) => {
           this.userCategories.push(response);
@@ -120,7 +119,9 @@ export class HomeComponent implements OnInit {
    */
   getUserCategoriesAndPutInLayout = (): void => {
     if (this.userService.user) {
-    this.userCategoryService.getUserCategoryByUserId(this.userService.user._id).subscribe((response) => {
+    this.userCategoryService.getAllUserCategories({userId: this.userService.user._id})
+    .subscribe(
+      (response) => {
       if (response && response.length > 0) {
         this.userCategories = response;
         // console.log('user categories size: ' + this.userCategories.length);
@@ -138,4 +139,20 @@ export class HomeComponent implements OnInit {
     });
   }
   };
+
+  /**
+   * @description sort messages based on the newest date first
+   * @memberof HomeComponent
+   */
+  sortDateDesc = (array: Message[]): Message[] => {
+    return array.sort((a,b) => {
+      if (new Date(a.created_at) < new Date(b.created_at)) {
+        return 1;
+      } else if (new Date(a.created_at) > new Date(b.created_at)) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
+  }
 }

@@ -40,9 +40,9 @@ export class AdminNumberBoxComponent implements OnInit {
         case 2:
           return 'text-success';
         case 3:
-          return 'text-danger';
-        case 4:
           return 'text-warning';
+        case 4:
+          return 'text-danger';
         default:
           break;
       }
@@ -61,9 +61,9 @@ export class AdminNumberBoxComponent implements OnInit {
         case 2:
           return 'bg-success';
         case 3:
-          return 'bg-danger';
-        case 4:
           return 'bg-warning';
+        case 4:
+          return 'bg-danger';
         default:
           break;
       }

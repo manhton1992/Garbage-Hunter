@@ -34,7 +34,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": [],
+            "scripts": [
+              "src/assets/ext-library/canvasjs/canvasjs.min.js"
+            ],
             "es5BrowserSupport": true
           },
           "configurations": {
