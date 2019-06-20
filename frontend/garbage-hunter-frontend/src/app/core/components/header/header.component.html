@@ -44,7 +44,7 @@
         </a>
       </li>
       <li *ngIf="userService.user != null" class="nav-item">
-        <a class="nav-link" [routerLink]="['/']" (click)="logout()">
+        <a class="nav-link" (click)="logout()">
           <fa name="sign-out" size="lg"></fa> Logout
         </a>
       </li>

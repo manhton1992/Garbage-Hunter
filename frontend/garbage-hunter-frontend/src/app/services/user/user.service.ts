@@ -5,6 +5,7 @@ import { map, catchError } from 'rxjs/internal/operators';
 import { User } from 'src/app/models/user.model';
 import { environment } from 'src/environments/environment';
 import { observableHandleError } from 'src/app/middlewares/errorhandler.middleware';
+import { FlashService } from '../flash/flash.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class UserService {
   private users: User[];
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private flashService: FlashService) { }
 
 
 /**
@@ -115,7 +116,8 @@ authenticate(){
 logout(){
   this.user = null;
   localStorage.removeItem("currentUser");
-  alert("Successfully logged out!")
+  this.flashService.setFlashSuccess('you are logged out!');
+  window.location.href = '/';
 }
 
 
