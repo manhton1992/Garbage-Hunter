@@ -52,8 +52,8 @@ before((done) => {
     });
     it('it should login the user', (done) => {
         chai.request(app)
-            .get('/api/users/login')
-            .query({email: 'test@test.com', password: 'test'})
+            .post('/api/users/login')
+            .send({email: 'test@test.com', password: 'test'})
             .end((err, res) => {
                 res.should.have.status(200);
                 token = res.body.data.token;
