@@ -6,6 +6,7 @@ import { Category } from 'src/app/models/category.model';
 import { UserService } from 'src/app/services/user/user.service';
 import { UserCategory } from 'src/app/models/user-category.model';
 import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
+import { FlashService } from 'src/app/services/flash/flash.service';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +16,13 @@ import { UserCategoryService } from 'src/app/services/user/user-category/user-ca
 export class HomeComponent implements OnInit {
   page: number = 1;
   pageSize: number = 6;
+
+  /**
+   * @description flash message
+   * @type {*}
+   * @memberof HomeComponent
+   */
+  flash: any = this.flashService.getFlashes();
 
   /**
    * @description messages that will be shown.
@@ -36,7 +44,8 @@ export class HomeComponent implements OnInit {
     private messageService: MessageService,
     private categoryService: CategoryService,
     private userService: UserService,
-    private userCategoryService: UserCategoryService
+    private userCategoryService: UserCategoryService,
+    private flashService: FlashService
   ) {}
 
   ngOnInit() {
@@ -97,7 +106,8 @@ export class HomeComponent implements OnInit {
         },
         (error) => {
           isSubcribeSuccess = false;
-          alert(error.error['data'].message);
+          this.flashService.setErrorFlash('something went wrong by subscribing, please try again...');
+          this.flash = this.flashService.getFlashes();
         }
       );
     });
@@ -106,10 +116,12 @@ export class HomeComponent implements OnInit {
     this.followedCategories = this.selectedCategories;
 
     if (isSubcribeSuccess) {
-      alert('SUBSCRIBE SUCCESSFUL!');
+      this.flashService.setFlashSuccess('subscribe successful!');
     } else {
-      alert('ERROR BY SUBSCRIBING! PLEASE TRY AGAIN!');
+      this.flashService.setErrorFlash('something went wrong by subscribing, please try again...');
     }
+    this.flash = this.flashService.getFlashes();
+    window.scrollTo(0, 0);
   };
 
   /**
@@ -119,25 +131,23 @@ export class HomeComponent implements OnInit {
    */
   getUserCategoriesAndPutInLayout = (): void => {
     if (this.userService.user) {
-    this.userCategoryService.getAllUserCategories({userId: this.userService.user._id})
-    .subscribe(
-      (response) => {
-      if (response && response.length > 0) {
-        this.userCategories = response;
-        // console.log('user categories size: ' + this.userCategories.length);
+      this.userCategoryService.getAllUserCategories({ userId: this.userService.user._id }).subscribe((response) => {
+        if (response && response.length > 0) {
+          this.userCategories = response;
+          // console.log('user categories size: ' + this.userCategories.length);
 
-        this.userCategories.forEach((userCategory) => {
-          this.categoryService.categories.some((category) => {
-            if (category._id == userCategory.categoryId) {
-              this.followedCategories.push(category);
-              return true;
-            }
-            return false;
+          this.userCategories.forEach((userCategory) => {
+            this.categoryService.categories.some((category) => {
+              if (category._id == userCategory.categoryId) {
+                this.followedCategories.push(category);
+                return true;
+              }
+              return false;
+            });
           });
-        });
-      }
-    });
-  }
+        }
+      });
+    }
   };
 
   /**
@@ -145,7 +155,7 @@ export class HomeComponent implements OnInit {
    * @memberof HomeComponent
    */
   sortDateDesc = (array: Message[]): Message[] => {
-    return array.sort((a,b) => {
+    return array.sort((a, b) => {
       if (new Date(a.created_at) < new Date(b.created_at)) {
         return 1;
       } else if (new Date(a.created_at) > new Date(b.created_at)) {
@@ -154,5 +164,5 @@ export class HomeComponent implements OnInit {
         return 0;
       }
     });
-  }
+  };
 }

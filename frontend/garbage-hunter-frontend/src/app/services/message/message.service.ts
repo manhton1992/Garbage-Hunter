@@ -25,7 +25,7 @@ export class MessageService {
     const token = data ? data.token : null;
     return {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${null}`
+      'Authorization': `Bearer ${token}`
     }
   }
 

@@ -5,6 +5,7 @@ import { Category } from 'src/app/models/category.model';
 import { CategoryService } from 'src/app/services/category/category.service';
 import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
 import { UserService } from 'src/app/services/user/user.service';
+import { FlashService } from 'src/app/services/flash/flash.service';
 
 @Component({
   selector: 'app-admin',
@@ -12,16 +13,23 @@ import { UserService } from 'src/app/services/user/user.service';
   styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent implements OnInit {
-
   page: number = 1;
   pageSize: number = 15;
+
+  /**
+   * @description flash message
+   * @type {*}
+   * @memberof AdminComponent
+   */
+  flash: any = this.flashService.getFlashes();
+
   /**
    * @description all messages.
    * @type {Message[]}
    * @memberof AdminComponent
    */
   messages: Message[] = [];
-  
+
   /**
    * @description available messages.
    * @type {Message[]}
@@ -71,7 +79,13 @@ export class AdminComponent implements OnInit {
    */
   isCollapsed: boolean = false;
 
-  constructor(private messageService: MessageService, private categoryService: CategoryService, private messageCategoryService: MessageCategoryService, private userService: UserService) {}
+  constructor(
+    private messageService: MessageService,
+    private categoryService: CategoryService,
+    private messageCategoryService: MessageCategoryService,
+    private userService: UserService,
+    private flashService: FlashService
+  ) {}
 
   ngOnInit() {
     this.getAllMessages();
@@ -84,11 +98,11 @@ export class AdminComponent implements OnInit {
    */
   getAllMessages = (): void => {
     this.messageService.getAllMessages({}).subscribe((messages) => {
-      messages.forEach(message => {
-        this.userService.getUserById(message.creatorId).subscribe(user => {
+      messages.forEach((message) => {
+        this.userService.getUserById(message.creatorId).subscribe((user) => {
           message.creatorId = user.email;
-        })
-      })
+        });
+      });
       this.messages = this.sortDateDesc(messages);
       this.availableMessages = this.getAvailableMessages();
       this.unavailableMessages = this.getUnavailableMessages();
@@ -140,11 +154,11 @@ export class AdminComponent implements OnInit {
   };
 
   getCategories = (): void => {
-    this.categoryService.getAllCategories().subscribe(categories => {
+    this.categoryService.getAllCategories().subscribe((categories) => {
       this.categories = categories;
       this.processDataCategory();
-    })
-  }
+    });
+  };
 
   /**
    * @description download all messages
@@ -152,12 +166,12 @@ export class AdminComponent implements OnInit {
    */
   download = (): void => {
     this.messageService.downloadMessages();
-  }
+  };
 
-  /**  
+  /**
    * ================================
    *    DATA FOR COMPONENT INPUT
-   * ================================ 
+   * ================================
    */
 
   /**
@@ -218,15 +232,28 @@ export class AdminComponent implements OnInit {
    * @memberof AdminComponent
    */
   processDataMonthly = (): any => {
-    const months: string[] = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+    const months: string[] = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
     for (let monthNum = 0; monthNum <= 11; monthNum++) {
       let totalNum: number = 0;
-      this.messages.forEach(message => {
+      this.messages.forEach((message) => {
         if (new Date(message.created_at).getMonth() == monthNum) {
           totalNum++;
         }
       });
-      this.lineData.push({label: months[monthNum], y:totalNum});
+      this.lineData.push({ label: months[monthNum], y: totalNum });
     }
   };
 
@@ -236,10 +263,10 @@ export class AdminComponent implements OnInit {
    * @memberof AdminComponent
    */
   processDataCategory = (): void => {
-    this.categories.forEach(category => {
-      this.messageCategoryService.getAllMessageCategories({categoryId: category._id}).subscribe(results => {
-        this.pieData.push({label: category.name, y: results.length});
-      })
+    this.categories.forEach((category) => {
+      this.messageCategoryService.getAllMessageCategories({ categoryId: category._id }).subscribe((results) => {
+        this.pieData.push({ label: category.name, y: results.length });
+      });
     });
   };
 
@@ -248,7 +275,7 @@ export class AdminComponent implements OnInit {
    * @memberof AdminComponent
    */
   sortDateDesc = (array: Message[]): Message[] => {
-    return array.sort((a,b) => {
+    return array.sort((a, b) => {
       if (new Date(a.created_at) < new Date(b.created_at)) {
         return 1;
       } else if (new Date(a.created_at) > new Date(b.created_at)) {
@@ -257,5 +284,5 @@ export class AdminComponent implements OnInit {
         return 0;
       }
     });
-  }
+  };
 }

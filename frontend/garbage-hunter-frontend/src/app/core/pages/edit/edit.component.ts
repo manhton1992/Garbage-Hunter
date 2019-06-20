@@ -12,14 +12,22 @@ import { CategoryService } from 'src/app/services/category/category.service';
 import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
 import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
 import { MessageCategory } from 'src/app/models/message-category.model';
+import { FlashService } from 'src/app/services/flash/flash.service';
 
 @Component({
   selector: 'app-edit',
   templateUrl: './edit.component.html',
-  styleUrls: ['./edit.component.scss']
+  styleUrls: ['./edit.component.scss'],
 })
 export class EditComponent implements OnInit {
-/**
+  /**
+   * @description flash message
+   * @type {*}
+   * @memberof EditComponent
+   */
+  flash: any = this.flashService.getFlashes();
+
+  /**
    * @description current user that accessing the page.
    * @type {User}
    * @memberof ShowMessageComponent
@@ -40,7 +48,7 @@ export class EditComponent implements OnInit {
    */
   messageCategories: MessageCategory[] = [];
 
-/**
+  /**
    * @description all categories in the main message.
    * @type {Category[]}
    * @memberof ShowMessageComponent
@@ -73,15 +81,17 @@ export class EditComponent implements OnInit {
     private categoryService: CategoryService,
     private messageCategoryService: MessageCategoryService,
     private userCategoryService: UserCategoryService,
-  ) { }
+    private flashService: FlashService
+  ) {}
 
   ngOnInit() {
-    if (this.categoryService.categories.length == 0){      
-      this.categoryService.getAllCategories().subscribe(response => {
-          this.categoryService.categories = response;
-      })
+    this.flash = this.flashService.getFlashes();
+    if (this.categoryService.categories.length == 0) {
+      this.categoryService.getAllCategories().subscribe((response) => {
+        this.categoryService.categories = response;
+      });
     }
-    this.route.params.subscribe( async (params) =>  {
+    this.route.params.subscribe(async (params) => {
       let messageid = params['messageid'];
       this.getMessage(messageid);
     });
@@ -91,19 +101,21 @@ export class EditComponent implements OnInit {
    * @description get the message item.
    * @param {string} messageid
    */
-  getMessage = (messageid: string):void => {
-    this.messageService.getMessageById(messageid).subscribe(message => {
-      this.message = message;
-      if(this.message ) {
-        this.getCreator();
-        this.getComments();
-        this.getMessageCategories();
+  getMessage = (messageid: string): void => {
+    this.messageService.getMessageById(messageid).subscribe(
+      (message) => {
+        this.message = message;
+        if (this.message) {
+          this.getCreator();
+          this.getComments();
+          this.getMessageCategories();
+        }
+      },
+      (error) => {
+        this.showError = true;
       }
-    }
-    , error => {
-      this.showError = true;
-    })
-  }
+    );
+  };
 
   /**
    * @description get the creator of the message
@@ -111,56 +123,56 @@ export class EditComponent implements OnInit {
    */
   getCreator = (): void => {
     if (this.message) {
-      this.userService.getUserById(this.message.creatorId).subscribe(user => {
-        this.creator = user; 
-      })
+      this.userService.getUserById(this.message.creatorId).subscribe((user) => {
+        this.creator = user;
+      });
     }
-  }
+  };
   /**
    * @description get all comments of the message.
    * @param {string} messageid
    */
-  getComments = ():void => {
-    if (this.message) { 
-      this.commentService.getAllComments({ messageId: this.message._id }).subscribe(comments => {
+  getComments = (): void => {
+    if (this.message) {
+      this.commentService.getAllComments({ messageId: this.message._id }).subscribe((comments) => {
         this.comments = comments;
       });
     }
-  }
+  };
 
   /**
    * @description get all available messages.
    * @memberof HomeComponent
    */
   getMessageCategories = (): void => {
-    this.messageCategoryService.getAllMessageCategories({messageId: this.message._id}).subscribe((messages) => {
+    this.messageCategoryService.getAllMessageCategories({ messageId: this.message._id }).subscribe((messages) => {
       this.messageCategories = messages;
-      if(this.messageCategories){
+      if (this.messageCategories) {
         this.getCategoryNames();
       }
     });
- };
+  };
 
- getCategoryNames = (): void => {
-   for (let i = 0; i < this.messageCategories.length; i++){
-     this.categoryService.getCategoryById(this.messageCategories[i].categoryId).subscribe((messages) =>{
-       this.category.push(messages);
-      })
+  getCategoryNames = (): void => {
+    for (let i = 0; i < this.messageCategories.length; i++) {
+      this.categoryService.getCategoryById(this.messageCategories[i].categoryId).subscribe((messages) => {
+        this.category.push(messages);
+      });
     }
- }
+  };
 
   /**
    * @description delete the message.
    * @memberof ShowMessageComponent
    */
   archiveMessage = (): void => {
-    if (this.currentUser && this.currentUser.isAdmin) { 
+    if (this.currentUser && this.currentUser.isAdmin) {
       this.message.archive = true;
-      this.messageService.updateMessage(this.message).subscribe(success => {
+      this.messageService.updateMessage(this.message).subscribe((success) => {
         this.router.navigate(['/']);
       });
     }
-  }
+  };
 
   /**
    * @description show action div that contains buttons to do something to the message
@@ -171,7 +183,7 @@ export class EditComponent implements OnInit {
       // return false;
     }
     return true;
-  }
+  };
 
   /**
    * @description show/hide edit and mark as unavailable buttons specific to current user.
@@ -182,7 +194,7 @@ export class EditComponent implements OnInit {
       return true;
     }
     return false;
-  }
+  };
 
   /**
    * @description show/hide delete button only to admins.
@@ -193,16 +205,37 @@ export class EditComponent implements OnInit {
       return true;
     }
     return false;
+  };
+
+  editMessage() {
+    if (this.validateForms()) {
+      this.messageService.updateMessage(this.message).subscribe(
+        (updatedMessage) => {
+          this.flashService.setFlashSuccess(`Message is successfully edited!`);
+          this.router.navigate([`/messages/${this.message._id}`]);
+        },
+        (error) => {
+          this.flashService.setErrorFlash('message can not be updated! something is wrong!');
+          this.router.navigate([`/messages/${this.message._id}/`]);
+        }
+      );
+    } else {
+      this.flashService.setErrorFlash('message can not be updated! something is wrong!');
+      this.router.navigate([`/messages/${this.message._id}`]);
+    }
   }
 
-  editMessage(message: Message){
-    let url = '/messages/' + this.message._id;
-    this.messageService.updateMessage(this.message).subscribe( updatedMessage => {
-      this.router.navigate([`/messages/${this.message._id}`])
-    });
-    alert("Message successfully edited");
-  }
-
+  /**
+   * @description validate the message's form.
+   * currently only handled phone because only that is a number in edit page
+   * @memberof EditComponent
+   */
+  validateForms = (): boolean => {
+    if (this.message.phone && !Number.isInteger(this.message.phone)) {
+      return false;
+    }
+    return true;
+  };
 
   /**
    * @description handle the latlon being passed from map component
@@ -211,7 +244,7 @@ export class EditComponent implements OnInit {
   handleMapCoordinateChange = (latlon: any): void => {
     this.changeLatLon(latlon);
     this.changeAddress(latlon);
-  }
+  };
 
   /**
    * @description change the latlon of message.
@@ -220,7 +253,7 @@ export class EditComponent implements OnInit {
   changeLatLon = (latlon: any): void => {
     this.message.lat = latlon.lat;
     this.message.lon = latlon.lng;
-  }
+  };
 
   /**
    * @description change the address of message.
@@ -239,17 +272,20 @@ export class EditComponent implements OnInit {
         console.error(err);
       }
     );
-  }
+  };
 
   /**
    * @description check if user is the creator of message.
    * @memberof EditComponent
    */
   canEdit = (): boolean => {
-    if (this.userService.user && this.message && (this.userService.user.isAdmin || this.userService.user._id == this.message.creatorId)) {
+    if (
+      this.userService.user &&
+      this.message &&
+      (this.userService.user.isAdmin || this.userService.user._id == this.message.creatorId)
+    ) {
       return true;
     }
     return false;
-  }
+  };
 }
-
