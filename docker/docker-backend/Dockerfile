@@ -8,8 +8,8 @@ RUN npm ci
 
 COPY backend/ .
 
-EXPOSE 3000
+RUN npm build
 
-CMD ["npm", "build"]
+EXPOSE 3000
 
 CMD ["npm", "start"]
