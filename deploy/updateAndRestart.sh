@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # any future command that fails will exit the script
-set -e
+# set -e
 
 # Delete the old repo
 # rm -rf /garbage-hunter
