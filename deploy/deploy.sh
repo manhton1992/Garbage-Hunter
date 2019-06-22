@@ -16,6 +16,8 @@
 # disable the host key checking.
 # bash ./deploy/disableHostKeyChecking.sh
 
+ssh-keygen -R hostname
+
 # we have already setup the DEPLOYER_SERVER in our gitlab settings which is a
 # comma seperated values of ip addresses.
 DEPLOY_SERVERS=$DEPLOY_SERVERS
@@ -35,5 +37,5 @@ chmod 600 ./deploy/garbage-hunter-ss19.pem
 for server in "${ALL_SERVERS[@]}"
 do
   echo "deploying to ${server}"
-  ssh -v -i ./deploy/garbage-hunter-ss19.pem ubuntu@${server} 'bash' < ./deploy/updateAndRestart.sh
+  ssh -i ./deploy/garbage-hunter-ss19.pem ubuntu@${server} 'bash' < ./deploy/updateAndRestart.sh
 done
