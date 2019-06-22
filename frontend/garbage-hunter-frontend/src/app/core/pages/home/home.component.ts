@@ -7,6 +7,8 @@ import { UserService } from 'src/app/services/user/user.service';
 import { UserCategory } from 'src/app/models/user-category.model';
 import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
 import { FlashService } from 'src/app/services/flash/flash.service';
+import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
+import { MessageCategory } from 'src/app/models/message-category.model';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +18,27 @@ import { FlashService } from 'src/app/services/flash/flash.service';
 export class HomeComponent implements OnInit {
   page: number = 1;
   pageSize: number = 6;
+
+  /**
+ * @description all categories
+ * @type {*}
+ * @memberof HomeComponent
+ */
+  allCategories: MessageCategory[] = [];
+
+  /**
+ * @description name of a category
+ * @type {*}
+ * @memberof HomeComponent
+ */
+  categoryName: string = '';
+
+  /**
+ * @description selected filtered category
+ * @type {*}
+ * @memberof HomeComponent
+ */
+  selectedCategory: Category;
 
   /**
    * @description flash message
@@ -45,8 +68,9 @@ export class HomeComponent implements OnInit {
     private categoryService: CategoryService,
     private userService: UserService,
     private userCategoryService: UserCategoryService,
-    private flashService: FlashService
-  ) {}
+    private flashService: FlashService,
+    private messageCategoryService: MessageCategoryService
+  ) { }
 
   ngOnInit() {
     this.getMessages();
@@ -165,4 +189,33 @@ export class HomeComponent implements OnInit {
       }
     });
   };
+
+  /**
+ * get category name from filter
+ * get messageId from categoryId
+ * display message from category
+ */
+  getAllMessageCategories = (): void => {
+    this.categoryName = this.selectedCategory.name;
+    if (this.selectedCategory) {
+      this.messageCategoryService.getAllMessageCategories({ categoryId: this.selectedCategory._id }).subscribe((messages) => {
+        this.allCategories = messages;
+        this.getMessageByCategory();
+      })
+    }
+  }
+
+  /**
+   * get messageId from categoryId
+   */
+  getMessageByCategory = (): void => {
+    let message: Message;
+    this.messages = [];
+    for (let i = 0; i < this.allCategories.length; i++) {
+      this.messageService.getMessageById(this.allCategories[i].messageId).subscribe((messages) => {
+        message = messages;
+        this.messages.push(message);
+      })
+    }
+  }
 }
