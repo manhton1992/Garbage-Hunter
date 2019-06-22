@@ -13,10 +13,12 @@ cd garbage-hunter
 sudo docker-compose down
 
 # checkout to master branch
-git checkout master
+# git checkout master
+git checkout develop
 
 # pull the new code
-git pull origin master
+# git pull origin master
+git pull origin develop
 
 # build the docker compose
 sudo docker-compose build

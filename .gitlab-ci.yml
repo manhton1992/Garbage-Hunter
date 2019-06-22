@@ -4,8 +4,9 @@ before_script:
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
 
 stages:
-    - test_backend
-    - test_frontend
+   # - test_backend
+   # - test_frontend
+    - deploy
 
 services:
     - mongo:latest
@@ -25,9 +26,9 @@ test_frontend:
         - npm install
         - npm run test-ci
 
-deployToAWS:
+deploy_aws:
   only:
-    - master
+    - develop
   stage: deploy
   script:
     - bash deploy/deploy.sh
