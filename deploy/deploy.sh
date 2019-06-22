@@ -31,5 +31,6 @@ echo "ALL_SERVERS ${ALL_SERVERS}"
 for server in "${ALL_SERVERS[@]}"
 do
   echo "deploying to ${server}"
+  dos2unix ./deploy/updateAndRestart.sh
   ssh ubuntu@${server} 'bash' < ./deploy/updateAndRestart.sh
 done
