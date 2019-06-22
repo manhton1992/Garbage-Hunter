@@ -16,7 +16,7 @@ test_backend:
     script:
         - cd backend
         - npm install
-        #- npm test
+        - npm test
 
 test_frontend:
     stage: test_frontend
@@ -24,11 +24,11 @@ test_frontend:
     script:
         - cd frontend/garbage-hunter-frontend
         - npm install
-        #- npm run test-ci
+        - npm run test-ci
 
 deploy_aws:
   only:
-    - develop
+    - master
   stage: deploy
   script:
     - bash deploy/deploy.sh
