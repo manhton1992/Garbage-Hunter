@@ -13,10 +13,11 @@
 # ** End of alternative approach
 
 
-# disable the host key checking.
-# bash ./deploy/disableHostKeyChecking.sh
+ssh-keygen -R 18.185.118.198
 
-ssh-keygen -R hostname
+# disable the host key checking.
+bash ./deploy/disableHostKeyChecking.sh
+
 
 # we have already setup the DEPLOYER_SERVER in our gitlab settings which is a
 # comma seperated values of ip addresses.
