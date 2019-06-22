@@ -28,7 +28,7 @@ test_frontend:
 
 deploy_aws:
   only:
-    - develop
+    - devlinh
   stage: deploy
   script:
     - bash deploy/deploy.sh
