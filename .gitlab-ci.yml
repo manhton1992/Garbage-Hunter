@@ -2,7 +2,6 @@ image: node:latest
 
 before_script:
   - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
-  - 'sudo apt-get dos2unix'
 
 stages:
     - test_backend
@@ -32,7 +31,4 @@ deploy_aws:
     - develop
   stage: deploy
   script:
-    - dos2unix deploy/deploy.sh
-    - dos2unix ./deploy/updateAndRestart.sh
-    - dos2unix ./deploy/disableHostKeyChecking.sh
     - bash deploy/deploy.sh
