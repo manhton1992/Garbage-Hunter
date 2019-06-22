@@ -31,5 +31,4 @@ deploy_aws:
     - develop
   stage: deploy
   script:
-    - dos2unix deploy/deploy.sh
     - bash deploy/deploy.sh
