@@ -1,6 +1,6 @@
 # Garbage Hunter (Backend)
 
-This repository is the backend part for the project `Garbage Hunter` that is made during the course "Advanced Web Development" in Hochschule Darmstadt in SS19.
+This document is the backend part for the project `Garbage Hunter` that is made during the course "Advanced Web Development" in Hochschule Darmstadt in SS19.
 
 ## API Reference
 
@@ -20,22 +20,22 @@ This repository is the backend part for the project `Garbage Hunter` that is mad
 
 ### api/users
 
-| API                              | Request | Authorization | Usage                   |
-| -------------------------------- | ------- | ------------- | ----------------------- |
-| `api/users`                      | GET     | -             | Get all users           |
-| `api/users`                      | POST    | -             | Create a user           |
-| `api/users`                      | PUT     | -             | Update a user           |
-| `api/users`                      | DELETE  | -             | Delete a user           |
-| `api/users/:userid`              | GET     | -             | Get a single user       |
-| `api/users/get_all/:token`       | GET     | -             | Get a single user       |
-| `api/users/login`                | GET     | -             | Get a single user       |
-| `api/users/login/:token`         | GET     | -             | Get a single user       |
-| `api/users/register`             | GET     | -             | Get a single user       |
-| `api/users/update/:token`        | GET     | -             | Get a single user       |
-| `api/users/delete/:token`        | GET     | -             | Get a single user       |
-| `api/users/confirm_email/:token` | GET     | -             | Get a single user       |
-| `api/users/delete_all`           | DELETE  | -             | Delete all users        |
-| `api/users/download`             | GET     | -             | Export all users as CSV |
+| API                              | Request | Authorization | Usage                                |
+| -------------------------------- | ------- | ------------- | ------------------------------------ |
+| `api/users`                      | GET     | -             | Get all users                        |
+| `api/users`                      | POST    | -             | Create a user                        |
+| `api/users`                      | PUT     | -             | Update a user                        |
+| `api/users`                      | DELETE  | -             | Delete a user                        |
+| `api/users/:userid`              | GET     | -             | Get a single user                    |
+| `api/users/get_all/:token`       | GET     | -             | Get all users                        |
+| `api/users/login`                | GET     | -             | Log a user in                        |
+| `api/users/login/:token`         | GET     | -             | Log a user in                        |
+| `api/users/register`             | GET     | -             | Register a user                      |
+| `api/users/update/:token`        | GET     | -             | Update a user                        |
+| `api/users/delete/:token`        | GET     | -             | Delete a user                        |
+| `api/users/confirm_email/:token` | GET     | -             | Set user isConfirm attribute to true |
+| `api/users/delete_all`           | DELETE  | -             | Delete all users                     |
+| `api/users/download`             | GET     | -             | Export all users as CSV              |
 
 ### api/comments
 
@@ -87,3 +87,72 @@ This repository is the backend part for the project `Garbage Hunter` that is mad
 | API         | Request | Authorization | Usage       |
 | ----------- | ------- | ------------- | ----------- |
 | `api/email` | GET     | -             | Send email? |
+
+## Database schemas
+
+\* = attribute is created automatically by mongoose
+
+### Message schema
+
+| Attributes      | Type    | Required | Default |
+| --------------- | ------- | -------- | ------- |
+| `title`         | String  | Yes      | -       |
+| `description`   | String  | Yes      | -       |
+| `creatorId`     | String  | Yes      | -       |
+| `lon`           | Number  | Yes      | false   |
+| `lat`           | Number  | Yes      | false   |
+| `address`       | String  | Yes      | -       |
+| `available`     | Boolean | Yes      | true    |
+| `archive`       | Boolean | Yes      | false   |
+| `imageUrl`      | String  | No       | -       |
+| `phone`         | Number  | No       | -       |
+| `created_at` \* | Date    | -        | auto    |
+| `updated_at` \* | Date    | -        | auto    |
+
+### User schema
+
+| Attributes        | Type    | Required | Default |
+| ----------------- | ------- | -------- | ------- |
+| `email`           | String  | Yes      | -       |
+| `firstName`       | String  | No       | -       |
+| `lastName`        | String  | No       | -       |
+| `phoneNumber`     | String  | No       | -       |
+| `passwordHash`    | Number  | Yes      | -       |
+| `isAdmin`         | Boolean | Yes      | false   |
+| `isConfirm`       | Boolean | Yes      | false   |
+| `profileImageUrl` | String  | No       | -       |
+| `created_at` \*   | Date    | -        | auto    |
+| `updated_at` \*   | Date    | -        | auto    |
+
+### Comment schema
+
+| Attributes      | Type    | Required | Default |
+| --------------- | ------- | -------- | ------- |
+| `text`          | String  | Yes      | -       |
+| `creatorId`     | String  | Ytes     | -       |
+| `parentId`      | String  | No       | -       |
+| `messageId`     | String  | Yes      | -       |
+| `archive`       | Boolean | Yes      | false   |
+| `imageUrl`      | String  | No       | ""      |
+| `created_at` \* | Date    | -        | auto    |
+
+### Category schema
+
+| Attributes | Type   | Required | Default |
+| ---------- | ------ | -------- | ------- |
+| `name`     | String | Yes      | -       |
+
+### MessageCategory schema
+
+| Attributes   | Type   | Required | Default |
+| ------------ | ------ | -------- | ------- |
+| `messageId`  | String | Yes      | -       |
+| `categoryId` | String | Yes      | -       |
+
+
+### UserCategory schema
+
+| Attributes   | Type   | Required | Default |
+| ------------ | ------ | -------- | ------- |
+| `userId`  | String | Yes      | -       |
+| `categoryId` | String | Yes      | -       |

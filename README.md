@@ -1,47 +1,56 @@
-# Garbage Hunter App
+# Garbage Hunter
 
 Application that allows you to create a report of garbage on the street that might be useful for others.
 
-## First discussion
+This repository is the `Garbage Hunter` project that is made during the course "Advanced Web Development" in Hochschule Darmstadt in SS19.
+
+## Documents
+
+### First discussion
 
 See this [document](https://docs.google.com/document/d/1pZcK6nOgmYxSbN2b9MdQSOWLhik8D2KYSkoZ8O7XWAs/edit?usp=sharing) for our first discussion on 26.05.2019.
 
-## Project pitch
+### Project pitch
 
 See this [presentation](https://docs.google.com/presentation/d/1I6PNRz_twv2VCshzv1o-vXBFN6c71CpDrIfRMc17KL8/edit?usp=sharing) for our project pitch.
 
-## Installation
+### Backend (`README.md`)
 
-1. Clone the project
-2. Run your `MongoDB` (default is port 27017)
-3. In `/backend` run:
+See this [file](backend/README.md) for a complete backend documentation. This covers:
 
-    ```bash
-    > npm install
-    > npm run dev
-    ```
+- API references
+- Database schemas
 
-4. In `/frontend/garbage-hunter-frontend` run:
+### Frontend
 
-    ```bash
-    > npm install
-    > ng serve
-    ```
+...
+
+---
 
 ## Project structure
 
-### Backend
+### backend/
 
 - `config`: Configuration setting of the app
 - `src/controllers`: Include all routers and controllers of the app
 - `src/middlewares`: Include all middleware functions of the app
 - `src/models`: Include the models of all objects that are used
+- `src/helpers`: Include other functions that can be used in general
 - `src/tests`: Include all tests of the app
 
-### Frontend
+### frontend/
 
 - `src/app/core`: Include all pages and components of the app
 - `src/app/core/components`: All components being used
 - `src/app/core/pages`: All pages being used
 - `src/app/models`: Include all models & interfaces of the app
-- `src/app/services`: Include all services of the app, to fetch data from the backend API
+- `src/app/services`: Include all services of the app
+
+### docker/
+
+- `docker-backend/Dockerfile`: Build docker image for backend.
+- `docker-frontend/`: Build docker image for frontend (includes also nginx.conf).
+
+### deploy/
+
+- Includes scripts and key for auto deployment.
