@@ -3,8 +3,10 @@
 This repository is the backend part for the project `Garbage Hunter` that is made during the course "Advanced Web Development" in Hochschule Darmstadt in SS19.
 
 ## API Reference
+Backend server run on the port 3000
 
 ### api/messages
+
 
 | API                         | Request | Authorization | Usage                      |
 | --------------------------- | ------- | ------------- | -------------------------- |
@@ -18,6 +20,21 @@ This repository is the backend part for the project `Garbage Hunter` that is mad
 | `api/messages/image_upload` | POST    | Bearer Token  | Upload image to AWS S3     |
 | `api/messages/delete_image` | POST    | Bearer Token  | Delete image from AWS S3   |
 
+The Body of PUT and POST request look like: 
+```
+{       
+    "lon": 8.651647567749025,        
+    "lat": 50.859277014261586,     
+    "available": true,     
+    "archive": false,    
+    "title": "trash an main station darmstadt",   
+    "description": "fheoihfio",   
+    "creatorId": "12345",   
+    "address": "B 62 , 35094 ",   
+    "imageUrl": "https://garbage-hunter.s3.eu-central-1.amazonaws.com/1560339294439",     
+    "phone": 1     
+}      
+```
 ### api/users
 
 | API                              | Request | Authorization | Usage                   |
@@ -37,6 +54,17 @@ This repository is the backend part for the project `Garbage Hunter` that is mad
 | `api/users/delete_all`           | DELETE  | -             | Delete all users        |
 | `api/users/download`             | GET     | -             | Export all users as CSV |
 
+
+The Body of PUT and POST request look like: 
+```
+{       
+    "email": "linh9a0910@gmail.com",
+    "password": "sdfhshjf",
+    "isAdmin": "false",
+    "isConfirm": "true"
+}      
+```
+
 ### api/comments
 
 | API                                        | Request | Authorization | Usage                         |
@@ -49,6 +77,17 @@ This repository is the backend part for the project `Garbage Hunter` that is mad
 | `api/comments/get_by_messageid/:messageid` | GET     | -             | Get a comment by message id |
 | `api/comments/delete_all`                  | DELETE  | -             | Delete all comments           |
 
+The Body of PUT and POST request look like: 
+```
+{       
+    "text": "cool",
+    "creatorId": "shfiewfwoifiwhefow",
+    "parentId": "iwoiwofjiwejfiwoefjw",
+    "messageId": "wiehfwihfiowehfiwfw",
+    "archive": false
+}      
+```
+
 ### api/categories
 
 | API                          | Request | Authorization | Usage                 |
@@ -59,6 +98,14 @@ This repository is the backend part for the project `Garbage Hunter` that is mad
 | `api/categories/:categoryid` | DELETE  | -             | Delete a category by category id   |
 | `api/categories/:categoryid` | GET     | -             | Get a category by category id |
 | `api/categories/delete_all`  | DELETE  | -             | Delete all categories |
+
+
+The Body of PUT and POST request look like: 
+```
+{       
+      "name": "table"
+}      
+```
 
 ### api/message_category
 
@@ -71,6 +118,14 @@ This repository is the backend part for the project `Garbage Hunter` that is mad
 | `api/message_category/:messagecategoryid` | GET     | -             | Get a message_category by message_category id|
 | `api/message_category/delete_all`         | DELETE  | -             | Delete all message_category |
 
+The Body of PUT and POST request look like: 
+```
+{       
+    "messageId": "uifuiewfwiuwhfuiwefuwehf";
+    "categoryId": "jishfuihfiuewfhwiufhuiw;     
+}      
+```
+
 ### api/user_category
 
 | API                                 | Request | Authorization | Usage                      |
@@ -81,6 +136,14 @@ This repository is the backend part for the project `Garbage Hunter` that is mad
 | `api/user_category/:usercategoryid` | DELETE  | -             | Delete a user_category by user_category id     |
 | `api/user_category/:usercategoryid` | GET     | -             | Get a user_category by user_category id |
 | `api/user_category/delete_all`      | DELETE  | -             | Delete all user_category   |
+
+The Body of PUT and POST request look like: 
+```
+{       
+    "userId": "jowhefoeiwhfoiwehfowfh";
+    "categoryId": "iuuwfuiwfuqwhfuiqfhw";
+}      
+```
 
 ### api/email
 
