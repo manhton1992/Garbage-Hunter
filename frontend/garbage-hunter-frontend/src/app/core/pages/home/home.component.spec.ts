@@ -20,6 +20,8 @@ import { ChartPieComponent } from '../../components/chart-pie/chart-pie.componen
 import { ErrorComponent } from '../../components/error/error.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditComponent } from '../edit/edit.component';
+import { FlashComponent } from '../../components/flash/flash.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -41,7 +43,9 @@ describe('HomeComponent', () => {
         AdminNumberBoxComponent,
         ChartLineComponent,
         ChartPieComponent,
-        ErrorComponent
+        ErrorComponent,
+        EditComponent,
+        FlashComponent
       ],
       imports: [
         FormsModule,

@@ -21,6 +21,8 @@ import { AdminNumberBoxComponent } from '../admin-number-box/admin-number-box.co
 import { CommentComponent } from '../comment/comment.component';
 import { FooterComponent } from '../footer/footer.component';
 import { ErrorComponent } from '../error/error.component';
+import { EditComponent } from '../../pages/edit/edit.component';
+import { FlashComponent } from '../flash/flash.component';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -43,6 +45,8 @@ describe('HeaderComponent', () => {
         ChartLineComponent,
         ChartPieComponent,
         ErrorComponent,
+        EditComponent,
+        FlashComponent
       ],
       imports: [
         BrowserAnimationsModule,

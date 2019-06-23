@@ -23,6 +23,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditComponent } from '../edit/edit.component';
+import { FlashComponent } from '../../components/flash/flash.component';
 
 describe('ShowMessageComponent', () => {
   let component: ShowMessageComponent;
@@ -45,7 +47,9 @@ describe('ShowMessageComponent', () => {
         AdminNumberBoxComponent,
         ChartLineComponent,
         ChartPieComponent,
-        ErrorComponent
+        ErrorComponent,
+        EditComponent,
+        FlashComponent
       ],
       imports: [
         BrowserModule,
