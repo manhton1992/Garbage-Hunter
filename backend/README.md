@@ -8,7 +8,7 @@ This repository is the backend part for the project `Garbage Hunter` that is mad
 
 | API                         | Request | Authorization | Usage                      |
 | --------------------------- | ------- | ------------- | -------------------------- |
-| `api/messages`              | GET     | -             | Get all messages           |
+| `api/messages`              | GET     | -             | Get all messages or           |
 | `api/messages`              | POST    | Bearer Token  | Create a message           |
 | `api/messages`              | PUT     | Bearer Token  | Update a message           |
 | `api/messages`              | DELETE  | Bearer Token  | Delete a message           |

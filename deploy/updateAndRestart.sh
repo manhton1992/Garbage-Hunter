@@ -14,11 +14,11 @@ sudo docker-compose down
 
 # checkout to master branch
 # git checkout master
-git checkout develop
+git checkout master
 
 # pull the new code
 # git pull origin master
-git pull origin develop
+git pull origin master
 
 # build the docker compose
 sudo docker-compose build

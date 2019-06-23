@@ -34,8 +34,9 @@ See this [presentation](https://docs.google.com/presentation/d/1I6PNRz_twv2VCshz
 
 - `config`: Configuration setting of the app
 - `src/controllers`: Include all routers and controllers of the app
-- `src/middlewares`: Include all middleware functions of the app
+- `src/helpers`: Include the extern function to solve some problem (sending email, uploading image, response and request form)
 - `src/models`: Include the models of all objects that are used
+- `src/middlewares`: Include all middleware functions of the app
 - `src/tests`: Include all tests of the app
 
 ### Frontend
@@ -44,4 +45,5 @@ See this [presentation](https://docs.google.com/presentation/d/1I6PNRz_twv2VCshz
 - `src/app/core/components`: All components being used
 - `src/app/core/pages`: All pages being used
 - `src/app/models`: Include all models & interfaces of the app
-- `src/app/services`: Include all services of the app, to fetch data from the backend API
+- `src/app/services`: Include all services of the app, to fetch data from the backend API or to put data in the backend API
+- `src/middlewares`: Include all middleware functions of the app
