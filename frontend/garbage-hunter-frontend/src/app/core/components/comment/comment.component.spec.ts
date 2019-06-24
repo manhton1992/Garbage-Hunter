@@ -18,9 +18,10 @@ import { FormsModule } from '@angular/forms';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditComponent } from '../../pages/edit/edit.component';
+import { FlashComponent } from '../flash/flash.component';
 
 describe('CommentComponent', () => {
   let component: CommentComponent;
@@ -42,14 +43,15 @@ describe('CommentComponent', () => {
         AdminNumberBoxComponent,
         ChartLineComponent,
         ChartPieComponent,
-        ErrorComponent
+        ErrorComponent,
+        EditComponent,
+        FlashComponent
       ],
       imports: [
         FormsModule,
         AppRoutingModule,
         HttpClientModule,
         AngularFontAwesomeModule,
-        NgxChartsModule,
         LeafletModule.forRoot(),
         NgbModule.forRoot(),
       ]

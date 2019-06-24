@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import * as CanvasJS from '../../../../assets/ext-library/canvasjs/canvasjs.min.js';
+
 
 @Component({
   selector: 'app-chart-pie',
@@ -17,6 +19,21 @@ export class ChartPieComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    setTimeout(() => {
+      
+      var chart = new CanvasJS.Chart("chartPieContainer", {
+        animationEnabled: true,
+        theme: "light2",
+        exportFileName: "data_monthly",
+        exportEnabled: true,
+        data: [{
+          type: "pie",
+          indexLabel: "{label} {y}",
+          dataPoints: this.data
+        }]
+      });
+      chart.render();
+    }, 1000);
   }
 
 }

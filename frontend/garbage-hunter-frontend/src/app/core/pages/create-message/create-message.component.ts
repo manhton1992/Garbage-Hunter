@@ -10,6 +10,7 @@ import { UserCategoryService } from 'src/app/services/user/user-category/user-ca
 import { MessageCategory } from 'src/app/models/message-category.model';
 import { EmailService } from 'src/app/services/email/email.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { FlashService } from 'src/app/services/flash/flash.service';
 
 /**
  * @description class for the uploaded image
@@ -37,8 +38,16 @@ export class CreateMessageComponent implements OnInit {
     private userCategoryService: UserCategoryService,
     private emailService: EmailService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private flashService: FlashService
   ) {}
+
+  /**
+   * @description flash message
+   * @type {*}
+   * @memberof CreateMessageComponent
+   */
+  flash: any = this.flashService.getFlashes();
 
   /**
    * @description selected image of the input file
@@ -124,16 +133,18 @@ export class CreateMessageComponent implements OnInit {
                 });
 
               // find user categories , which has the same categoryId
-              this.userCategoryService.getUserCategoryByCategoryId(category._id).subscribe((response_user_category) => {
-                // avoid duplicate userId
-                if (response_user_category != null && response_user_category.length > 0) {
-                  response_user_category.forEach((userCategory) => {
-                    if (!this.listUserIdToSendSubcribeEmail.includes(userCategory.userId)) {
-                      this.listUserIdToSendSubcribeEmail.push(userCategory.userId);
-                    }
-                  });
-                }
-              });
+              this.userCategoryService
+                .getAllUserCategories({ categoryId: category._id })
+                .subscribe((response_user_category) => {
+                  // avoid duplicate userId
+                  if (response_user_category != null && response_user_category.length > 0) {
+                    response_user_category.forEach((userCategory) => {
+                      if (!this.listUserIdToSendSubcribeEmail.includes(userCategory.userId)) {
+                        this.listUserIdToSendSubcribeEmail.push(userCategory.userId);
+                      }
+                    });
+                  }
+                });
             });
             setTimeout(() => {
               // send email to each user in the listUserId
@@ -150,17 +161,18 @@ export class CreateMessageComponent implements OnInit {
               });
             }, 2000);
           }
-          alert('MESSAGE CREATED!');
+          this.flashService.setFlashSuccess('message successfully created!');
           localStorage.removeItem('imgUrl');
           this.router.navigate([`/messages/${response_message._id}`]);
         },
         (error) => {
-          alert(error.error['data'].message);
-          //alert("Fail! Please check input again");
+          this.flashService.setErrorFlash('Something went wrong, please try again!');
+          this.flash = this.flashService.getFlashes();
         }
       );
     } else {
-      alert('PLEASE LOGIN TO CREATE A MESSAGE!');
+      this.flashService.setErrorFlash('please login to create a message');
+      this.flash = this.flashService.getFlashes();
     }
   }
 
@@ -234,7 +246,7 @@ export class CreateMessageComponent implements OnInit {
         (error) => {
           this.selectedFile.pending = false;
           this.selectedFile.status = 'fail';
-          this.selectedFile.src = 'https://www.shareicon.net/data/128x128/2015/09/22/105437_cloud_512x512.png';
+          this.selectedFile.src = '';
         }
       );
     });
@@ -256,5 +268,5 @@ export class CreateMessageComponent implements OnInit {
         });
       }
     };
-  }
+  };
 }

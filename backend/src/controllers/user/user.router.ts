@@ -41,7 +41,7 @@ userRouter.get('/download', logTime, wrapAsync(exportUsersAsCsv));
 userRouter.delete('/delete_all', logTime, wrapAsync(deleteAllUsers));
 
 /** READ BY email and address with query ?email=..&&address=.. */
-userRouter.get('/login', logTime, wrapAsync(login));
+userRouter.post('/login', logTime, wrapAsync(login));
 
 /** AUTO LOGIN WITH TOKEN */
 userRouter.get('/login/:token', logTime, wrapAsync(loginByToken));

@@ -6,6 +6,9 @@ import { Category } from 'src/app/models/category.model';
 import { UserService } from 'src/app/services/user/user.service';
 import { UserCategory } from 'src/app/models/user-category.model';
 import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
+import { FlashService } from 'src/app/services/flash/flash.service';
+import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
+import { MessageCategory } from 'src/app/models/message-category.model';
 
 @Component({
   selector: 'app-home',
@@ -15,6 +18,34 @@ import { UserCategoryService } from 'src/app/services/user/user-category/user-ca
 export class HomeComponent implements OnInit {
   page: number = 1;
   pageSize: number = 6;
+
+  /**
+ * @description all categories
+ * @type {*}
+ * @memberof HomeComponent
+ */
+  allCategories: MessageCategory[] = [];
+
+  /**
+ * @description name of a category
+ * @type {*}
+ * @memberof HomeComponent
+ */
+  categoryName: string = '';
+
+  /**
+ * @description selected filtered category
+ * @type {*}
+ * @memberof HomeComponent
+ */
+  selectedCategory: Category;
+
+  /**
+   * @description flash message
+   * @type {*}
+   * @memberof HomeComponent
+   */
+  flash: any = this.flashService.getFlashes();
 
   /**
    * @description messages that will be shown.
@@ -36,8 +67,10 @@ export class HomeComponent implements OnInit {
     private messageService: MessageService,
     private categoryService: CategoryService,
     private userService: UserService,
-    private userCategoryService: UserCategoryService
-  ) {}
+    private userCategoryService: UserCategoryService,
+    private flashService: FlashService,
+    private messageCategoryService: MessageCategoryService
+  ) { }
 
   ngOnInit() {
     this.getMessages();
@@ -63,7 +96,7 @@ export class HomeComponent implements OnInit {
    */
   getMessages = (): void => {
     this.messageService.getAllMessages({ available: true, archive: false }).subscribe((messages) => {
-      this.messages = messages;
+      this.messages = this.sortDateDesc(messages);
     });
   };
 
@@ -91,14 +124,14 @@ export class HomeComponent implements OnInit {
         userId: this.userService.user._id,
         categoryId: category._id,
       };
-      this.userCategoryService.getUserCategoryByCategoryId;
       this.userCategoryService.createUserCategory(userCategory).subscribe(
         (response) => {
           this.userCategories.push(response);
         },
         (error) => {
           isSubcribeSuccess = false;
-          alert(error.error['data'].message);
+          this.flashService.setErrorFlash('something went wrong by subscribing, please try again...');
+          this.flash = this.flashService.getFlashes();
         }
       );
     });
@@ -107,10 +140,12 @@ export class HomeComponent implements OnInit {
     this.followedCategories = this.selectedCategories;
 
     if (isSubcribeSuccess) {
-      alert('SUBSCRIBE SUCCESSFUL!');
+      this.flashService.setFlashSuccess('subscribe successful!');
     } else {
-      alert('ERROR BY SUBSCRIBING! PLEASE TRY AGAIN!');
+      this.flashService.setErrorFlash('something went wrong by subscribing, please try again...');
     }
+    this.flash = this.flashService.getFlashes();
+    window.scrollTo(0, 0);
   };
 
   /**
@@ -120,22 +155,73 @@ export class HomeComponent implements OnInit {
    */
   getUserCategoriesAndPutInLayout = (): void => {
     if (this.userService.user) {
-    this.userCategoryService.getUserCategoryByUserId(this.userService.user._id).subscribe((response) => {
-      if (response && response.length > 0) {
-        this.userCategories = response;
-        // console.log('user categories size: ' + this.userCategories.length);
+      this.userCategoryService.getAllUserCategories({ userId: this.userService.user._id }).subscribe((response) => {
+        if (response && response.length > 0) {
+          this.userCategories = response;
+          // console.log('user categories size: ' + this.userCategories.length);
 
-        this.userCategories.forEach((userCategory) => {
-          this.categoryService.categories.some((category) => {
-            if (category._id == userCategory.categoryId) {
-              this.followedCategories.push(category);
-              return true;
-            }
-            return false;
+          this.userCategories.forEach((userCategory) => {
+            this.categoryService.categories.some((category) => {
+              if (category._id == userCategory.categoryId) {
+                this.followedCategories.push(category);
+                return true;
+              }
+              return false;
+            });
           });
-        });
+        }
+      });
+    }
+  };
+
+  /**
+   * @description sort messages based on the newest date first
+   * @memberof HomeComponent
+   */
+  sortDateDesc = (array: Message[]): Message[] => {
+    return array.sort((a, b) => {
+      if (new Date(a.created_at) < new Date(b.created_at)) {
+        return 1;
+      } else if (new Date(a.created_at) > new Date(b.created_at)) {
+        return -1;
+      } else {
+        return 0;
       }
     });
-  }
   };
+
+  /**
+ * get category name from filter
+ * get messageId from categoryId
+ * display message from category
+ */
+  getAllMessageCategories = (): void => {
+    this.categoryName = this.selectedCategory.name;
+    if (this.selectedCategory) {
+      this.messageCategoryService.getAllMessageCategories({ categoryId: this.selectedCategory._id }).subscribe((messages) => {
+        this.allCategories = messages;
+        this.getMessageByCategory();
+      })
+    }
+  }
+
+  /**
+   * get messageId from categoryId
+   */
+  getMessageByCategory = (): void => {
+    let message: Message;
+    this.messages = [];
+    for (let i = 0; i < this.allCategories.length; i++) {
+      this.messageService.getMessageById(this.allCategories[i].messageId).subscribe((messages) => {
+        message = messages;
+        if(!message.archive && message.available){
+          this.messages.push(message);
+        }
+      })
+    }
+  }
+
+  clearFilter = () : void =>{
+    this.getMessages();
+  }
 }

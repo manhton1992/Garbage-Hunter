@@ -8,7 +8,7 @@ RUN npm ci
 
 COPY frontend/garbage-hunter-frontend .
 
-RUN npm run build
+RUN npm run build-prod
 
 # Stage 2
 FROM nginx

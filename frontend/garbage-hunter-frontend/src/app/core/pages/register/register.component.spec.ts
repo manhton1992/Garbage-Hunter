@@ -21,9 +21,10 @@ import { AppRoutingModule } from 'src/app/app-routing.module';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditComponent } from '../edit/edit.component';
+import { FlashComponent } from '../../components/flash/flash.component';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -46,7 +47,9 @@ describe('RegisterComponent', () => {
         AdminNumberBoxComponent,
         ChartLineComponent,
         ChartPieComponent,
-        ErrorComponent
+        ErrorComponent,
+        EditComponent,
+        FlashComponent
       ],
       imports: [
         BrowserModule,
@@ -55,7 +58,6 @@ describe('RegisterComponent', () => {
         FormsModule,
         HttpClientModule,
         AngularFontAwesomeModule,
-        NgxChartsModule,
         LeafletModule.forRoot(),
         NgbModule.forRoot(),
       ],

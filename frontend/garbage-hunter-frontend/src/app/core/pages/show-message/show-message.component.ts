@@ -10,13 +10,21 @@ import { UserService } from 'src/app/services/user/user.service';
 import { MessageCategoryService } from 'src/app/services/message/message-category/message-category.service';
 import { MessageCategory } from 'src/app/models/message-category.model';
 import { CategoryService } from 'src/app/services/category/category.service';
+import { FlashService } from 'src/app/services/flash/flash.service';
 
 @Component({
   selector: 'app-show-message',
   templateUrl: './show-message.component.html',
-  styleUrls: ['./show-message.component.scss']
+  styleUrls: ['./show-message.component.scss'],
 })
 export class ShowMessageComponent implements OnInit {
+  /**
+   * @description flash message
+   * @type {*}
+   * @memberof ShowMessageComponent
+   */
+  flash: any = this.flashService.getFlashes();
+
   /**
    * @description the main message.
    * @type {Message}
@@ -31,7 +39,7 @@ export class ShowMessageComponent implements OnInit {
    */
   messageCategories: MessageCategory[] = [];
 
-/**
+  /**
    * @description all categories in the main message.
    * @type {Category[]}
    * @memberof ShowMessageComponent
@@ -62,10 +70,11 @@ export class ShowMessageComponent implements OnInit {
     private userService: UserService,
     private route: ActivatedRoute,
     private router: Router,
-  ) { }
+    private flashService: FlashService
+  ) {}
 
-   ngOnInit() {
-    this.route.params.subscribe( async (params) =>  {
+  ngOnInit() {
+    this.route.params.subscribe(async (params) => {
       let messageid = params['messageid'];
       this.getMessage(messageid);
     });
@@ -75,19 +84,21 @@ export class ShowMessageComponent implements OnInit {
    * @description get the message item.
    * @param {string} messageid
    */
-  getMessage = (messageid: string):void => {
-    this.messageService.getMessageById(messageid).subscribe(message => {
-      this.message = message;
-      if(this.message ) {
-        this.getCreator();
-        this.getComments();
-        this.getMessageCategories();
+  getMessage = (messageid: string): void => {
+    this.messageService.getMessageById(messageid).subscribe(
+      (message) => {
+        this.message = message;
+        if (this.message) {
+          this.getCreator();
+          this.getComments();
+          this.getMessageCategories();
+        }
+      },
+      (error) => {
+        this.showError = true;
       }
-    }
-    , error => {
-      this.showError = true;
-    })
-  }
+    );
+  };
 
   /**
    * @description get the creator of the message
@@ -95,68 +106,68 @@ export class ShowMessageComponent implements OnInit {
    */
   getCreator = (): void => {
     if (this.message) {
-      this.userService.getUserById(this.message.creatorId).subscribe(user => {
-        this.creator = user; 
-      })
+      this.userService.getUserById(this.message.creatorId).subscribe((user) => {
+        this.creator = user;
+      });
     }
-  }
+  };
   /**
    * @description get all comments of the message.
    * @param {string} messageid
    */
-  getComments = ():void => {
-    if (this.message) { 
-      this.commentService.getAllComments({ messageId: this.message._id }).subscribe(comments => {
+  getComments = (): void => {
+    if (this.message) {
+      this.commentService.getAllComments({ messageId: this.message._id }).subscribe((comments) => {
         this.comments = comments;
       });
     }
-  }
+  };
 
   /**
    * @description get all available messages.
    * @memberof HomeComponent
    */
   getMessageCategories = (): void => {
-    this.messageCategoryService.getAllMessageCategories({messageId: this.message._id}).subscribe((messages) => {
+    this.messageCategoryService.getAllMessageCategories({ messageId: this.message._id }).subscribe((messages) => {
       this.messageCategories = messages;
-      if(this.messageCategories){
+      if (this.messageCategories) {
         this.getCategoryNames();
       }
     });
- };
+  };
 
- getCategoryNames = (): void => {
-   for (let i = 0; i < this.messageCategories.length; i++){
-     this.categoryService.getCategoryById(this.messageCategories[i].categoryId).subscribe((messages) =>{
-       this.category.push(messages);
-      })
+  getCategoryNames = (): void => {
+    for (let i = 0; i < this.messageCategories.length; i++) {
+      this.categoryService.getCategoryById(this.messageCategories[i].categoryId).subscribe((messages) => {
+        this.category.push(messages);
+      });
     }
- }
+  };
 
- /**
-  * @description set as unavailable.
-  * @memberof ShowMessageComponent
-  */
- setAsUnavailable = (): void => {
-   this.message.available = false;
-   this.messageService.updateMessage(this.message).subscribe(success => {
-     alert('MESSAGE IS MARKED AS UNAVAILABLE!');
-    this.router.navigate(['/']);
-  });
- }
+  /**
+   * @description set as unavailable.
+   * @memberof ShowMessageComponent
+   */
+  setAsUnavailable = (): void => {
+    this.message.available = false;
+    this.messageService.updateMessage(this.message).subscribe((success) => {
+      this.flashService.setFlashSuccess('Message is marked as unavailable!');
+      this.router.navigate(['/']);
+    });
+  };
 
   /**
    * @description delete the message.
    * @memberof ShowMessageComponent
    */
-  archiveMessage = (): void => { 
-      this.message.archive = true;
-      this.message.available = false;
-      this.messageService.updateMessage(this.message).subscribe(success => {
-        alert('MESSAGE IS ARCHIVED!');
-        this.router.navigate(['/']);
-      });
-  }
+  archiveMessage = (): void => {
+    this.message.archive = true;
+    this.message.available = false;
+    this.messageService.updateMessage(this.message).subscribe((success) => {
+      this.flashService.setFlashSuccess('MESSAGE IS ARCHIVED!');
+      this.router.navigate(['/']);
+    });
+  };
 
   /**
    * @description show/hide edit and mark as unavailable buttons specific to current user.
@@ -167,7 +178,7 @@ export class ShowMessageComponent implements OnInit {
       return true;
     }
     return false;
-  }
+  };
 
   /**
    * @description show/hide delete button only to admins.
@@ -178,5 +189,5 @@ export class ShowMessageComponent implements OnInit {
       return true;
     }
     return false;
-  }
+  };
 }

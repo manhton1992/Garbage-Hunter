@@ -13,7 +13,6 @@ import { MapComponent } from '../map/map.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ChartPieComponent } from '../chart-pie/chart-pie.component';
@@ -22,6 +21,8 @@ import { AdminNumberBoxComponent } from '../admin-number-box/admin-number-box.co
 import { CommentComponent } from '../comment/comment.component';
 import { FooterComponent } from '../footer/footer.component';
 import { ErrorComponent } from '../error/error.component';
+import { EditComponent } from '../../pages/edit/edit.component';
+import { FlashComponent } from '../flash/flash.component';
 
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
@@ -44,6 +45,8 @@ describe('HeaderComponent', () => {
         ChartLineComponent,
         ChartPieComponent,
         ErrorComponent,
+        EditComponent,
+        FlashComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -51,7 +54,6 @@ describe('HeaderComponent', () => {
         FormsModule,
         HttpClientModule,
         AngularFontAwesomeModule,
-        NgxChartsModule,
         LeafletModule.forRoot(),
         NgbModule.forRoot(),
       ],

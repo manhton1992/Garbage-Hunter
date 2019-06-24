@@ -1,4 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
+import * as CanvasJS from '../../../../assets/ext-library/canvasjs/canvasjs.min.js';
 
 @Component({
   selector: 'app-chart-line',
@@ -31,6 +32,20 @@ export class ChartLineComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    setTimeout(() => {
+      console.log(this.data);
+      let chart = new CanvasJS.Chart("chartContainer", {
+        animationEnabled: true,
+        theme: "light2",
+        exportFileName: "data_monthly",
+        exportEnabled: true,
+        data: [{        
+          type: "line",       
+          dataPoints: this.data
+        }]
+      });
+      chart.render();
+    }, 1000);
   }
 
 }

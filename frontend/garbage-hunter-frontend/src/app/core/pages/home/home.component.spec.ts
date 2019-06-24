@@ -19,8 +19,9 @@ import { ChartLineComponent } from '../../components/chart-line/chart-line.compo
 import { ChartPieComponent } from '../../components/chart-pie/chart-pie.component';
 import { ErrorComponent } from '../../components/error/error.component';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditComponent } from '../edit/edit.component';
+import { FlashComponent } from '../../components/flash/flash.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -42,14 +43,15 @@ describe('HomeComponent', () => {
         AdminNumberBoxComponent,
         ChartLineComponent,
         ChartPieComponent,
-        ErrorComponent
+        ErrorComponent,
+        EditComponent,
+        FlashComponent
       ],
       imports: [
         FormsModule,
         AppRoutingModule,
         HttpClientModule,
         AngularFontAwesomeModule,
-        NgxChartsModule,
         LeafletModule.forRoot(),
         NgbModule.forRoot(),
       ]

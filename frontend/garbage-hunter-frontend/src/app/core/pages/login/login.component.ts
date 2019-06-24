@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
 import { Router } from '@angular/router';
+import { FlashService } from 'src/app/services/flash/flash.service';
 
 @Component({
   selector: 'app-login',
@@ -8,13 +9,21 @@ import { Router } from '@angular/router';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
+
+  /**
+   * @description flash message
+   * @type {*}
+   * @memberof LoginComponent
+   */
+  flash: any = this.flashService.getFlashes();
+
   userLogin = {
     email: '',
     password: '',
   };
   passwordType: string = 'password';
   passwordShow: boolean = false;
-  constructor(private userService: UserService, private router: Router) {}
+  constructor(private userService: UserService, private router: Router, private flashService: FlashService) {}
 
   ngOnInit() {}
 
@@ -32,11 +41,12 @@ export class LoginComponent implements OnInit {
         // console.log( this.userService.user)
         // console.log("login successfully");
 
-        alert('login successfully');
+        this.flashService.setFlashSuccess(`welcome back, ${response.docs.email}!`);
         this.router.navigate(['/']);
       },
       (error) => {
-        alert(error.error['data'].message);
+        this.flashService.setErrorFlash(`wrong email or password!`);
+        this.flash = this.flashService.getFlashes();
       }
     );
   }

@@ -14,7 +14,7 @@ import { ICategoryModel, category } from '../../models/category.model';
  */
 export const getCategories = async (req: Request, res: Response) => {
     try {
-        const categories: ICategoryModel[] = await category.find();
+        const categories: ICategoryModel[] = await category.find(req.query);
         res.status(200).send({
             data: {
                 status: 'success',

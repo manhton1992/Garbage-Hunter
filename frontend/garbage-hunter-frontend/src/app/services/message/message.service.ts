@@ -20,6 +20,15 @@ export class MessageService {
 
   constructor(private http: HttpClient) {}
 
+  private getHeader = (): any => {
+    const data = JSON.parse(localStorage.getItem('currentUser'));
+    const token = data ? data.token : null;
+    return {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  }
+
   /**
    * @description get all messages.
    * @returns {Observable<Message>[]}
@@ -51,7 +60,7 @@ export class MessageService {
    * @memberof MessageService
    */
   createMessage = (message: Message): Observable<Message> => {
-    return this.http.post<Message>(this.messageUrl, message).pipe(
+    return this.http.post<Message>(this.messageUrl, message, {headers: this.getHeader()}).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
@@ -64,7 +73,7 @@ export class MessageService {
    */
   updateMessage(message: Message): Observable<Message> {
     const url = `${this.messageUrl}/${message._id}`;
-    return this.http.put<Message>(url, message).pipe(catchError((err) => observableHandleError(err)));
+    return this.http.put<Message>(url, message, {headers: this.getHeader()}).pipe(catchError((err) => observableHandleError(err)));
   }
 
   /**
@@ -74,7 +83,7 @@ export class MessageService {
    */
   deleteMessage(messageid: string): Observable<{}> {
     const url = `${this.messageUrl}/${messageid}`;
-    return this.http.delete<{}>(url).pipe(catchError((err) => observableHandleError(err)));
+    return this.http.delete<{}>(url, {headers: this.getHeader()}).pipe(catchError((err) => observableHandleError(err)));
   }
 
   /**
@@ -109,7 +118,7 @@ export class MessageService {
    */
   deleteUploadedImage(imageKey: string): Observable<{}> {
     const url = `${this.messageUrl}/delete_image`;
-    return this.http.post<string>(url, {key: imageKey}).pipe(
+    return this.http.post<string>(url, {key: imageKey}, {headers: this.getHeader()}).pipe(
       map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );

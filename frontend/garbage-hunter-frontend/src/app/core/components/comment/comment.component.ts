@@ -36,9 +36,6 @@ export class CommentComponent implements OnInit {
   ngOnInit() {
     this.getMessageId();
     this.getComments();
-    this.route.params.subscribe((params) => {
-      this.newComment.messageId = params['messageid'];
-    });
   }
 
   getComments(): void {
@@ -48,12 +45,13 @@ export class CommentComponent implements OnInit {
           comment.creatorId = user.email;
         })
       })
-      this.comments = comments;
+      this.comments = this.sortDateDesc(comments);
     });
   }
   getMessageId(): void {
     this.route.params.subscribe((params) => {
       this.thisMessageID = params['messageid'];
+      this.newComment.messageId = params['messageid'];
     });
   }
 
@@ -62,8 +60,8 @@ export class CommentComponent implements OnInit {
     if (this.userService.user) {
       this.commentService.createComment(thisNewComment).subscribe(
         (reponseCommnet) => {
-          this.newComment.creatorId = this.userService.user.email;
-          this.comments.push(this.newComment);
+          thisNewComment.creatorId = this.userService.user.email;
+          this.comments.unshift(thisNewComment);
           // alert('COMMENT CREATED! RELOADING PAGE!');
         },
         (error) => {
@@ -74,5 +72,21 @@ export class CommentComponent implements OnInit {
       alert('PLEASE LOGIN TO CREATE COMMENT');
     }
     e.target.value = '';
+  }
+
+  /**
+   * @description sort comments based on the newest date first
+   * @memberof CommentComponent
+   */
+  sortDateDesc = (array: Comment[]): Comment[] => {
+    return array.sort((a,b) => {
+      if (new Date(a.created_at) < new Date(b.created_at)) {
+        return 1;
+      } else if (new Date(a.created_at) > new Date(b.created_at)) {
+        return -1;
+      } else {
+        return 0;
+      }
+    });
   }
 }

@@ -185,12 +185,12 @@ export const deleteAllUsers = async (req: Request, res: Response) => {
 export const login = async (req: Request, res: Response) => {
     try {
 
-        const singleUser: IUserModel | null = await user.findOne({email: req.query.email});
+        const singleUser: IUserModel | null = await user.findOne({email: req.body.email});
         
         // compare password with hashpassword
         if (myJWTSecretKey && singleUser ){
 
-            if (bcrypt.compareSync(req.query.password, singleUser.passwordHash)){
+            if (bcrypt.compareSync(req.body.password, singleUser.passwordHash)){
                 if (singleUser.isConfirm){
                     // create a token. With this token, client can communite with server of the user
                     // sign with default (HMAC SHA256) 
@@ -522,8 +522,7 @@ export const confirmEmail = async (req: Request, res: Response) => {
             });
             res.status(200).send({
                 data: {
-                    status: 'success',
-                    docs: updateUser,
+                    status: 'success'
                 },
             });
         }
