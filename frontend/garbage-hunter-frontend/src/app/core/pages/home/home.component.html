@@ -5,7 +5,7 @@
     <div class="text-center container">
       <h1 class="display-2">Garbage Hunter</h1>
       <p class="lead">
-          Garbage Hunter is the application to report unused things that lies on the side of a street.
+        Garbage Hunter is the application to report unused things that lies on the side of a street.
         <br />
         You can create, see and contribute to the messages.
       </p>
@@ -21,81 +21,87 @@
 <div class="container">
   <div class="form-group">
     <span>
-      Filter:
+      Filter with categories:
     </span>
     <div class="row">
-      <div class="col-lg-6">
+      <div class="col-lg-8">
         <select [(ngModel)]="selectedCategory" [ngModelOptions]="{ standalone: true }" id="filter" class="form-control">
           <option *ngFor="let category of categoryService.categories" [ngValue]="category">
             {{category.name | uppercase}}
           </option>
         </select>
       </div>
-      <button class="btn btn-primary mr-1" (click)="getAllMessageCategories()"> OK </button>
-      <button class="btn btn-primary" (click)="clearFilter()"> Clear Filter </button>
+      <div class="col-lg-2">
+        <button class="btn btn-success mr-1 filter-button" (click)="getAllMessageCategories()" > Filter
+        </button>
+      </div>
+      <div class="col-lg-2">
+        <button class="btn btn-outline-success filter-button" (click)="clearFilter()" > Clear </button>
+      </div>
 
     </div>
   </div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-6" *ngFor="let m of messages | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
-        <div class="card card-item shadow mb-3">
-          <h4 class="card-header"><a class="text-success" [routerLink]="['/messages/' + m?._id]">{{m?.title}}</a></h4>
-          <div class="card-body">
-            <div class="row">
-              <div class="col-4">
-                <img class="garbage-img" src="{{m?.imageUrl}}" alt="{{m?.imageUrl}}" />
-              </div>
-              <div class="col-8">
-                <h6 class="card-title">
-                  {{(m?.description?.length>200)? (m?.description | slice:0:200)+'...':(m?.description)}}</h6>
-              </div>
+</div>
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-lg-6" *ngFor="let m of messages | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize">
+      <div class="card card-item shadow mb-3">
+        <h4 class="card-header"><a class="text-success" [routerLink]="['/messages/' + m?._id]">{{m?.title}}</a></h4>
+        <div class="card-body">
+          <div class="row">
+            <div class="col-4">
+              <img class="garbage-img" src="{{m?.imageUrl}}" alt="{{m?.imageUrl}}" />
+            </div>
+            <div class="col-8">
+              <h6 class="card-title">
+                {{(m?.description?.length>200)? (m?.description | slice:0:200)+'...':(m?.description)}}</h6>
             </div>
           </div>
-          <div class="card-footer text-muted">
-            <span>{{m?.address}}</span>&nbsp;<span [ngStyle]="{'font-size': '0.8rem'}"> at
-              {{m?.created_at | date: 'HH:mm on dd.MM.yyyy'}}</span>
-          </div>
+        </div>
+        <div class="card-footer text-muted">
+          <span>{{m?.address}}</span>&nbsp;<span [ngStyle]="{'font-size': '0.8rem'}"> at
+            {{m?.created_at | date: 'HH:mm on dd.MM.yyyy'}}</span>
         </div>
       </div>
     </div>
-
-    <ngb-pagination class="my-2 d-flex justify-content-center" [(page)]="page" [pageSize]="pageSize"
-      [collectionSize]="messages?.length" size="sm"></ngb-pagination>
-
   </div>
 
-  <div *ngIf="userService.user" class="container my-2">
-    <hr class="my-3">
-    <div class="card shadow">
-      <h4 class="card-header">Subcribe categories to get email when someone post a matching message:</h4>
-      <div class="card-body">
-        <div class="display-4">
-          <span>Your currently followed categories: </span>
-          <div class="d-inline px-2 mx-1 badge badge-pill badge-info" *ngFor="let category of followedCategories">
-            {{category.name}} </div>
-        </div>
-        <br>
-        <div class="display-4 mb-3">
-          <span>Your selected categories: </span>
-          <div class="d-inline px-2 mx-1 badge badge-pill badge-info" *ngFor="let category of selectedCategories">
-            {{category.name}} </div>
-        </div>
-        <!-- Category input -->
-        <div class="form-group">
-          <select [(ngModel)]="selectedCategories" [ngModelOptions]="{ standalone: true }" id="categoryInput"
-            class="form-control my-2" size="6" multiple>
-            <option *ngFor="let category of categoryService.categories" [ngValue]="category">
-              {{category.name | uppercase}}
-            </option>
-          </select>
-          <div class="form-group my-1">
-            <button type="submit" (click)="subcribeSubmit()" class="btn btn-success" id="submitBtn">Subscribe!</button>
-          </div>
-          <span class="text-muted" [ngStyle]="{'font-size': '0.6rem'}">*By clicking on the button, you are overwriting
-            your followed categories with the selected categories.</span>
-        </div>
-        <!-- End of category input -->
+  <ngb-pagination class="my-2 d-flex justify-content-center" [(page)]="page" [pageSize]="pageSize"
+    [collectionSize]="messages?.length" size="sm"></ngb-pagination>
+
+</div>
+
+<div *ngIf="userService.user" class="container my-2">
+  <hr class="my-3">
+  <div class="card shadow">
+    <h4 class="card-header">Subcribe categories to get email when someone post a matching message:</h4>
+    <div class="card-body">
+      <div class="display-4">
+        <span>Your currently followed categories: </span>
+        <div class="d-inline px-2 mx-1 badge badge-pill badge-info" *ngFor="let category of followedCategories">
+          {{category.name}} </div>
       </div>
+      <br>
+      <div class="display-4 mb-3">
+        <span>Your selected categories: </span>
+        <div class="d-inline px-2 mx-1 badge badge-pill badge-info" *ngFor="let category of selectedCategories">
+          {{category.name}} </div>
+      </div>
+      <!-- Category input -->
+      <div class="form-group">
+        <select [(ngModel)]="selectedCategories" [ngModelOptions]="{ standalone: true }" id="categoryInput"
+          class="form-control my-2" size="6" multiple>
+          <option *ngFor="let category of categoryService.categories" [ngValue]="category">
+            {{category.name | uppercase}}
+          </option>
+        </select>
+        <div class="form-group my-1">
+          <button type="submit" (click)="subcribeSubmit()" class="btn btn-success" id="submitBtn">Subscribe!</button>
+        </div>
+        <span class="text-muted" [ngStyle]="{'font-size': '0.6rem'}">*By clicking on the button, you are overwriting
+          your followed categories with the selected categories.</span>
+      </div>
+      <!-- End of category input -->
     </div>
   </div>
+</div>
