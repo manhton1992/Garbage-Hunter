@@ -15,16 +15,16 @@ test_backend:
     stage: test_backend
     script:
         - cd backend
-        - npm install
-        - npm test
+       # - npm install
+       # - npm test
 
 test_frontend:
     stage: test_frontend
     image: trion/ng-cli-karma:latest
     script:
         - cd frontend/garbage-hunter-frontend
-        - npm install
-        - npm run test-ci
+       # - npm install
+       # - npm run test-ci
 
 deploy_aws:
   only:
