@@ -41,11 +41,11 @@ export class HomeComponent implements OnInit {
   selectedCategories: Category[] = [];
 
   constructor(
-    private messageService: MessageService,
-    private categoryService: CategoryService,
-    private userService: UserService,
-    private userCategoryService: UserCategoryService,
-    private flashService: FlashService
+    public messageService: MessageService,
+    public categoryService: CategoryService,
+    public userService: UserService,
+    public userCategoryService: UserCategoryService,
+    public flashService: FlashService
   ) {}
 
   ngOnInit() {

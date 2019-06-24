@@ -80,11 +80,11 @@ export class AdminComponent implements OnInit {
   isCollapsed: boolean = false;
 
   constructor(
-    private messageService: MessageService,
-    private categoryService: CategoryService,
-    private messageCategoryService: MessageCategoryService,
-    private userService: UserService,
-    private flashService: FlashService
+    public messageService: MessageService,
+    public categoryService: CategoryService,
+    public messageCategoryService: MessageCategoryService,
+    public userService: UserService,
+    public flashService: FlashService
   ) {}
 
   ngOnInit() {
