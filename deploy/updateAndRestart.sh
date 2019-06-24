@@ -26,5 +26,4 @@ sudo docker-compose build frontend
 sudo docker-compose build backend
 
 # run the docker compose
-sudo docker-compose up backend
-sudo docker-compose up frontend
+sudo docker-compose up backend frontend
