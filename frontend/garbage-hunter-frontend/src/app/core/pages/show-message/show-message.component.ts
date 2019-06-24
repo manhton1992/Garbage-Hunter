@@ -63,14 +63,14 @@ export class ShowMessageComponent implements OnInit {
   showError: boolean = false;
 
   constructor(
-    private messageService: MessageService,
-    private messageCategoryService: MessageCategoryService,
-    private categoryService: CategoryService,
-    private commentService: CommentService,
-    private userService: UserService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private flashService: FlashService
+    public messageService: MessageService,
+    public messageCategoryService: MessageCategoryService,
+    public categoryService: CategoryService,
+    public commentService: CommentService,
+    public userService: UserService,
+    public route: ActivatedRoute,
+    public router: Router,
+    public flashService: FlashService
   ) {}
 
   ngOnInit() {

@@ -30,16 +30,16 @@ class ImageSnippet {
 })
 export class CreateMessageComponent implements OnInit {
   constructor(
-    private userService: UserService,
-    private messageService: MessageService,
-    private mapService: MapService,
-    private categoryService: CategoryService,
-    private messageCategoryService: MessageCategoryService,
-    private userCategoryService: UserCategoryService,
-    private emailService: EmailService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private flashService: FlashService
+    public userService: UserService,
+    public messageService: MessageService,
+    public mapService: MapService,
+    public categoryService: CategoryService,
+    public messageCategoryService: MessageCategoryService,
+    public userCategoryService: UserCategoryService,
+    public emailService: EmailService,
+    public route: ActivatedRoute,
+    public router: Router,
+    public flashService: FlashService
   ) {}
 
   /**

@@ -28,9 +28,9 @@ export class CommentComponent implements OnInit {
   };
 
   constructor(
-    private userService: UserService,
-    private commentService: CommentService,
-    private route: ActivatedRoute
+    public userService: UserService,
+    public commentService: CommentService,
+    public route: ActivatedRoute
   ) {}
 
   ngOnInit() {
