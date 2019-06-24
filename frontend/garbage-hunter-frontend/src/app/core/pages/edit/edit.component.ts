@@ -73,17 +73,17 @@ export class EditComponent implements OnInit {
   showError: boolean = false;
 
   constructor(
-    private messageService: MessageService,
-    private commentService: CommentService,
-    private userService: UserService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private mapService: MapService,
-    private categoryService: CategoryService,
-    private messageCategoryService: MessageCategoryService,
-    private userCategoryService: UserCategoryService,
-    private flashService: FlashService,
-    private _location: Location
+    public messageService: MessageService,
+    public commentService: CommentService,
+    public userService: UserService,
+    public route: ActivatedRoute,
+    public router: Router,
+    public mapService: MapService,
+    public categoryService: CategoryService,
+    public messageCategoryService: MessageCategoryService,
+    public userCategoryService: UserCategoryService,
+    public flashService: FlashService,
+    public _location: Location
   ) {}
 
   ngOnInit() {

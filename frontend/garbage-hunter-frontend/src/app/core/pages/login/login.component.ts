@@ -23,7 +23,11 @@ export class LoginComponent implements OnInit {
   };
   passwordType: string = 'password';
   passwordShow: boolean = false;
-  constructor(private userService: UserService, private router: Router, private flashService: FlashService) {}
+  constructor(
+    public userService: UserService, 
+    public router: Router, 
+    public flashService: FlashService
+    ) {}
 
   ngOnInit() {}
 
