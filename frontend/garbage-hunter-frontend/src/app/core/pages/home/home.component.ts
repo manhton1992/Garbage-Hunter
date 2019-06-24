@@ -218,4 +218,8 @@ export class HomeComponent implements OnInit {
       })
     }
   }
+
+  clearFilter = () : void =>{
+    this.getMessages();
+  }
 }

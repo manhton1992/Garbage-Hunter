@@ -83,12 +83,11 @@
 
   <!-- <div *ngIf="showActionDiv()" class="row text-center my-4"> -->
   <div class="row text-center my-4">
-    <div class="col-lg">
-      <button *ngIf="showEditChangeButton()" class="btn btn-outline-primary btn-lg mx-1 my-1 btn-action"
-        id="edit-button" [routerLink]="['/messages/' + message?._id + '/edit']">Edit message</button>
-
+    <div *ngIf="creator" class="col-lg">
+        <button *ngIf="showEditChangeButton()" class="btn btn-outline-primary btn-lg mx-1 my-1 btn-action"
+          id="edit-button" [routerLink]="['/messages/' + message?._id + '/edit']">Edit message</button>
     </div>
-    <div class="col-lg">
+    <div *ngIf="creator" class="col-lg">
       <button *ngIf="showEditChangeButton()" class="btn btn-outline-warning btn-lg mx-1 my-1 btn-action"
         id="status-button" (click)="setAsUnavailable()">Mark as unavailable</button>
 
