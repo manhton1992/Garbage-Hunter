@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # remove the old key of the server mit this ip
-ssh-keygen -R 18.185.126.85
+ssh-keygen -R 18.184.237.145
 
 # disable the host key checking.
 bash ./deploy/disableHostKeyChecking.sh
