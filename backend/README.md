@@ -1,6 +1,6 @@
 # Garbage Hunter (Backend)
 
-This repository is the backend part for the project `Garbage Hunter` that is made during the course "Advanced Web Development" in Hochschule Darmstadt in SS19.
+This document is the backend part for the project `Garbage Hunter` that is made during the course "Advanced Web Development" in Hochschule Darmstadt in SS19.
 
 ## API Reference
 Backend server run on the port 3000
@@ -151,3 +151,72 @@ The Body of PUT and POST request look like:
 | ----------- | ------- | ------------- | ----------- |
 | `api/email` | GET     | -             | Send email to a subcriber by URL query : userId ( subcriber) and messageId |
 
+
+## Database schemas
+
+\* = attribute is created automatically by mongoose
+
+### Message schema
+
+| Attributes      | Type    | Required | Default |
+| --------------- | ------- | -------- | ------- |
+| `title`         | String  | Yes      | -       |
+| `description`   | String  | Yes      | -       |
+| `creatorId`     | String  | Yes      | -       |
+| `lon`           | Number  | Yes      | false   |
+| `lat`           | Number  | Yes      | false   |
+| `address`       | String  | Yes      | -       |
+| `available`     | Boolean | Yes      | true    |
+| `archive`       | Boolean | Yes      | false   |
+| `imageUrl`      | String  | No       | -       |
+| `phone`         | Number  | No       | -       |
+| `created_at` \* | Date    | -        | auto    |
+| `updated_at` \* | Date    | -        | auto    |
+
+### User schema
+
+| Attributes        | Type    | Required | Default |
+| ----------------- | ------- | -------- | ------- |
+| `email`           | String  | Yes      | -       |
+| `firstName`       | String  | No       | -       |
+| `lastName`        | String  | No       | -       |
+| `phoneNumber`     | String  | No       | -       |
+| `passwordHash`    | Number  | Yes      | -       |
+| `isAdmin`         | Boolean | Yes      | false   |
+| `isConfirm`       | Boolean | Yes      | false   |
+| `profileImageUrl` | String  | No       | -       |
+| `created_at` \*   | Date    | -        | auto    |
+| `updated_at` \*   | Date    | -        | auto    |
+
+### Comment schema
+
+| Attributes      | Type    | Required | Default |
+| --------------- | ------- | -------- | ------- |
+| `text`          | String  | Yes      | -       |
+| `creatorId`     | String  | Ytes     | -       |
+| `parentId`      | String  | No       | -       |
+| `messageId`     | String  | Yes      | -       |
+| `archive`       | Boolean | Yes      | false   |
+| `imageUrl`      | String  | No       | ""      |
+| `created_at` \* | Date    | -        | auto    |
+
+### Category schema
+
+| Attributes | Type   | Required | Default |
+| ---------- | ------ | -------- | ------- |
+| `name`     | String | Yes      | -       |
+
+### MessageCategory schema
+
+| Attributes   | Type   | Required | Default |
+| ------------ | ------ | -------- | ------- |
+| `messageId`  | String | Yes      | -       |
+| `categoryId` | String | Yes      | -       |
+
+
+### UserCategory schema
+
+| Attributes   | Type   | Required | Default |
+| ------------ | ------ | -------- | ------- |
+| `userId`  | String | Yes      | -       |
+| `categoryId` | String | Yes      | -       |

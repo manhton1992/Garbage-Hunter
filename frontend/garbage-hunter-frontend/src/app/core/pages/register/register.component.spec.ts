@@ -23,6 +23,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditComponent } from '../edit/edit.component';
+import { FlashComponent } from '../../components/flash/flash.component';
 
 describe('RegisterComponent', () => {
   let component: RegisterComponent;
@@ -45,7 +47,9 @@ describe('RegisterComponent', () => {
         AdminNumberBoxComponent,
         ChartLineComponent,
         ChartPieComponent,
-        ErrorComponent
+        ErrorComponent,
+        EditComponent,
+        FlashComponent
       ],
       imports: [
         BrowserModule,

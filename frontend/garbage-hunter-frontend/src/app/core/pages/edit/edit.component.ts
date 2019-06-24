@@ -13,6 +13,7 @@ import { MessageCategoryService } from 'src/app/services/message/message-categor
 import { UserCategoryService } from 'src/app/services/user/user-category/user-category.service';
 import { MessageCategory } from 'src/app/models/message-category.model';
 import { FlashService } from 'src/app/services/flash/flash.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-edit',
@@ -81,7 +82,8 @@ export class EditComponent implements OnInit {
     private categoryService: CategoryService,
     private messageCategoryService: MessageCategoryService,
     private userCategoryService: UserCategoryService,
-    private flashService: FlashService
+    private flashService: FlashService,
+    private _location: Location
   ) {}
 
   ngOnInit() {
@@ -288,4 +290,8 @@ export class EditComponent implements OnInit {
     }
     return false;
   };
+
+  clickBack = () : void => {
+    this._location.back();
+  }
 }
