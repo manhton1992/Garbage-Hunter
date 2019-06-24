@@ -5,30 +5,43 @@ import { CategoryService } from './services/category/category.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
 
+  constructor(private userService: UserService, private categoryService: CategoryService) {}
 
-  constructor(private userService: UserService,
-    private categoryService: CategoryService) { }
+  title = 'garbage-hunter-frontend';
 
   /** auto login when open the app */
   ngOnInit(): void {
-    if (localStorage.getItem("currentUser")) {
-      this.userService.authenticate()
-        .subscribe(res => {
-          if (res && res != null) {
-            if (res.status == 'success') {
-              this.userService.user = res.docs;
-              console.log("auto login successfully");
-            } else {
-              alert(res.message);
-            }
+    if (localStorage.getItem('currentUser')) {
+      this.userService.authenticate().subscribe((res) => {
+        if (res && res != null) {
+          if (res.status == 'success') {
+            this.userService.user = res.docs;
+            console.log('auto login successfully');
+          } else {
+            alert(res.message);
           }
-        });
+        }
+      });
     }
-
   }
-  title = 'garbage-hunter-frontend';
+
+  /**
+   * @description scroll page on top slowly
+   * @param {*} event
+   * @memberof AppComponent
+   */
+  onActivate = (event:  any): void => {
+    let scrollToTop = window.setInterval(() => {
+      let pos = window.pageYOffset;
+      if (pos > 0) {
+        window.scrollTo(0, pos - 50); // how far to scroll on each step
+      } else {
+        window.clearInterval(scrollToTop);
+      }
+    }, 16);
+  }
 }

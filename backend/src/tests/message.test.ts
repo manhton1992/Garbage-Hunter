@@ -6,8 +6,9 @@
 import chai from 'chai';
 import chaiHttp from 'chai-http';
 import { message } from '../models/message.model';
+import { user } from '../models/user.model';
 import { app } from '../server';
-import { readFileSync } from 'fs';
+import { setTimeout } from 'timers';
 
 /** Chai plugins */
 chai.use(chaiHttp);
@@ -24,7 +25,47 @@ let completeMessage = new message({
     phone: 15647472983,
 });
 
+/** save the token for authorization */
+let token: string;
+
+before((done) => {
+    let userid: string;
+    user.deleteMany({});
+    it('it should register new user', (done) => {
+        chai.request(app)
+            .post('/api/users/register')
+            .send({email: 'test@test.com', password: 'test'})
+            .end((err, res) => {
+                res.should.have.status(201);
+                userid = res.body.data.docs._id;
+                done();
+            });
+    });
+    it('it should register new user', (done) => {
+        chai.request(app)
+            .put('/api/users/' + userid)
+            .send({isConfirm: true})
+            .end((err, res) => {
+                res.should.have.status(200);
+                done();
+            });
+    });
+    it('it should login the user', (done) => {
+        chai.request(app)
+            .post('/api/users/login')
+            .send({email: 'test@test.com', password: 'test'})
+            .end((err, res) => {
+                res.should.have.status(200);
+                token = res.body.data.token;
+                console.log(token);
+                done();
+            });
+    });
+    done();
+})
+
 describe('Message API', () => {
+
     beforeEach((done) => {
         message.deleteMany({}, (err) => {
             done();
@@ -42,7 +83,6 @@ describe('Message API', () => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.data.status.should.be.eql('success');
-                    res.body.data.items.should.be.eql(0);
                     res.body.data.docs.should.be.a('array');
                     done();
                 });
@@ -56,6 +96,8 @@ describe('Message API', () => {
         it('it should POST a new message', (done) => {
             chai.request(app)
                 .post('/api/messages')
+                .set('Content-Type', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
                 .send(completeMessage)
                 .end((err, res) => {
                     res.should.have.status(201);
@@ -69,8 +111,9 @@ describe('Message API', () => {
                     done();
                 });
         });
-        it('it should not POST a new message without title', (done) => {
-            let completeMessageWoTitle = new message({
+        it('it should not POST a new message without authorization', (done) => {
+            let completeMessageWoAuth = new message({
+                title: 'test yoo',
                 description: 'there is a beautiful second hand chair that might be useful',
                 creatorId: 'abcDe2312',
                 lon: 89.11,
@@ -81,12 +124,13 @@ describe('Message API', () => {
             });
             chai.request(app)
                 .post('/api/messages')
-                .send(completeMessageWoTitle)
+                .send(completeMessageWoAuth)
                 .end((err, res) => {
-                    res.should.have.status(400);
+                    res.should.have.status(403);
                     res.body.data.status.should.be.eql('error');
                     done();
                 });
+            setTimeout(done, 3000);
         });
         it('it should POST a new message without phone', (done) => {
             let completeMessageWoPhone = new message({
@@ -100,6 +144,8 @@ describe('Message API', () => {
             });
             chai.request(app)
                 .post('/api/messages')
+                .set('Content-Type', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
                 .send(completeMessageWoPhone)
                 .end((err, res) => {
                     res.should.have.status(201);
@@ -156,6 +202,8 @@ describe('Message API', () => {
             updateMessage.save((err, act) => {
                 chai.request(app)
                     .put('/api/messages/' + updateMessage.id)
+                    .set('Content-Type', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
                     .send({
                         title: 'not beautiful chair',
                         description: 'just realised the chair is not beautiful',
@@ -196,6 +244,8 @@ describe('Message API', () => {
             deleteMessage.save((err, act) => {
                 chai.request(app)
                     .delete('/api/messages/' + deleteMessage.id)
+                    .set('Content-Type', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
                     .end((err, res) => {
                         res.should.have.status(200);
                         res.body.data.status.should.be.eql('success');
@@ -218,6 +268,8 @@ describe('Message API', () => {
         it('it should DELETE all messages', (done) => {
             chai.request(app)
                 .post('/api/messages')
+                .set('Content-Type', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
                 .send(completeMessage)
                 .end((err, res) => {
                     res.should.have.status(201);
@@ -233,11 +285,12 @@ describe('Message API', () => {
                     res.should.have.status(200);
                     res.body.should.be.a('object');
                     res.body.data.status.should.be.eql('success');
-                    res.body.data.items.should.be.eql(1);
                     res.body.data.docs.should.be.a('array');
                 });
             chai.request(app)
                 .delete('/api/messages/delete_all')
+                .set('Content-Type', 'application/json')
+                .set('Authorization', 'Bearer ' + token)
                 .end((err, res) => {
                     res.should.have.status(200);
                     res.body.data.status.should.be.eql('success');

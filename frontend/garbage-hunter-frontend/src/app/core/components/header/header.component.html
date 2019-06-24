@@ -43,8 +43,8 @@
           <fa name="user" size="lg"></fa> Admin
         </a>
       </li>
-      <li *ngIf="userService.user != null" class="nav-item">
-        <a class="nav-link" [routerLink]="['/']" (click)="logout()">
+      <li *ngIf="userService.user != null" class="nav-item" [ngStyle]="{cursor: 'pointer'}">
+        <a class="nav-link" (click)="logout()">
           <fa name="sign-out" size="lg"></fa> Logout
         </a>
       </li>

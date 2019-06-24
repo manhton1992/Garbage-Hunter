@@ -15,7 +15,6 @@ import { ChartPieComponent } from '../../components/chart-pie/chart-pie.componen
 import { ErrorComponent } from '../../components/error/error.component';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -43,7 +42,6 @@ describe('LoginComponent', () => {
         FormsModule,
         HttpClientModule,
         AngularFontAwesomeModule,
-        NgxChartsModule,
         LeafletModule.forRoot(),
         NgbModule.forRoot(),
       ],

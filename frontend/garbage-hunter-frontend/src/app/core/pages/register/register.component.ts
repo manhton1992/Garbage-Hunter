@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
 import { Router } from '@angular/router';
+import { FlashService } from 'src/app/services/flash/flash.service';
 
 @Component({
   selector: 'app-register',
@@ -8,6 +9,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./register.component.scss'],
 })
 export class RegisterComponent implements OnInit {
+  /**
+   * @description flash message
+   * @type {*}
+   * @memberof RegisterComponent
+   */
+  flash: any = this.flashService.getFlashes();
+
   userRegister = {
     email: '',
     password: '',
@@ -16,7 +24,12 @@ export class RegisterComponent implements OnInit {
   passwordShow: boolean = false;
 
   passwordConfirm: String = '';
-  constructor(private userService: UserService, private router: Router) {}
+  
+  constructor(
+    public userService: UserService, 
+    public router: Router, 
+    public flashService: FlashService
+    ) {}
 
   ngOnInit() {}
 
@@ -29,15 +42,17 @@ export class RegisterComponent implements OnInit {
       this.userService.register(this.userRegister).subscribe(
         (res) => {
           // console.log(res);
+          this.flashService.setFlashSuccess('register success! please confirm email to use your account!');
           this.router.navigate(['/login']);
-          alert('REGISTER SUCCESS! PLEASE CONFIRM EMAIL TO USE THIS ACCOUNT!');
         },
         (error) => {
-          alert(error.error['data'].message);
+          this.flashService.setErrorFlash('email address is already registered!');
+          this.flash = this.flashService.getFlashes();
         }
       );
     } else {
-      alert('password and password confirm not the same');
+      this.flashService.setErrorFlash('Passwords do not match!');
+      this.flash = this.flashService.getFlashes();
     }
   }
   public togglePassword() {

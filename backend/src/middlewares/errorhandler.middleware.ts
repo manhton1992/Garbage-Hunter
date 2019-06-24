@@ -4,6 +4,7 @@
 
  /** Package imports */
  import { Request, Response, NextFunction } from "express";
+import { sendInternalError } from "../helpers/request-response-helper/response-status";
 
  /**
   * Wrapper for the error handler
@@ -23,10 +24,5 @@
   * @param next 
   */
  export const globalErrorHandler = (error: Error, request: Request, response: Response, next: NextFunction) => {
-     response.status(500).send({
-         data: {
-             status: "error",
-             message: error.message
-         }
-     });
+     sendInternalError(response, error.message);
  }
