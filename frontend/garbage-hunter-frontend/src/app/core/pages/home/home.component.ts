@@ -214,7 +214,9 @@ export class HomeComponent implements OnInit {
     for (let i = 0; i < this.allCategories.length; i++) {
       this.messageService.getMessageById(this.allCategories[i].messageId).subscribe((messages) => {
         message = messages;
-        this.messages.push(message);
+        if(!message.archive && message.available){
+          this.messages.push(message);
+        }
       })
     }
   }
