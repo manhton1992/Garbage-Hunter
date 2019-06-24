@@ -10,18 +10,21 @@
 cd garbage-hunter
 
 # down the docker compose
-sudo docker-compose down
+sudo docker-compose stop frontend
+sudo docker-compose stop backend
 
 # checkout to master branch
 # git checkout master
-git checkout develop
+git checkout master
 
 # pull the new code
 # git pull origin master
-git pull origin develop
+git pull origin master
 
 # build the docker compose
-sudo docker-compose build
+sudo docker-compose build frontend
+sudo docker-compose build backend
 
 # run the docker compose
-sudo docker-compose up
+sudo docker-compose up backend
+sudo docker-compose up frontend

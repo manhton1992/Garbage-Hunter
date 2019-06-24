@@ -33,9 +33,9 @@ See this [file](backend/README.md) for a complete backend documentation. This co
 
 - `config`: Configuration setting of the app
 - `src/controllers`: Include all routers and controllers of the app
-- `src/middlewares`: Include all middleware functions of the app
+- `src/helpers`: Include the extern function to solve some problem (sending email, uploading image, response and request form)
 - `src/models`: Include the models of all objects that are used
-- `src/helpers`: Include other functions that can be used in general
+- `src/middlewares`: Include all middleware functions of the app
 - `src/tests`: Include all tests of the app
 
 ### frontend/
@@ -44,7 +44,8 @@ See this [file](backend/README.md) for a complete backend documentation. This co
 - `src/app/core/components`: All components being used
 - `src/app/core/pages`: All pages being used
 - `src/app/models`: Include all models & interfaces of the app
-- `src/app/services`: Include all services of the app
+- `src/app/services`: Include all services of the app, to fetch data from the backend API or to put data in the backend API
+- `src/middlewares`: Include all middleware functions of the app
 
 ### docker/
 
