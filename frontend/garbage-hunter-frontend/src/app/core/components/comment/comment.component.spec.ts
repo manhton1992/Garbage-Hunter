@@ -20,6 +20,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { EditComponent } from '../../pages/edit/edit.component';
+import { FlashComponent } from '../flash/flash.component';
 
 describe('CommentComponent', () => {
   let component: CommentComponent;
@@ -41,7 +43,9 @@ describe('CommentComponent', () => {
         AdminNumberBoxComponent,
         ChartLineComponent,
         ChartPieComponent,
-        ErrorComponent
+        ErrorComponent,
+        EditComponent,
+        FlashComponent
       ],
       imports: [
         FormsModule,

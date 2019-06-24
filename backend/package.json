@@ -11,7 +11,8 @@
     "nodemon": "SET NODE_ENV=dev&& nodemon ./dist/server.js",
     "winDev": "npm-run-all --parallel watch nodemon",
     "dev": "npm run watch && NODE_ENV=dev nodemon dist/server.js",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "startLocal": "NODE_ENV=test nodemon dist/server.js"
   },
   "author": "fwe-group-4",
   "license": "ISC",
