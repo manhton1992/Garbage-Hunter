@@ -14,11 +14,10 @@ import { FlashService } from 'src/app/services/flash/flash.service';
 
 /**
  * @description class for the uploaded image
- * @class ImageSnippet
  */
 class ImageSnippet {
-  pending: boolean = false;
-  status: string = 'init';
+  pending = false;
+  status = 'init';
 
   constructor(public src: string, public file: File) {}
 }
@@ -29,44 +28,24 @@ class ImageSnippet {
   styleUrls: ['./create-message.component.scss'],
 })
 export class CreateMessageComponent implements OnInit {
-  constructor(
-    public userService: UserService,
-    public messageService: MessageService,
-    public mapService: MapService,
-    public categoryService: CategoryService,
-    public messageCategoryService: MessageCategoryService,
-    public userCategoryService: UserCategoryService,
-    public emailService: EmailService,
-    public route: ActivatedRoute,
-    public router: Router,
-    public flashService: FlashService
-  ) {}
 
   /**
    * @description flash message
-   * @type {*}
-   * @memberof CreateMessageComponent
    */
   flash: any = this.flashService.getFlashes();
 
   /**
    * @description selected image of the input file
-   * @type {ImageSnippet}
-   * @memberof CreateMessageComponent
    */
   selectedFile: ImageSnippet;
 
   /**
    * @description selected categories of the message.
-   * @type {Category[]}
-   * @memberof CreateMessageComponent
    */
   selectedCategories: Category[];
 
   /**
    * @description message that will be created.
-   * @type {Message}
-   * @memberof CreateMessageComponent
    */
   newMessage: Message = {
     title: '',
@@ -81,7 +60,20 @@ export class CreateMessageComponent implements OnInit {
     phone: null,
   };
 
-  listUserIdToSendSubcribeEmail: string[] = [];
+  listUserIdToSendSubscribeEmail: string[] = [];
+
+  constructor(
+    public userService: UserService,
+    public messageService: MessageService,
+    public mapService: MapService,
+    public categoryService: CategoryService,
+    public messageCategoryService: MessageCategoryService,
+    public userCategoryService: UserCategoryService,
+    public emailService: EmailService,
+    public route: ActivatedRoute,
+    public router: Router,
+    public flashService: FlashService
+  ) {}
 
   ngOnInit() {
     this.processQueryParams();
@@ -89,7 +81,6 @@ export class CreateMessageComponent implements OnInit {
     if (this.categoryService.categories.length == 0) {
       this.categoryService.getAllCategories().subscribe((response) => {
         this.categoryService.categories = response;
-        // console.log("get categories:  " + JSON.stringify(response));
       });
     }
     this.addDeleteUploadedImageListener();
@@ -103,44 +94,42 @@ export class CreateMessageComponent implements OnInit {
         this.newMessage.lon = queryParams['lon'];
       }
     });
-  };
+  }
 
   /**
    * 1.add new message
    * 2.create new message category
    * 3.find match user category
    * 4.avoid duplicate email
-   * 5.send email to subcribe user
+   * 5.send email to subscribe user
    */
   addNewMessage() {
-    let newMessage = Object.assign({}, this.newMessage);
-    this.listUserIdToSendSubcribeEmail = [];
+    const newMessage = Object.assign({}, this.newMessage);
+    this.listUserIdToSendSubscribeEmail = [];
     if (this.userService.user) {
       // create new message
       this.messageService.createMessage(newMessage).subscribe(
-        (response_message) => {
+        (responseMessage) => {
           if (this.selectedCategories && this.selectedCategories.length > 0) {
             this.selectedCategories.forEach((category) => {
-              let messageCategory: MessageCategory = {
-                messageId: response_message._id,
+              const messageCategory: MessageCategory = {
+                messageId: responseMessage._id,
                 categoryId: category._id,
               };
               // create new message category
               this.messageCategoryService
                 .createMessageCategory(messageCategory)
-                .subscribe((response_message_category) => {
-                  // console.log("create message category with category: " + response_message_category.categoryId);
-                });
+                .subscribe();
 
               // find user categories , which has the same categoryId
               this.userCategoryService
                 .getAllUserCategories({ categoryId: category._id })
-                .subscribe((response_user_category) => {
+                .subscribe((responseUserCategory) => {
                   // avoid duplicate userId
-                  if (response_user_category != null && response_user_category.length > 0) {
-                    response_user_category.forEach((userCategory) => {
-                      if (!this.listUserIdToSendSubcribeEmail.includes(userCategory.userId)) {
-                        this.listUserIdToSendSubcribeEmail.push(userCategory.userId);
+                  if (responseUserCategory != null && responseUserCategory.length > 0) {
+                    responseUserCategory.forEach((userCategory) => {
+                      if (!this.listUserIdToSendSubscribeEmail.includes(userCategory.userId)) {
+                        this.listUserIdToSendSubscribeEmail.push(userCategory.userId);
                       }
                     });
                   }
@@ -148,22 +137,16 @@ export class CreateMessageComponent implements OnInit {
             });
             setTimeout(() => {
               // send email to each user in the listUserId
-              // console.log(this.listUserIdToSendSubcribeEmail);
-              this.listUserIdToSendSubcribeEmail.forEach((userId) => {
-                if (this.userService.user._id != userId) {
-                  // console.log("response user category :" + userId);
-                  // console.log("response message category :" + response_message._id);
-
-                  this.emailService.sendEmailSubcribe(userId, response_message._id).subscribe((res) => {
-                    // console.log("send a maching message to user: " + userId);
-                  });
+              this.listUserIdToSendSubscribeEmail.forEach((userId) => {
+                if (this.userService.user._id !== userId) {
+                  this.emailService.sendEmailSubscribe(userId, responseMessage._id).subscribe();
                 }
               });
             }, 2000);
           }
           this.flashService.setFlashSuccess('message successfully created!');
           localStorage.removeItem('imgUrl');
-          this.router.navigate([`/messages/${response_message._id}`]);
+          this.router.navigate([`/messages/${responseMessage._id}`]);
         },
         (error) => {
           this.flashService.setErrorFlash('Something went wrong, please try again!');
@@ -177,56 +160,51 @@ export class CreateMessageComponent implements OnInit {
   }
 
   /**
-   * @description set the creatorid as the logged in user
-   * make delay 1 s to make sure user is in userservice
-   * @memberof CreateMessageComponent
+   * @description set the creator id as the logged in user
+   * make delay 1 s to make sure user is in user service
    */
   setCreator = (): void => {
     setTimeout(() => {
       this.newMessage.creatorId = this.userService && this.userService.user ? this.userService.user._id : null;
     }, 1000);
-  };
+  }
 
   /**
-   * @description handle the latlon being passed from map component
-   * @memberof CreateMessageComponent
+   * @description handle the latLon being passed from map component
    */
-  handleMapCoordinateChange = (latlon: any): void => {
-    this.changeLatLon(latlon);
-    this.changeAddress(latlon);
-  };
+  handleMapCoordinateChange = (latLon: any): void => {
+    this.changeLatLon(latLon);
+    this.changeAddress(latLon);
+  }
 
   /**
-   * @description change the latlon of message.
-   * @memberof CreateMessageComponent
+   * @description change the latLon of message.
    */
-  changeLatLon = (latlon: any): void => {
-    this.newMessage.lat = latlon.lat;
-    this.newMessage.lon = latlon.lng;
-  };
+  changeLatLon = (latLon: any): void => {
+    this.newMessage.lat = latLon.lat;
+    this.newMessage.lon = latLon.lng;
+  }
 
   /**
    * @description change the address of message.
-   * @memberof CreateMessageComponent
    */
-  changeAddress = (latlon: any): void => {
-    this.mapService.getAddressfromLatLon(latlon.lat, latlon.lng).subscribe(
+  changeAddress = (latLon: any): void => {
+    this.mapService.getAddressFromLatLon(latLon.lat, latLon.lng).subscribe(
       (data) => {
-        let road = data.road ? data.road : '';
-        let house_number = data.house_number ? data.house_number : '';
-        let postcode = data.postcode ? data.postcode : '';
-        let city = data.city ? data.city : '';
-        this.newMessage.address = `${road} ${house_number}, ${postcode} ${city}`;
+        const road = data.road ? data.road : '';
+        const houseNumber = data.house_number ? data.house_number : '';
+        const postcode = data.postcode ? data.postcode : '';
+        const city = data.city ? data.city : '';
+        this.newMessage.address = `${road} ${houseNumber}, ${postcode} ${city}`;
       },
       (err) => {
         console.error(err);
       }
     );
-  };
+  }
 
   /**
    * @description handle when an image is chosen (upload image to storage server).
-   * @memberof CreateMessageComponent
    */
   onFileChange = (e: any): void => {
     const file: File = e.target.files[0];
@@ -252,21 +230,20 @@ export class CreateMessageComponent implements OnInit {
     });
 
     reader.readAsDataURL(file);
-  };
+  }
 
   /**
    * @description delete uploaded image that has not yet submitted on refresh.
-   * @memberof CreateMessageComponent
    */
   addDeleteUploadedImageListener = () => {
     window.onbeforeunload = () => {
-      let imgUrl = localStorage.getItem('imgUrl');
+      const imgUrl = localStorage.getItem('imgUrl');
       if (imgUrl) {
-        let imageKey = imgUrl.split('/').pop();
+        const imageKey = imgUrl.split('/').pop();
         this.messageService.deleteUploadedImage(imageKey).subscribe((result) => {
           localStorage.removeItem('imgUrl');
         });
       }
     };
-  };
+  }
 }

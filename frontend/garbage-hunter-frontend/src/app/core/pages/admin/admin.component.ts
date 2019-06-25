@@ -13,71 +13,60 @@ import { FlashService } from 'src/app/services/flash/flash.service';
   styleUrls: ['./admin.component.scss'],
 })
 export class AdminComponent implements OnInit {
-  page: number = 1;
-  pageSize: number = 15;
+  /**
+   * @description pagination set default to 1
+   */
+  page = 1;
+
+  /**
+   * @description items per page
+   */
+  pageSize = 15;
 
   /**
    * @description flash message
-   * @type {*}
-   * @memberof AdminComponent
    */
   flash: any = this.flashService.getFlashes();
 
   /**
    * @description all messages.
-   * @type {Message[]}
-   * @memberof AdminComponent
    */
   messages: Message[] = [];
 
   /**
    * @description available messages.
-   * @type {Message[]}
-   * @memberof AdminComponent
    */
   availableMessages: Message[] = [];
 
   /**
-   * @description unavailble messages.
-   * @type {Message[]}
-   * @memberof AdminComponent
+   * @description unavailable messages.
    */
   unavailableMessages: Message[] = [];
 
   /**
    * @description archived messages.
-   * @type {Message[]}
-   * @memberof AdminComponent
    */
   archivedMessages: Message[] = [];
 
   /**
    * @description all categories in database.
-   * @type {Category[]}
-   * @memberof AdminComponent
    */
   categories: Category[];
 
   /**
    * @description data that will be sent to the line chart component.
-   * @type {*}
-   * @memberof AdminComponent
    */
   lineData: any = [];
 
   /**
    * @description data that will be sent to the pie chart component.
-   * @type {*}
-   * @memberof AdminComponent
    */
   pieData: any = [];
 
   /**
    * @description collapse messages table div
-   * @type {boolean}
-   * @memberof AdminComponent
    */
-  isCollapsed: boolean = false;
+  isCollapsed = false;
 
   constructor(
     public messageService: MessageService,
@@ -94,7 +83,6 @@ export class AdminComponent implements OnInit {
 
   /**
    * @description get all messages and process the them.
-   * @memberof AdminComponent
    */
   getAllMessages = (): void => {
     this.messageService.getAllMessages({}).subscribe((messages) => {
@@ -109,64 +97,60 @@ export class AdminComponent implements OnInit {
       this.archivedMessages = this.getArchivedMessages();
       this.processDataMonthly();
     });
-  };
+  }
 
   /**
    * @description function to get available messages but not archived.
-   * @memberof AdminComponent
    */
   getAvailableMessages = (): Message[] => {
-    let items = [];
+    const items = [];
     this.messages.forEach((message) => {
       if (message.available && !message.archive) {
         items.push(message);
       }
     });
     return items;
-  };
+  }
 
   /**
-   * @description funtion to get unavailable messages but not archived.
-   * @memberof AdminComponent
+   * @description function to get unavailable messages but not archived.
    */
   getUnavailableMessages = (): Message[] => {
-    let items = [];
+    const items = [];
     this.messages.forEach((message) => {
       if (!message.available && !message.archive) {
         items.push(message);
       }
     });
     return items;
-  };
+  }
 
   /**
    * @description function to get archived messages
-   * @memberof AdminComponent
    */
   getArchivedMessages = (): Message[] => {
-    let items = [];
+    const items = [];
     this.messages.forEach((message) => {
       if (message.archive) {
         items.push(message);
       }
     });
     return items;
-  };
+  }
 
   getCategories = (): void => {
     this.categoryService.getAllCategories().subscribe((categories) => {
       this.categories = categories;
       this.processDataCategory();
     });
-  };
+  }
 
   /**
    * @description download all messages
-   * @memberof AdminComponent
    */
   download = (): void => {
     this.messageService.downloadMessages();
-  };
+  }
 
   /**
    * ================================
@@ -176,7 +160,6 @@ export class AdminComponent implements OnInit {
 
   /**
    * @description object that is sent to admin-number-box component
-   * @memberof AdminComponent
    */
   dataTotalBox = (): object => {
     return {
@@ -185,11 +168,10 @@ export class AdminComponent implements OnInit {
       value: this.messages.length,
       maxValue: this.messages.length,
     };
-  };
+  }
 
   /**
    * @description object that is sent to admin-number-box component
-   * @memberof AdminComponent
    */
   dataAvailableBox = (): object => {
     return {
@@ -198,11 +180,10 @@ export class AdminComponent implements OnInit {
       value: this.availableMessages.length,
       maxValue: this.messages.length,
     };
-  };
+  }
 
   /**
    * @description object that is sent to admin-number-box component
-   * @memberof AdminComponent
    */
   dataUnavailableBox = (): object => {
     return {
@@ -211,11 +192,10 @@ export class AdminComponent implements OnInit {
       value: this.unavailableMessages.length,
       maxValue: this.messages.length,
     };
-  };
+  }
 
   /**
    * @description object that is sent to admin-number-box component
-   * @memberof AdminComponent
    */
   dataArchivedBox = (): object => {
     return {
@@ -224,12 +204,11 @@ export class AdminComponent implements OnInit {
       value: this.archivedMessages.length,
       maxValue: this.messages.length,
     };
-  };
+  }
 
   /**
    * @description Process the data to pass to line-chart component.
    * Format: { label: 'label, y; value}
-   * @memberof AdminComponent
    */
   processDataMonthly = (): any => {
     const months: string[] = [
@@ -247,20 +226,19 @@ export class AdminComponent implements OnInit {
       'December',
     ];
     for (let monthNum = 0; monthNum <= 11; monthNum++) {
-      let totalNum: number = 0;
+      let totalNum = 0;
       this.messages.forEach((message) => {
-        if (new Date(message.created_at).getMonth() == monthNum) {
+        if (new Date(message.created_at).getMonth() === monthNum) {
           totalNum++;
         }
       });
       this.lineData.push({ label: months[monthNum], y: totalNum });
     }
-  };
+  }
 
   /**
    * @description Process the data to pass to pie-chart component.
    * Format: { label: 'label, y; value}
-   * @memberof AdminComponent
    */
   processDataCategory = (): void => {
     this.categories.forEach((category) => {
@@ -268,11 +246,10 @@ export class AdminComponent implements OnInit {
         this.pieData.push({ label: category.name, y: results.length });
       });
     });
-  };
+  }
 
   /**
    * @description sort messages based on the newest date first
-   * @memberof AdminComponent
    */
   sortDateDesc = (array: Message[]): Message[] => {
     return array.sort((a, b) => {
@@ -284,5 +261,5 @@ export class AdminComponent implements OnInit {
         return 0;
       }
     });
-  };
+  }
 }

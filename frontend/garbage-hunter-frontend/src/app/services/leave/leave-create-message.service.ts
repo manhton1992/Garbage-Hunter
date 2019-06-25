@@ -4,20 +4,19 @@ import { CreateMessageComponent } from 'src/app/core/pages/create-message/create
 import { MessageService } from '../message/message.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LeaveCreateMessageService implements CanDeactivate<CreateMessageComponent> {
-
-  constructor(private messageService: MessageService) { }
+  constructor(private messageService: MessageService) {}
 
   canDeactivate(target: CreateMessageComponent) {
-    let imgUrl = localStorage.getItem('imgUrl');
+    const imgUrl = localStorage.getItem('imgUrl');
     if (imgUrl) {
-      let imageKey = imgUrl.split('/').pop();
-      this.messageService.deleteUploadedImage(imageKey).subscribe(result => {
+      const imageKey = imgUrl.split('/').pop();
+      this.messageService.deleteUploadedImage(imageKey).subscribe((result) => {
         localStorage.removeItem('imgUrl');
       });
     }
     return true;
-}
+  }
 }

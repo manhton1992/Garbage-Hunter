@@ -7,20 +7,16 @@ import { Category } from 'src/app/models/category.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CategoryService {
-
   private categoryUrl = `${environment.baseUrl}/categories`;
   public categories: Category[] = [];
 
-  constructor(private http: HttpClient) { }
-
+  constructor(private http: HttpClient) {}
 
   /**
    * @description get all categories in a message.
-   * @returns {Observable<Category>[]}
-   * @memberof CategoryService
    */
   getAllCategories = (): Observable<Category[]> => {
     return this.http.get<Category[]>(this.categoryUrl).pipe(
@@ -31,8 +27,6 @@ export class CategoryService {
 
   /**
    * @description get Category by id.
-   * @returns {Observable<Message>}
-   * @memberof CategoryService
    */
   getCategoryById = (categoryid: string): Observable<Category> => {
     const url = `${this.categoryUrl}/${categoryid}`;
@@ -44,8 +38,6 @@ export class CategoryService {
 
   /**
    * @description create new Category.
-   * @returns {Observable<Category>}
-   * @memberof CategoryService
    */
   createCategory = (category: Category): Observable<Category> => {
     return this.http.post<Category>(this.categoryUrl, category).pipe(
@@ -56,8 +48,6 @@ export class CategoryService {
 
   /**
    * @description update Category by id.
-   * @returns {Observable<Category>}
-   * @memberof CategoryService
    */
   updateCategoryById(category: Category): Observable<Category> {
     const url = `${this.categoryUrl}/${category._id}`;
@@ -66,8 +56,6 @@ export class CategoryService {
 
   /**
    * @description delete Category by id.
-   * @returns {Observable<{}>}
-   * @memberof CategoryService
    */
   deleteCategoryById(categoryid: string): Observable<{}> {
     const url = `${this.categoryUrl}/${categoryid}`;

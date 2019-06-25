@@ -9,42 +9,43 @@ import { FlashService } from 'src/app/services/flash/flash.service';
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit {
-
   /**
    * @description flash message
-   * @type {*}
-   * @memberof LoginComponent
    */
   flash: any = this.flashService.getFlashes();
 
+  /**
+   * @description type for password input (for show/hide password)
+   */
+  passwordType = 'password';
+
+  /**
+   * @description show/hide password text
+   */
+  passwordShow = false;
+
+  /**
+   * @description logged in user object
+   */
   userLogin = {
     email: '',
     password: '',
   };
-  passwordType: string = 'password';
-  passwordShow: boolean = false;
-  constructor(
-    public userService: UserService, 
-    public router: Router, 
-    public flashService: FlashService
-    ) {}
+
+  constructor(public userService: UserService, public router: Router, public flashService: FlashService) {}
 
   ngOnInit() {}
 
   submitLogin() {
     this.userService.login(this.userLogin.email, this.userLogin.password).subscribe(
       (response) => {
-        //this.userService.user = response.docs;
-        let user = {
+        const user = {
           token: response.token,
         };
         // store user details and jwt token in local storage to keep user logged in between page refreshes
         localStorage.removeItem('currentUser');
         localStorage.setItem('currentUser', JSON.stringify(user));
         this.userService.user = response.docs;
-        // console.log( this.userService.user)
-        // console.log("login successfully");
-
         this.flashService.setFlashSuccess(`welcome back, ${response.docs.email}!`);
         this.router.navigate(['/']);
       },

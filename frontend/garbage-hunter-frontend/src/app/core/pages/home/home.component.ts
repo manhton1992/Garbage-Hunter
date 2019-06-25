@@ -16,51 +16,48 @@ import { MessageCategory } from 'src/app/models/message-category.model';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-  page: number = 1;
-  pageSize: number = 6;
+  /**
+   * @description pagination default 1
+   */
+  page = 1;
 
   /**
- * @description all categories
- * @type {*}
- * @memberof HomeComponent
- */
+   * @description items per page
+   */
+  pageSize = 6;
+
+  /**
+   * @description all categories
+   */
   allCategories: MessageCategory[] = [];
 
   /**
- * @description name of a category
- * @type {*}
- * @memberof HomeComponent
- */
-  categoryName: string = '';
+   * @description name of a category
+   */
+  categoryName = '';
 
   /**
- * @description selected filtered category
- * @type {*}
- * @memberof HomeComponent
- */
+   * @description selected filtered category
+   */
   selectedCategory: Category;
 
   /**
    * @description flash message
-   * @type {*}
-   * @memberof HomeComponent
    */
   flash: any = this.flashService.getFlashes();
 
   /**
    * @description messages that will be shown.
-   * @type {Message[]}
-   * @memberof HomeComponent
    */
   messages: Message[] = [];
 
   /** all user categories we get at begin */
   userCategories: UserCategory[] = [];
 
-  /** followed categories for subcribe */
+  /** followed categories for subscribe */
   followedCategories: Category[] = [];
 
-  /** selected categories for subcribe */
+  /** selected categories for subscribe */
   selectedCategories: Category[] = [];
 
   constructor(
@@ -70,16 +67,15 @@ export class HomeComponent implements OnInit {
     public userCategoryService: UserCategoryService,
     public flashService: FlashService,
     public messageCategoryService: MessageCategoryService
-  ) { }
+  ) {}
 
   ngOnInit() {
     this.getMessages();
-    if (this.categoryService.categories.length == 0) {
+    if (this.categoryService.categories.length === 0) {
       this.categoryService.getAllCategories().subscribe(
         (response) => {
           this.categoryService.categories = response;
           this.getUserCategoriesAndPutInLayout();
-          // console.log('get categories:  ' + JSON.stringify(response));
         },
         (error) => {
           // console.log('get categories unsuccessfully!');
@@ -92,35 +88,31 @@ export class HomeComponent implements OnInit {
 
   /**
    * @description get all available messages.
-   * @memberof HomeComponent
    */
   getMessages = (): void => {
     this.messageService.getAllMessages({ available: true, archive: false }).subscribe((messages) => {
       this.messages = this.sortDateDesc(messages);
     });
-  };
+  }
 
   /**
    * delete all alt user categories
-   * create user category for subcribe category
+   * create user category for subscribe category
    */
-  subcribeSubmit = (): void => {
+  subscribeSubmit = (): void => {
     // delete alt user categories
     if (this.userCategories.length > 0) {
       this.userCategories.forEach((userCategory) => {
-        this.userCategoryService.deleteUserCategoryById(userCategory._id).subscribe((response) => {
-          // console.log('delete alt usercategory');
-        });
+        this.userCategoryService.deleteUserCategoryById(userCategory._id).subscribe();
       });
     }
 
     this.userCategories = [];
 
     // create new user categories
-    console.log(this.selectedCategories);
-    let isSubcribeSuccess: Boolean = true;
+    let isSubscribeSuccess = true;
     this.selectedCategories.forEach((category) => {
-      let userCategory: UserCategory = {
+      const userCategory: UserCategory = {
         userId: this.userService.user._id,
         categoryId: category._id,
       };
@@ -129,7 +121,7 @@ export class HomeComponent implements OnInit {
           this.userCategories.push(response);
         },
         (error) => {
-          isSubcribeSuccess = false;
+          isSubscribeSuccess = false;
           this.flashService.setErrorFlash('something went wrong by subscribing, please try again...');
           this.flash = this.flashService.getFlashes();
         }
@@ -139,14 +131,14 @@ export class HomeComponent implements OnInit {
     // set the followed categories to the selected categories
     this.followedCategories = this.selectedCategories;
 
-    if (isSubcribeSuccess) {
+    if (isSubscribeSuccess) {
       this.flashService.setFlashSuccess('subscribe successful!');
     } else {
       this.flashService.setErrorFlash('something went wrong by subscribing, please try again...');
     }
     this.flash = this.flashService.getFlashes();
     window.scrollTo(0, 0);
-  };
+  }
 
   /**
    * get user categories
@@ -158,11 +150,9 @@ export class HomeComponent implements OnInit {
       this.userCategoryService.getAllUserCategories({ userId: this.userService.user._id }).subscribe((response) => {
         if (response && response.length > 0) {
           this.userCategories = response;
-          // console.log('user categories size: ' + this.userCategories.length);
-
           this.userCategories.forEach((userCategory) => {
             this.categoryService.categories.some((category) => {
-              if (category._id == userCategory.categoryId) {
+              if (category._id === userCategory.categoryId) {
                 this.followedCategories.push(category);
                 return true;
               }
@@ -172,11 +162,10 @@ export class HomeComponent implements OnInit {
         }
       });
     }
-  };
+  }
 
   /**
    * @description sort messages based on the newest date first
-   * @memberof HomeComponent
    */
   sortDateDesc = (array: Message[]): Message[] => {
     return array.sort((a, b) => {
@@ -188,20 +177,22 @@ export class HomeComponent implements OnInit {
         return 0;
       }
     });
-  };
+  }
 
   /**
- * get category name from filter
- * get messageId from categoryId
- * display message from category
- */
+   * get category name from filter
+   * get messageId from categoryId
+   * display message from category
+   */
   getAllMessageCategories = (): void => {
     this.categoryName = this.selectedCategory.name;
     if (this.selectedCategory) {
-      this.messageCategoryService.getAllMessageCategories({ categoryId: this.selectedCategory._id }).subscribe((messages) => {
-        this.allCategories = messages;
-        this.getMessageByCategory();
-      })
+      this.messageCategoryService
+        .getAllMessageCategories({ categoryId: this.selectedCategory._id })
+        .subscribe((messages) => {
+          this.allCategories = messages;
+          this.getMessageByCategory();
+        });
     }
   }
 
@@ -211,17 +202,17 @@ export class HomeComponent implements OnInit {
   getMessageByCategory = (): void => {
     let message: Message;
     this.messages = [];
-    for (let i = 0; i < this.allCategories.length; i++) {
-      this.messageService.getMessageById(this.allCategories[i].messageId).subscribe((messages) => {
+    for (const category of this.allCategories) {
+      this.messageService.getMessageById(category.messageId).subscribe((messages) => {
         message = messages;
-        if(!message.archive && message.available){
+        if (!message.archive && message.available) {
           this.messages.push(message);
         }
-      })
+      });
     }
   }
 
-  clearFilter = () : void =>{
+  clearFilter = (): void => {
     this.getMessages();
   }
 }

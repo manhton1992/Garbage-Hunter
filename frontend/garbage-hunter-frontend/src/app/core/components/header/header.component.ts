@@ -8,10 +8,9 @@ import { User } from 'src/app/models/user.model';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  
-  /** toggle navbar collapse.
-   * @description
-   * @memberof HeaderComponent
+
+  /**
+   * @description toggle navbar collapse
    */
   isCollapsed = true;
 
@@ -21,7 +20,7 @@ export class HeaderComponent implements OnInit {
   ngOnInit() {
   }
 
-  logout(){
+  logout() {
     this.userService.logout();
   }
 }

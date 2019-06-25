@@ -7,22 +7,18 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommentService {
   /**
    * @description url of the comment API.
-   * @private
-   * @memberof CommentService
    */
   private commentUrl = `${environment.baseUrl}/comments`;
 
-  constructor(private http: HttpClient, ) {}
+  constructor(private http: HttpClient) {}
 
   /**
    * @description get all comments.
-   * @returns {Observable<Comment>[]}
-   * @memberof CommentService
    */
   getAllComments = (query: any): Observable<Comment[]> => {
     return this.http.get<Comment[]>(this.commentUrl, { params: query }).pipe(
@@ -33,8 +29,6 @@ export class CommentService {
 
   /**
    * @description get comment by id.
-   * @returns {Observable<Message>}
-   * @memberof CommentService
    */
   getCommentById = (commentid: string): Observable<Comment> => {
     const url = `${this.commentUrl}/${commentid}`;
@@ -46,8 +40,6 @@ export class CommentService {
 
   /**
    * @description get comment by message id.
-   * @returns {Observable<Message>}
-   * @memberof CommentService
    */
   getCommentByMessageId = (messageId: string): Observable<Comment[]> => {
     const url = `${this.commentUrl}/get_by_messageid/${messageId}`;
@@ -59,8 +51,6 @@ export class CommentService {
 
   /**
    * @description create new comment.
-   * @returns {Observable<Comment>}
-   * @memberof CommentService
    */
   createComment = (comment: Comment): Observable<Comment> => {
     return this.http.post<Comment>(this.commentUrl, comment).pipe(
@@ -71,8 +61,6 @@ export class CommentService {
 
   /**
    * @description update comment by id.
-   * @returns {Observable<Comment>}
-   * @memberof CommentService
    */
   updateCommentById(comment: Comment): Observable<Comment> {
     const url = `${this.commentUrl}/${comment._id}`;
@@ -81,8 +69,6 @@ export class CommentService {
 
   /**
    * @description delete comment by id.
-   * @returns {Observable<{}>}
-   * @memberof CommentService
    */
   deleteCommentById(commentid: string): Observable<{}> {
     const url = `${this.commentUrl}/${commentid}`;

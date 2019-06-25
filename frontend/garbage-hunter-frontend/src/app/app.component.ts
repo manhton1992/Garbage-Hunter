@@ -8,7 +8,6 @@ import { CategoryService } from './services/category/category.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-
   constructor(private userService: UserService, private categoryService: CategoryService) {}
 
   title = 'garbage-hunter-frontend';
@@ -18,9 +17,8 @@ export class AppComponent implements OnInit {
     if (localStorage.getItem('currentUser')) {
       this.userService.authenticate().subscribe((res) => {
         if (res && res != null) {
-          if (res.status == 'success') {
+          if (res.status === 'success') {
             this.userService.user = res.docs;
-            console.log('auto login successfully');
           } else {
             alert(res.message);
           }
@@ -31,11 +29,9 @@ export class AppComponent implements OnInit {
 
   /**
    * @description scroll page on top slowly
-   * @param {*} event
-   * @memberof AppComponent
    */
-  onActivate = (event:  any): void => {
-    let scrollToTop = window.setInterval(() => {
+  onActivate = (event: any): void => {
+    const scrollToTop = window.setInterval(() => {
       let pos = window.pageYOffset;
       if (pos > 0) {
         window.scrollTo(0, pos - 50); // how far to scroll on each step
@@ -43,5 +39,5 @@ export class AppComponent implements OnInit {
         window.clearInterval(scrollToTop);
       }
     }, 16);
-  }
+  };
 }

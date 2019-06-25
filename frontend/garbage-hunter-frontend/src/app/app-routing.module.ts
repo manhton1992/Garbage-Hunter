@@ -15,10 +15,15 @@ const routes: Routes = [
   { path: '', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
-  { path: 'messages/create', component: CreateMessageComponent, canDeactivate: [LeaveCreateMessageService], canActivate: [AuthLoginService] },
+  {
+    path: 'messages/create',
+    component: CreateMessageComponent,
+    canDeactivate: [LeaveCreateMessageService],
+    canActivate: [AuthLoginService],
+  },
   { path: 'messages/:messageid', component: ShowMessageComponent },
   { path: 'messages/:messageid/edit', component: EditComponent },
-  { path: 'admin', canActivate: [AuthAdminService], component: AdminComponent, },
+  { path: 'admin', canActivate: [AuthAdminService], component: AdminComponent },
 ];
 
 @NgModule({
