@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class FlashComponent implements OnInit {
 
-  @Input() text: string;
+  @Input() text: any;
 
   constructor() { }
 
