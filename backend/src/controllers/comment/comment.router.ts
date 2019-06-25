@@ -8,8 +8,15 @@ import express from 'express';
 /** Module imports */
 import { logTime } from '../../middlewares/timelogger.middleware';
 import { wrapAsync } from '../../middlewares/errorhandler.middleware';
-import { getComments, createComment, deleteAllComments, getSingleComment, updateSingleComment, deleteSingleComment, getCommentsWithMessageId } from './comment.controller';
-
+import {
+	getComments,
+	createComment,
+	deleteAllComments,
+	getSingleComment,
+	updateSingleComment,
+	deleteSingleComment,
+	getCommentsWithMessageId,
+} from './comment.controller';
 
 export const commentRouter: express.Router = express.Router({ mergeParams: true });
 

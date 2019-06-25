@@ -2,7 +2,6 @@
  * Global router
  */
 
-
 /** Package imports */
 import * as express from 'express';
 import { messageRouter } from './message/message.router';

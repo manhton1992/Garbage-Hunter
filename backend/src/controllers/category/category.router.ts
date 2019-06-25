@@ -25,7 +25,6 @@ categoryRouter.get('/', logTime, wrapAsync(getCategories));
 /** CREATE */
 categoryRouter.post('/', logTime, wrapAsync(createCategory));
 
-
 /** Delete all activities in the database */
 categoryRouter.delete('/delete_all', logTime, wrapAsync(deleteAllCategories));
 

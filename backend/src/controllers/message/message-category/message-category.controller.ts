@@ -14,9 +14,6 @@ import { IMessageCategoryModel, messageCategory } from '../../../models/message-
  */
 export const getMessageCategory = async (req: Request, res: Response) => {
     try {
-        /** Process queries to check for dates*/
-        //req.query = processQueries(req.query);
-
         const messageCategories: IMessageCategoryModel[] = await messageCategory.find(req.query);
         res.status(200).send({
             data: {
@@ -158,4 +155,3 @@ export const deleteSingleMessageCategory = async (req: Request, res: Response) =
         });
     }
 };
-

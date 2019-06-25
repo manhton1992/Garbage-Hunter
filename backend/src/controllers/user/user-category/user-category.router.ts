@@ -9,12 +9,12 @@ import express from 'express';
 import { logTime } from '../../../middlewares/timelogger.middleware';
 import { wrapAsync } from '../../../middlewares/errorhandler.middleware';
 import {
-    getUserCategory,
-    createUserCategory,
-    deleteAllUserCategory,
-    getSingleUserCategory,
-    updateSingleUserCategory,
-    deleteSingleUserCategory,
+	getUserCategory,
+	createUserCategory,
+	deleteAllUserCategory,
+	getSingleUserCategory,
+	updateSingleUserCategory,
+	deleteSingleUserCategory,
 } from './user-category.controller';
 
 export const userCategoryRouter: express.Router = express.Router({ mergeParams: true });
@@ -25,11 +25,8 @@ userCategoryRouter.get('/', logTime, wrapAsync(getUserCategory));
 /** CREATE */
 userCategoryRouter.post('/', logTime, wrapAsync(createUserCategory));
 
-
 /** Delete all activities in the database */
 userCategoryRouter.delete('/delete_all', logTime, wrapAsync(deleteAllUserCategory));
-
-
 
 /** READ BY ID */
 userCategoryRouter.get('/:userCategoryId', logTime, wrapAsync(getSingleUserCategory));

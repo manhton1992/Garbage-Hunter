@@ -12,22 +12,22 @@ import * as mongoose from 'mongoose';
  * @extends {mongoose.Document}
  */
 export interface ICategoryModel extends mongoose.Document {
-    name: string;
+	name: string;
 }
 
 /**
  * @description Schema of category for mongoose.
  * @export
- * @Schema CategorySchema 
+ * @Schema CategorySchema
  */
 export const CategorySchema: mongoose.Schema = new mongoose.Schema(
-    {
-        name: {
-            type: String,
-            required: true,
-        },
-    },
-    { timestamps: true} 
+	{
+		name: {
+			type: String,
+			required: true,
+		},
+	},
+	{ timestamps: true }
 );
 
 /**

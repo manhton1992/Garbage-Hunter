@@ -4,17 +4,17 @@
 
 /** Package imports */
 import { Request, Response } from 'express';
-import { sendMailSubcribe } from '../../helpers/email-helper/send-email'
+import { sendMailSubscribe } from '../../helpers/email-helper/send-email'
 
 /**
  * Get all categories.
  * @param req
  * @param res
  */
-export const sendEmailSubcribe = async (req: Request, res: Response) => {
+export const sendEmailSubscribe = async (req: Request, res: Response) => {
     try {
         if (req.query.userId && req.query.messageId){
-            sendMailSubcribe(req.query.userId, req.query.messageId);
+            sendMailSubscribe(req.query.userId, req.query.messageId);
             res.status(200).send({
                 data: {
                     status: 'success',

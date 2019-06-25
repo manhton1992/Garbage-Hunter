@@ -66,7 +66,7 @@ export const deleteAllComments = async (req: Request, res: Response) => {
         res.status(200).send({
             data: {
                 status: 'success',
-                message: `all comments are deleted`,
+                message: 'all comments are deleted',
             },
         });
     } catch (error) {
@@ -170,5 +170,4 @@ export const getCommentsWithMessageId = async (req: Request, res: Response) => {
             },
         });
     }
-
-}
+};
