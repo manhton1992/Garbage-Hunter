@@ -87,7 +87,7 @@ export class MapComponent implements OnInit {
   map_conf = {
     layers: [this.map_conf_streetmap],
     zoom: 13,
-    center: latLng(50.869009, 8.637904),
+    center: latLng(49.87283243897958, 8.651180863380432), // luisenplatz
   };
 
   /**
