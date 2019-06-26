@@ -5,6 +5,7 @@
 /** Package imports */
 import { Request, Response } from 'express';
 import { IUserCategoryModel, userCategory } from '../../../models/user-category.model';
+import { sendSuccess, sendBadRequest, sendCreated } from '../../../helpers/request-response-helper/response-status';
 
 /**
  * Get all UserCategory.
@@ -14,20 +15,9 @@ import { IUserCategoryModel, userCategory } from '../../../models/user-category.
 export const getUserCategory = async (req: Request, res: Response) => {
 	try {
 		const userCategories: IUserCategoryModel[] = await userCategory.find(req.query);
-		res.status(200).send({
-			data: {
-				status: 'success',
-				items: userCategories.length,
-				docs: userCategories,
-			},
-		});
+		sendSuccess(res, userCategories);
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -39,19 +29,9 @@ export const getUserCategory = async (req: Request, res: Response) => {
 export const createUserCategory = async (req: Request, res: Response) => {
 	try {
 		const newUserCategory: IUserCategoryModel = await userCategory.create(req.body);
-		res.status(201).send({
-			data: {
-				status: 'success',
-				docs: newUserCategory,
-			},
-		});
+		sendCreated(res, newUserCategory);
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -63,19 +43,9 @@ export const createUserCategory = async (req: Request, res: Response) => {
 export const deleteAllUserCategory = async (req: Request, res: Response) => {
 	try {
 		await userCategory.deleteMany({});
-		res.status(200).send({
-			data: {
-				status: 'success',
-				message: 'all User category are deleted',
-			},
-		});
+		sendSuccess(res, 'all user category are deleted');
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -87,19 +57,9 @@ export const deleteAllUserCategory = async (req: Request, res: Response) => {
 export const getSingleUserCategory = async (req: Request, res: Response) => {
 	try {
 		const singleUserCategory: IUserCategoryModel | null = await userCategory.findById(req.params.userCategoryId);
-		res.status(200).send({
-			data: {
-				status: 'success',
-				docs: singleUserCategory,
-			},
-		});
+		sendSuccess(res, singleUserCategory);
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -117,19 +77,9 @@ export const updateSingleUserCategory = async (req: Request, res: Response) => {
 				new: true,
 			}
 		);
-		res.status(200).send({
-			data: {
-				status: 'success',
-				docs: updateUserCategory,
-			},
-		});
+		sendSuccess(res, updateUserCategory);
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -143,18 +93,8 @@ export const deleteSingleUserCategory = async (req: Request, res: Response) => {
 		const deleteUserCategory: IUserCategoryModel | null = await userCategory.findByIdAndDelete(
 			req.params.userCategoryId
 		);
-		res.status(200).send({
-			data: {
-				status: 'success',
-				docs: deleteUserCategory,
-			},
-		});
+		sendSuccess(res, deleteUserCategory);
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				User: error.User,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };

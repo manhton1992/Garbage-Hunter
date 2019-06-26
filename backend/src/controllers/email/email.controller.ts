@@ -4,7 +4,8 @@
 
 /** Package imports */
 import { Request, Response } from 'express';
-import { sendMailSubscribe } from '../../helpers/email-helper/send-email'
+import { sendMailSubscribe } from '../../helpers/email-helper/send-email';
+import { sendSuccess, sendBadRequest } from '../../helpers/request-response-helper/response-status';
 
 /**
  * Get all categories.
@@ -12,29 +13,14 @@ import { sendMailSubscribe } from '../../helpers/email-helper/send-email'
  * @param res
  */
 export const sendEmailSubscribe = async (req: Request, res: Response) => {
-    try {
-        if (req.query.userId && req.query.messageId){
-            sendMailSubscribe(req.query.userId, req.query.messageId);
-            res.status(200).send({
-                data: {
-                    status: 'success',
-                }
-            });
-        } else {
-            res.status(400).send({
-                data: {
-                    status: 'error',
-                    message: 'userId or messageId is undefined',
-                },
-            });
-        }
-
-    } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
-    }
+	try {
+		if (req.query.userId && req.query.messageId) {
+			sendMailSubscribe(req.query.userId, req.query.messageId);
+			sendSuccess(res, null, 'subscribe email is sent!');
+		} else {
+			sendBadRequest(res, 'user id of message id is undefined');
+		}
+	} catch (error) {
+		sendBadRequest(res, error.message);
+	}
 };

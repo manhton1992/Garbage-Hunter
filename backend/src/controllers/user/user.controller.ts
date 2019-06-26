@@ -9,6 +9,7 @@ import { IUserModel, user } from '../../models/user.model';
 import * as jwt from 'jsonwebtoken';
 import { sendMailRegister } from '../../helpers/email-helper/send-email';
 import config from 'config';
+import { sendSuccess, sendBadRequest, sendCreated, sendNotFound, sendUnauthorized } from '../../helpers/request-response-helper/response-status';
 
 // use to hash the password
 const bcrypt = require('bcryptjs');
@@ -45,29 +46,13 @@ export const getAllUsers = async (req: Request, res: Response) => {
 		if (user && user.isAdmin) {
 			//  this user is admin, so he can get data
 			const users: IUserModel[] = await user.find();
-			res.status(200).send({
-				data: {
-					status: 'success',
-					items: users.length,
-					docs: users,
-				},
-			});
+			sendSuccess(res, users);
 		} else {
 			// this user is not admin
-			res.status(400).send({
-				data: {
-					status: 'fail',
-					message: 'this user is not admin',
-				},
-			});
+			sendBadRequest(res, 'this user is not admin');
 		}
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -86,28 +71,13 @@ export const registerUser = async (req: Request, res: Response) => {
 				req.body.passwordHash = hash;
 				const newUser: IUserModel = await user.create(req.body);
 				sendMailRegister(newUser);
-				res.status(201).send({
-					data: {
-						status: 'success',
-						docs: newUser,
-					},
-				});
+				sendCreated(res, newUser);
 			}
 		} else {
-			res.status(400).send({
-				data: {
-					status: 'fail',
-					message: 'this email is already registered',
-				},
-			});
+			sendBadRequest(res, 'this email is already registered');
 		}
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -136,12 +106,7 @@ export const exportUsersAsCsv = async (req: Request, res: Response) => {
 			res.status(200).send(csv);
 		});
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -153,19 +118,9 @@ export const exportUsersAsCsv = async (req: Request, res: Response) => {
 export const deleteAllUsers = async (req: Request, res: Response) => {
 	try {
 		await user.deleteMany({});
-		res.status(200).send({
-			data: {
-				status: 'success',
-				message: 'all users are deleted',
-			},
-		});
+		sendSuccess(res, null, 'all users are deleted');
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -194,37 +149,17 @@ export const login = async (req: Request, res: Response) => {
 						},
 					});
 				} else {
-					res.status(400).send({
-						data: {
-							status: 'error',
-							message: 'please confirm the email',
-						},
-					});
+					sendBadRequest(res, 'please confirm the email');
 				}
 			} else {
-				res.status(400).send({
-					data: {
-						status: 'error',
-						message: 'false password. Please try again',
-					},
-				});
+				sendBadRequest(res, 'wrong password, please try again');
 			}
 		} else {
 			// user does not exist
-			res.status(404).send({
-				data: {
-					status: 'error',
-					message: 'user does not exist',
-				},
-			});
+			sendNotFound(res, 'user does not exist');
 		}
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -238,27 +173,12 @@ export const loginByToken = async (req: Request, res: Response) => {
 	try {
 		const checkedUser = checkJwt(req.params.token);
 		if (checkedUser) {
-			res.status(200).send({
-				data: {
-					status: 'success',
-					docs: checkedUser,
-				},
-			});
+			sendSuccess(res, checkedUser);
 		} else {
-			res.status(200).send({
-				data: {
-					status: '401',
-					message: 'token are not available. please log in again',
-				},
-			});
+			sendUnauthorized(res, 'token are not available, please log in again');
 		}
 	} catch (error) {
-		res.status(200).send({
-			data: {
-				status: '401',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -274,20 +194,10 @@ export const updateSingleUserWithToken = async (req: Request, res: Response) => 
 			const updateUser: IUserModel | null = await user.findByIdAndUpdate(checkedUser._id, req.body, {
 				new: true,
 			});
-			res.status(200).send({
-				data: {
-					status: 'success',
-					docs: updateUser,
-				},
-			});
+			sendSuccess(res, updateUser);
 		}
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -301,57 +211,11 @@ export const deleteSingleUserWithToken = async (req: Request, res: Response) => 
 		const user = checkJwt(req.params.token);
 		if (user) {
 			const deleteUser: IUserModel | null = await user.findByIdAndDelete(user._id);
-			res.status(200).send({
-				data: {
-					status: 'success',
-					docs: deleteUser,
-				},
-			});
+			sendSuccess(res, deleteUser);
 		}
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
-};
-
-/**
- * ======================================================================================
- * Functions
- * ======================================================================================
- */
-
-/**
- * @description Process the queries for showing activities
- * @param {*} queries
- * @returns {object}
- */
-const processQueries = (queries: any): object => {
-	/** regex the params search for not dates */
-	for (const key of Object.keys(queries)) {
-		if (key != 'start_at' && key != 'end_at' && key != 'from' && key != 'until') {
-			queries[key] = new RegExp(queries[key], 'i');
-		}
-	}
-	/** handle from and until params */
-	const fromQuery = queries.from;
-	const untilQuery = queries.until;
-	if (fromQuery || untilQuery) {
-		const newQuery: object = {};
-		if (fromQuery) {
-			Object.assign(newQuery, { $gte: fromQuery });
-			delete queries.from;
-		}
-		if (untilQuery) {
-			Object.assign(newQuery, { $lte: untilQuery });
-			delete queries.until;
-		}
-		queries.start_at = newQuery;
-	}
-	return queries;
 };
 
 /**
@@ -367,24 +231,10 @@ const processQueries = (queries: any): object => {
  */
 export const getUsers = async (req: Request, res: Response) => {
 	try {
-		/** Process queries to check for dates*/
-		req.query = processQueries(req.query);
-
 		const users: IUserModel[] = await user.find(req.query);
-		res.status(200).send({
-			data: {
-				status: 'success',
-				items: users.length,
-				docs: users,
-			},
-		});
+		sendSuccess(res, users);
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -396,19 +246,9 @@ export const getUsers = async (req: Request, res: Response) => {
 export const createUser = async (req: Request, res: Response) => {
 	try {
 		const newUser: IUserModel = await user.create(req.body);
-		res.status(201).send({
-			data: {
-				status: 'success',
-				docs: newUser,
-			},
-		});
+		sendCreated(res, newUser);
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -424,19 +264,9 @@ export const getSingleUser = async (req: Request, res: Response) => {
 			// TODO what for send mail?
 			// sendMailRegister(singleUser);
 		}
-		res.status(200).send({
-			data: {
-				status: 'success',
-				docs: singleUser,
-			},
-		});
+		sendSuccess(res, singleUser);
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -450,19 +280,9 @@ export const updateSingleUser = async (req: Request, res: Response) => {
 		const updateUser: IUserModel | null = await user.findByIdAndUpdate(req.params.userid, req.body, {
 			new: true,
 		});
-		res.status(200).send({
-			data: {
-				status: 'success',
-				docs: updateUser,
-			},
-		});
+		sendSuccess(res, updateUser);
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
@@ -474,24 +294,14 @@ export const updateSingleUser = async (req: Request, res: Response) => {
 export const deleteSingleUser = async (req: Request, res: Response) => {
 	try {
 		const deleteUser: IUserModel | null = await user.findByIdAndDelete(req.params.userid);
-		res.status(200).send({
-			data: {
-				status: 'success',
-				docs: deleteUser,
-			},
-		});
+		sendSuccess(res, deleteUser);
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
 
 /**
- * change user infor after user confirm email
+ * change user information after user confirm email
  * @param req
  * @param res
  */
@@ -503,18 +313,9 @@ export const confirmEmail = async (req: Request, res: Response) => {
 			const updateUser: IUserModel | null = await user.findByIdAndUpdate(checkedUser._id, req.body, {
 				new: true,
 			});
-			res.status(200).send({
-				data: {
-					status: 'success',
-				},
-			});
+			sendSuccess(res, updateUser, 'email is confirmed');
 		}
 	} catch (error) {
-		res.status(400).send({
-			data: {
-				status: 'error',
-				message: error.message,
-			},
-		});
+		sendBadRequest(res, error.message);
 	}
 };
