@@ -33,6 +33,7 @@ commentRouter.delete('/delete_all', logTime, wrapAsync(deleteAllComments));
 commentRouter.get('/:commentid', logTime, wrapAsync(getSingleComment));
 
 /** READ BY ID */
+// TODO i think this is not needed, can use getComments(messageid)
 commentRouter.get('/get_by_messageid/:messageId', logTime, wrapAsync(getCommentsWithMessageId));
 
 /** UPDATE */

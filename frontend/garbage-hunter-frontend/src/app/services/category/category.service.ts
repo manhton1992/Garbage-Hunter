@@ -15,6 +15,15 @@ export class CategoryService {
 
   constructor(private http: HttpClient) {}
 
+  private getHeader = (): any => {
+    const data = JSON.parse(localStorage.getItem('currentUser'));
+    const token = data ? data.token : null;
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+  }
+
   /**
    * @description get all categories in a message.
    */
@@ -40,7 +49,7 @@ export class CategoryService {
    * @description create new Category.
    */
   createCategory = (category: Category): Observable<Category> => {
-    return this.http.post<Category>(this.categoryUrl, category).pipe(
+    return this.http.post<Category>(this.categoryUrl, category, { headers: this.getHeader() }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
@@ -51,7 +60,7 @@ export class CategoryService {
    */
   updateCategoryById(category: Category): Observable<Category> {
     const url = `${this.categoryUrl}/${category._id}`;
-    return this.http.put<Category>(url, category).pipe(catchError((err) => observableHandleError(err)));
+    return this.http.put<Category>(url, category, { headers: this.getHeader() }).pipe(catchError((err) => observableHandleError(err)));
   }
 
   /**
@@ -59,6 +68,6 @@ export class CategoryService {
    */
   deleteCategoryById(categoryid: string): Observable<{}> {
     const url = `${this.categoryUrl}/${categoryid}`;
-    return this.http.delete<{}>(url).pipe(catchError((err) => observableHandleError(err)));
+    return this.http.delete<{}>(url, { headers: this.getHeader() }).pipe(catchError((err) => observableHandleError(err)));
   }
 }

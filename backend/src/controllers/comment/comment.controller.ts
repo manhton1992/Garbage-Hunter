@@ -6,6 +6,11 @@
 import { Request, Response } from 'express';
 import { ICommentModel, comment } from '../../models/comment.model';
 import { sendSuccess, sendBadRequest, sendCreated } from '../../helpers/request-response-helper/response-status';
+import * as jwt from 'jsonwebtoken';
+import config from 'config';
+
+/** Secret key to verify API callers */
+const myJWTSecretKey = config.get<string>('jwt.secret-key');
 
 /**
  * Get all comments in a message.
@@ -36,7 +41,7 @@ export const createComment = async (req: Request, res: Response) => {
 };
 
 /**
- * Delete all comments in a message. 
+ * Delete all comments in a message.
  * @param req
  * @param res
  */
