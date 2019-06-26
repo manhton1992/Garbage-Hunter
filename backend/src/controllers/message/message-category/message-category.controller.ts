@@ -5,7 +5,12 @@
 /** Package imports */
 import { Request, Response } from 'express';
 import { IMessageCategoryModel, messageCategory } from '../../../models/message-category.model';
-import { sendSuccess, sendBadRequest, sendCreated } from '../../../helpers/request-response-helper/response-status';
+import { sendSuccess, sendBadRequest, sendCreated, sendForbidden } from '../../../helpers/request-response-helper/response-status';
+import * as jwt from 'jsonwebtoken';
+import config from 'config';
+
+/** Secret key to verify API callers */
+const myJWTSecretKey = config.get<string>('jwt.secret-key');
 
 /**
  * Get all messageCategory.
@@ -28,8 +33,14 @@ export const getMessageCategory = async (req: Request, res: Response) => {
  */
 export const createMessageCategory = async (req: Request, res: Response) => {
     try {
-        const newMessageCategory: IMessageCategoryModel = await messageCategory.create(req.body);
-        sendCreated(res, newMessageCategory);
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const newMessageCategory: IMessageCategoryModel = await messageCategory.create(req.body);
+                sendCreated(res, newMessageCategory);
+            }
+        });
     } catch (error) {
         sendBadRequest(res, error.message);
     }
@@ -43,8 +54,14 @@ export const createMessageCategory = async (req: Request, res: Response) => {
  */
 export const deleteAllMessageCategory = async (req: Request, res: Response) => {
     try {
-        await messageCategory.deleteMany({});
-        sendSuccess(res, null, 'all message category are deleted');
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                await messageCategory.deleteMany({});
+                sendSuccess(res, null, 'all message category are deleted');
+            }
+        });
     } catch (error) {
         sendBadRequest(res, error.message);
     }
@@ -71,11 +88,17 @@ export const getSingleMessageCategory = async (req: Request, res: Response) => {
  */
 export const updateSingleMessageCategory = async (req: Request, res: Response) => {
     try {
-        const updateMessageCategory: IMessageCategoryModel | null 
-        = await messageCategory.findByIdAndUpdate(req.params.messageCategoryId, req.body, {
-            new: true,
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const updateMessageCategory: IMessageCategoryModel | null
+                = await messageCategory.findByIdAndUpdate(req.params.messageCategoryId, req.body, {
+                    new: true,
+                });
+                sendSuccess(res, updateMessageCategory);
+            }
         });
-        sendSuccess(res, updateMessageCategory);
     } catch (error) {
         sendBadRequest(res, error.message);
     }
@@ -88,8 +111,14 @@ export const updateSingleMessageCategory = async (req: Request, res: Response) =
  */
 export const deleteSingleMessageCategory = async (req: Request, res: Response) => {
     try {
-        const deleteMessageCategory: IMessageCategoryModel | null = await messageCategory.findByIdAndDelete(req.params.messageCategoryId);
-        sendSuccess(res, deleteMessageCategory);
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const deleteMessageCategory: IMessageCategoryModel | null = await messageCategory.findByIdAndDelete(req.params.messageCategoryId);
+                sendSuccess(res, deleteMessageCategory);
+            }
+        });
     } catch (error) {
         sendBadRequest(res, error.message);
     }

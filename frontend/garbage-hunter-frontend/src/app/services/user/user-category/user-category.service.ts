@@ -13,6 +13,15 @@ export class UserCategoryService {
   private userCategoryUrl = `${environment.baseUrl}/user_category`;
   constructor(private http: HttpClient) {}
 
+  private getHeader = (): any => {
+    const data = JSON.parse(localStorage.getItem('currentUser'));
+    const token = data ? data.token : null;
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+  }
+
   /**
    * @description get all UserCategory in a message.
    */
@@ -27,7 +36,7 @@ export class UserCategoryService {
    * @description create new UserCategory.
    */
   createUserCategory = (userCategory: UserCategory): Observable<UserCategory> => {
-    return this.http.post<UserCategory>(this.userCategoryUrl, userCategory).pipe(
+    return this.http.post<UserCategory>(this.userCategoryUrl, userCategory, { headers: this.getHeader() }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
@@ -38,7 +47,9 @@ export class UserCategoryService {
    */
   updateUserCategoryById(userCategory: UserCategory): Observable<UserCategory> {
     const url = `${this.userCategoryUrl}/${userCategory._id}`;
-    return this.http.put<UserCategory>(url, userCategory).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .put<UserCategory>(url, userCategory, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 
   /**
@@ -46,6 +57,8 @@ export class UserCategoryService {
    */
   deleteUserCategoryById(usercategoryid: string): Observable<{}> {
     const url = `${this.userCategoryUrl}/${usercategoryid}`;
-    return this.http.delete<{}>(url).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .delete<{}>(url, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 }

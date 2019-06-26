@@ -17,6 +17,7 @@
   "author": "fwe-group-4",
   "license": "ISC",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "@types/body-parser": "^1.17.0",
     "@types/chai": "^4.1.7",
     "@types/config": "0.0.34",

@@ -16,6 +16,7 @@ import {
 	updateSingleUserCategory,
 	deleteSingleUserCategory,
 } from './user-category.controller';
+import { verifyToken } from '../../../middlewares/authorization.middleware';
 
 export const userCategoryRouter: express.Router = express.Router({ mergeParams: true });
 
@@ -23,16 +24,16 @@ export const userCategoryRouter: express.Router = express.Router({ mergeParams: 
 userCategoryRouter.get('/', logTime, wrapAsync(getUserCategory));
 
 /** CREATE */
-userCategoryRouter.post('/', logTime, wrapAsync(createUserCategory));
+userCategoryRouter.post('/', logTime, verifyToken, wrapAsync(createUserCategory));
 
 /** Delete all activities in the database */
-userCategoryRouter.delete('/delete_all', logTime, wrapAsync(deleteAllUserCategory));
+userCategoryRouter.delete('/delete_all', logTime, verifyToken, wrapAsync(deleteAllUserCategory));
 
 /** READ BY ID */
 userCategoryRouter.get('/:userCategoryId', logTime, wrapAsync(getSingleUserCategory));
 
 /** UPDATE */
-userCategoryRouter.put('/:userCategoryId', logTime, wrapAsync(updateSingleUserCategory));
+userCategoryRouter.put('/:userCategoryId', logTime, verifyToken, wrapAsync(updateSingleUserCategory));
 
 /** DELETE */
-userCategoryRouter.delete('/:userCategoryId', logTime, wrapAsync(deleteSingleUserCategory));
+userCategoryRouter.delete('/:userCategoryId', logTime, verifyToken, wrapAsync(deleteSingleUserCategory));

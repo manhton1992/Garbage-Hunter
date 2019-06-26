@@ -14,6 +14,15 @@ export class MessageCategoryService {
 
   constructor(private http: HttpClient) {}
 
+  private getHeader = (): any => {
+    const data = JSON.parse(localStorage.getItem('currentUser'));
+    const token = data ? data.token : null;
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+  }
+
   /**
    * @description get all MessageCategory in a message.
    */
@@ -39,10 +48,12 @@ export class MessageCategoryService {
    * @description create new MessageCategory.
    */
   createMessageCategory = (messageCategory: MessageCategory): Observable<MessageCategory> => {
-    return this.http.post<MessageCategory>(this.messageCategoryUrl, messageCategory).pipe(
-      map((response) => response['data']['docs']),
-      catchError((err) => observableHandleError(err))
-    );
+    return this.http
+      .post<MessageCategory>(this.messageCategoryUrl, messageCategory, { headers: this.getHeader() })
+      .pipe(
+        map((response) => response['data']['docs']),
+        catchError((err) => observableHandleError(err))
+      );
   }
 
   /**
@@ -50,7 +61,9 @@ export class MessageCategoryService {
    */
   updateMessageCategoryById(messageCategory: MessageCategory): Observable<MessageCategory> {
     const url = `${this.messageCategoryUrl}/${messageCategory._id}`;
-    return this.http.put<MessageCategory>(url, messageCategory).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .put<MessageCategory>(url, messageCategory, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 
   /**
@@ -58,6 +71,8 @@ export class MessageCategoryService {
    */
   deleteMessageCategoryById(messagecategoryid: string): Observable<{}> {
     const url = `${this.messageCategoryUrl}/${messagecategoryid}`;
-    return this.http.delete<{}>(url).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .delete<{}>(url, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 }

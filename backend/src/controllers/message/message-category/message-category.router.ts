@@ -9,13 +9,14 @@ import express from 'express';
 import { logTime } from '../../../middlewares/timelogger.middleware';
 import { wrapAsync } from '../../../middlewares/errorhandler.middleware';
 import {
-    getMessageCategory,
-    createMessageCategory,
-    deleteAllMessageCategory,
-    getSingleMessageCategory,
-    updateSingleMessageCategory,
-    deleteSingleMessageCategory,
+	getMessageCategory,
+	createMessageCategory,
+	deleteAllMessageCategory,
+	getSingleMessageCategory,
+	updateSingleMessageCategory,
+	deleteSingleMessageCategory,
 } from './message-category.controller';
+import { verifyToken } from '../../../middlewares/authorization.middleware';
 
 export const messageCategoryRouter: express.Router = express.Router({ mergeParams: true });
 
@@ -23,17 +24,16 @@ export const messageCategoryRouter: express.Router = express.Router({ mergeParam
 messageCategoryRouter.get('/', logTime, wrapAsync(getMessageCategory));
 
 /** CREATE */
-messageCategoryRouter.post('/', logTime, wrapAsync(createMessageCategory));
-
+messageCategoryRouter.post('/', logTime, verifyToken, wrapAsync(createMessageCategory));
 
 /** Delete all activities in the database */
-messageCategoryRouter.delete('/delete_all', logTime, wrapAsync(deleteAllMessageCategory));
+messageCategoryRouter.delete('/delete_all', logTime, verifyToken, wrapAsync(deleteAllMessageCategory));
 
 /** READ BY ID */
 messageCategoryRouter.get('/:messageCategoryId', logTime, wrapAsync(getSingleMessageCategory));
 
 /** UPDATE */
-messageCategoryRouter.put('/:messageCategoryId', logTime, wrapAsync(updateSingleMessageCategory));
+messageCategoryRouter.put('/:messageCategoryId', logTime, verifyToken, wrapAsync(updateSingleMessageCategory));
 
 /** DELETE */
-messageCategoryRouter.delete('/:messageCategoryId', logTime, wrapAsync(deleteSingleMessageCategory));
+messageCategoryRouter.delete('/:messageCategoryId', logTime, verifyToken, wrapAsync(deleteSingleMessageCategory));

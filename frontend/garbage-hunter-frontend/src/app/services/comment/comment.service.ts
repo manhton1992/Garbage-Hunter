@@ -17,6 +17,15 @@ export class CommentService {
 
   constructor(private http: HttpClient) {}
 
+  private getHeader = (): any => {
+    const data = JSON.parse(localStorage.getItem('currentUser'));
+    const token = data ? data.token : null;
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+  }
+
   /**
    * @description get all comments.
    */
@@ -25,7 +34,7 @@ export class CommentService {
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description get comment by id.
@@ -36,7 +45,7 @@ export class CommentService {
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description get comment by message id.
@@ -47,24 +56,26 @@ export class CommentService {
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description create new comment.
    */
   createComment = (comment: Comment): Observable<Comment> => {
-    return this.http.post<Comment>(this.commentUrl, comment).pipe(
+    return this.http.post<Comment>(this.commentUrl, comment, { headers: this.getHeader() }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description update comment by id.
    */
   updateCommentById(comment: Comment): Observable<Comment> {
     const url = `${this.commentUrl}/${comment._id}`;
-    return this.http.put<Comment>(url, comment).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .put<Comment>(url, comment, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 
   /**
@@ -72,6 +83,8 @@ export class CommentService {
    */
   deleteCommentById(commentid: string): Observable<{}> {
     const url = `${this.commentUrl}/${commentid}`;
-    return this.http.delete<{}>(url).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .delete<{}>(url, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 }

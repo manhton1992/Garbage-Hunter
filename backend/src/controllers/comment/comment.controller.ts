@@ -5,7 +5,7 @@
 /** Package imports */
 import { Request, Response } from 'express';
 import { ICommentModel, comment } from '../../models/comment.model';
-import { sendSuccess, sendBadRequest, sendCreated } from '../../helpers/request-response-helper/response-status';
+import { sendSuccess, sendBadRequest, sendCreated, sendForbidden } from '../../helpers/request-response-helper/response-status';
 import * as jwt from 'jsonwebtoken';
 import config from 'config';
 
@@ -33,8 +33,14 @@ export const getComments = async (req: Request, res: Response) => {
  */
 export const createComment = async (req: Request, res: Response) => {
     try {
-        const newComment: ICommentModel = await comment.create(req.body);
-        sendCreated(res, newComment);
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const newComment: ICommentModel = await comment.create(req.body);
+                sendCreated(res, newComment);
+            }
+        });
     } catch (error) {
         sendBadRequest(res, error.message);
     }
@@ -47,8 +53,14 @@ export const createComment = async (req: Request, res: Response) => {
  */
 export const deleteAllComments = async (req: Request, res: Response) => {
     try {
-        await comment.deleteMany({});
-        sendSuccess(res, null, 'all comments are deleted');
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                await comment.deleteMany({});
+                sendSuccess(res, null, 'all comments are deleted');
+            }
+        });
     } catch (error) {
         sendBadRequest(res, error.message);
     }
@@ -75,10 +87,16 @@ export const getSingleComment = async (req: Request, res: Response) => {
  */
 export const updateSingleComment = async (req: Request, res: Response) => {
     try {
-        const updateComment: ICommentModel | null = await comment.findByIdAndUpdate(req.params.commentid, req.body, {
-            new: true,
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const updateComment: ICommentModel | null = await comment.findByIdAndUpdate(req.params.commentid, req.body, {
+                    new: true,
+                });
+                sendSuccess(res, updateComment);
+            }
         });
-        sendSuccess(res, updateComment);
     } catch (error) {
         sendBadRequest(res, error.message);
     }
@@ -91,8 +109,14 @@ export const updateSingleComment = async (req: Request, res: Response) => {
  */
 export const deleteSingleComment = async (req: Request, res: Response) => {
     try {
-        const deleteComment: ICommentModel | null = await comment.findByIdAndDelete(req.params.commentid);
-        sendSuccess(res, deleteComment);
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const deleteComment: ICommentModel | null = await comment.findByIdAndDelete(req.params.commentid);
+                sendSuccess(res, deleteComment);
+            }
+        });
     } catch (error) {
         sendBadRequest(res, error.message);
     }

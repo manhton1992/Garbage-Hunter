@@ -15,34 +15,27 @@ export class UserService {
   private userLoginUrl = `${this.userUrl}/login`;
   private userLoginByTokenUrl = `${this.userUrl}/login`;
   private userRegisterUrl = `${this.userUrl}/register`;
-  private userUpdateUrl = `${this.userUrl}/update`;
-  private userDeleteUrl = `${this.userUrl}/delete`;
 
   public user: User = null;
-  private users: User[];
 
   constructor(private http: HttpClient, private flashService: FlashService) {}
 
-  /**
-   * get all users.
-   * Just feature just for admin.
-   * We need compare this user id with admin id in backend.
-   */
-  getAllUser(token: string) {
-    const url = `${this.userUrl}/get_all/${token}`;
-    return this.http.get<User[]>(url).pipe(
-      map((response) => response['data']),
-      catchError((err) => observableHandleError(err))
-    );
+  private getHeader = (): any => {
+    const data = JSON.parse(localStorage.getItem('currentUser'));
+    const token = data ? data.token : null;
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
   }
 
   getUserById = (userid: string): Observable<User> => {
     const url = `${this.userUrl}/${userid}`;
-    return this.http.get<User>(url).pipe(
+    return this.http.get<User>(url, { headers: this.getHeader() }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * get user/ login
@@ -63,28 +56,6 @@ export class UserService {
    */
   register(user: any) {
     return this.http.post<string>(this.userRegisterUrl, user).pipe(
-      map((response) => response['data']),
-      catchError((err) => observableHandleError(err))
-    );
-  }
-
-  /**
-   * update user information
-   * @param token
-   * @param user
-   */
-  updateUserWithToken(token: string, user: User): Observable<{}> {
-    const url = `${this.userUpdateUrl}/${token}`;
-    return this.http.put<User>(url, user).pipe(map((response) => response['data']));
-  }
-
-  /**
-   * delete user
-   * @param token
-   */
-  deleteUserWithToken(token: string): Observable<{}> {
-    const url = `${this.userDeleteUrl}/${token}`;
-    return this.http.delete<User>(url).pipe(
       map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );
@@ -116,4 +87,44 @@ export class UserService {
     this.flashService.setFlashSuccess('you are logged out!');
     window.location.href = '/';
   }
+
+  // ! IMPORTANT SEE BELOW
+
+  // TODO delete unused function
+  /**
+   * get all users.
+   * Just feature just for admin.
+   * We need compare this user id with admin id in backend.
+   */
+  // getAllUser(token: string) {
+  //   const url = `${this.userUrl}/get_all/${token}`;
+  //   return this.http.get<User[]>(url).pipe(
+  //     map((response) => response['data']),
+  //     catchError((err) => observableHandleError(err))
+  //   );
+  // }
+
+  // TODO delete unused function
+  /**
+   * update user information
+   * @param token
+   * @param user
+   */
+  // updateUserWithToken(token: string, user: User): Observable<{}> {
+  //   const url = `${this.userUpdateUrl}/${token}`;
+  //   return this.http.put<User>(url, user).pipe(map((response) => response['data']));
+  // }
+
+  // TODO delete unused function
+  /**
+   * delete user
+   * @param token
+   */
+  // deleteUserWithToken(token: string): Observable<{}> {
+  //   const url = `${this.userDeleteUrl}/${token}`;
+  //   return this.http.delete<User>(url).pipe(
+  //     map((response) => response['data']),
+  //     catchError((err) => observableHandleError(err))
+  //   );
+  // }
 }
