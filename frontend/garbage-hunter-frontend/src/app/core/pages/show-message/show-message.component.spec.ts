@@ -61,16 +61,22 @@ describe('ShowMessageComponent', () => {
         LeafletModule.forRoot(),
         NgbModule.forRoot(),
       ],
-    }).compileComponents();
+    }).compileComponents().then(()=>{
+      fixture = TestBed.createComponent(ShowMessageComponent);
+      component = fixture.componentInstance;
+    });;
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ShowMessageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have Title in h1 tag', async() => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('h1'));
+  })
+
+  it('should have message', async(() => {
+    expect(component.message).toBeTruthy();
+  }) )
 });

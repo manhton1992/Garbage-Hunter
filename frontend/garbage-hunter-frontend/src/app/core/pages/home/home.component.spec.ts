@@ -22,6 +22,7 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditComponent } from '../edit/edit.component';
 import { FlashComponent } from '../../components/flash/flash.component';
+import { By } from '@angular/platform-browser';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -56,16 +57,38 @@ describe('HomeComponent', () => {
         NgbModule.forRoot(),
       ]
     })
-    .compileComponents();
+    .compileComponents().then(()=>{
+      fixture = TestBed.createComponent(HomeComponent);
+      component = fixture.componentInstance;
+    });
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(HomeComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have Title Garbage Hunter in h1 tag', async() => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('h1').textContent).toContain('Garbage Hunter');
+  })
+
+  it('should have messages', async() => {
+    expect(component.messages.length).toBeGreaterThanOrEqual(0);
+  })
+
+  it('should call getAllMessageCategories method', async() => {
+    fixture.detectChanges();
+    spyOn(component, 'getAllMessageCategories');
+    const el = fixture.debugElement.query(By.css('button')).nativeElement;
+    el.click();
+    expect(component.getAllMessageCategories).toHaveBeenCalledTimes(1);
+  })
+
+  it('should call clearFilter method', async() => {
+    fixture.detectChanges();
+    spyOn(component, 'clearFilter');
+    const el = fixture.debugElement.query(By.css('button')).nativeElement;
+    el.click();
+    expect(component.clearFilter).toHaveBeenCalledTimes(0);
+  })
 });
