@@ -15,8 +15,8 @@ test_backend:
     stage: test_backend
     script:
         - cd backend
-        - npm install
-        - npm test
+        #- npm install
+        #- npm test
 
 test_frontend:
     stage: test_frontend
