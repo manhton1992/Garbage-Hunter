@@ -4,7 +4,10 @@
 
 export const environment = {
   production: false,
-  baseUrl: 'http://localhost:3000/api',
+  // for online server
+  baseUrl: 'http://13.58.162.26:3000/api',
+  // for local server
+  //baseUrl: 'http://localhost:3000/api',
   nominatimUrl: 'https://nominatim.openstreetmap.org',
 };
 
