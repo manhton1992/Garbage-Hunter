@@ -8,8 +8,6 @@ import { Component, OnInit, Input } from '@angular/core';
 export class AdminNumberBoxComponent implements OnInit {
   /**
    * @description data for the box from admin page.
-   * @type {*}
-   * @memberof AdminNumberBoxComponent
    */
   @Input() data: any;
 
@@ -19,18 +17,16 @@ export class AdminNumberBoxComponent implements OnInit {
 
   /**
    * @description calculate the ratio for progress bar.
-   * @memberof AdminNumberBoxComponent
    */
   countProgress = (): number => {
     if (this.data) {
       return (this.data.value / this.data.maxValue) * 100;
     }
     return 0;
-  };
+  }
 
   /**
    * @description determine the class for color of text.
-   * @memberof AdminNumberBoxComponent
    */
   textColor = (): string => {
     if (this.data) {
@@ -47,11 +43,10 @@ export class AdminNumberBoxComponent implements OnInit {
           break;
       }
     }
-  };
+  }
 
   /**
    * @description determine the class for color of progress bar.
-   * @memberof AdminNumberBoxComponent
    */
   progressBarColor = (): string => {
     if (this.data) {
@@ -68,5 +63,5 @@ export class AdminNumberBoxComponent implements OnInit {
           break;
       }
     }
-  };
+  }
 }

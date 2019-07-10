@@ -7,6 +7,9 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class FlashComponent implements OnInit {
 
+  /**
+   * @description text object, contains either success/error text
+   */
   @Input() text: any;
 
   constructor() { }

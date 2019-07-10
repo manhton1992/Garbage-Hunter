@@ -5,6 +5,12 @@
 /** Package imports */
 import { Request, Response } from 'express';
 import { ICommentModel, comment } from '../../models/comment.model';
+import { sendSuccess, sendBadRequest, sendCreated, sendForbidden } from '../../helpers/request-response-helper/response-status';
+import * as jwt from 'jsonwebtoken';
+import config from 'config';
+
+/** Secret key to verify API callers */
+const myJWTSecretKey = config.get<string>('jwt.secret-key');
 
 /**
  * Get all comments in a message.
@@ -14,20 +20,9 @@ import { ICommentModel, comment } from '../../models/comment.model';
 export const getComments = async (req: Request, res: Response) => {
     try {
         const comments: ICommentModel[] = await comment.find(req.query);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                items: comments.length,
-                docs: comments,
-            },
-        });
+        sendSuccess(res, comments);
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -38,44 +33,36 @@ export const getComments = async (req: Request, res: Response) => {
  */
 export const createComment = async (req: Request, res: Response) => {
     try {
-        const newComment: ICommentModel = await comment.create(req.body);
-        res.status(201).send({
-            data: {
-                status: 'success',
-                docs: newComment,
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const newComment: ICommentModel = await comment.create(req.body);
+                sendCreated(res, newComment);
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
 /**
- * Delete all comments in a message. 
+ * Delete all comments in a message.
  * @param req
  * @param res
  */
 export const deleteAllComments = async (req: Request, res: Response) => {
     try {
-        await comment.deleteMany({});
-        res.status(200).send({
-            data: {
-                status: 'success',
-                message: `all comments are deleted`,
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                await comment.deleteMany({});
+                sendSuccess(res, null, 'all comments are deleted');
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -87,19 +74,9 @@ export const deleteAllComments = async (req: Request, res: Response) => {
 export const getSingleComment = async (req: Request, res: Response) => {
     try {
         const singleComment: ICommentModel | null = await comment.findById(req.params.commentid);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: singleComment,
-            },
-        });
+        sendSuccess(res, singleComment);
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -110,22 +87,18 @@ export const getSingleComment = async (req: Request, res: Response) => {
  */
 export const updateSingleComment = async (req: Request, res: Response) => {
     try {
-        const updateComment: ICommentModel | null = await comment.findByIdAndUpdate(req.params.commentid, req.body, {
-            new: true,
-        });
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: updateComment,
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const updateComment: ICommentModel | null = await comment.findByIdAndUpdate(req.params.commentid, req.body, {
+                    new: true,
+                });
+                sendSuccess(res, updateComment);
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -136,39 +109,24 @@ export const updateSingleComment = async (req: Request, res: Response) => {
  */
 export const deleteSingleComment = async (req: Request, res: Response) => {
     try {
-        const deleteComment: ICommentModel | null = await comment.findByIdAndDelete(req.params.commentid);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: deleteComment,
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const deleteComment: ICommentModel | null = await comment.findByIdAndDelete(req.params.commentid);
+                sendSuccess(res, deleteComment);
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
 export const getCommentsWithMessageId = async (req: Request, res: Response) => {
     try {
-        const Comments :  ICommentModel[] | null = await comment.find({messageId: req.params.messageId});
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: Comments,
-            },
-        });
+        const comments :  ICommentModel[] | null = await comment.find({messageId: req.params.messageId});
+        sendSuccess(res, comments);
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
-
-}
+};

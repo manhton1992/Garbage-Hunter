@@ -14,11 +14,11 @@ export class AuthAdminService implements CanActivate {
   constructor(private router: Router, private http: HttpClient) {}
 
   canActivate = (): Observable<boolean> => {
-    let currentUser = localStorage.getItem('currentUser');
+    const currentUser = localStorage.getItem('currentUser');
     if (currentUser) {
-    let token = JSON.parse(currentUser).token;
+      const token = JSON.parse(currentUser).token;
       const url = `${this.url}/${token}`;
-      return this.http.get<Boolean>(url).pipe(
+      return this.http.get<boolean>(url).pipe(
         map((response) => {
           if (response['data']['docs']['isAdmin']) {
             return true;

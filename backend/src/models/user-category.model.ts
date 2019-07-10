@@ -12,29 +12,29 @@ import * as mongoose from 'mongoose';
  * @extends {mongoose.Document}
  */
 export interface IUserCategoryModel extends mongoose.Document {
-    userId: string;
-    categoryId: string;
+	userId: string;
+	categoryId: string;
 }
 
 /**
  * @description Schema of User Category for mongoose.
  * @export
- * @Schema UserCategorySchema 
+ * @Schema UserCategorySchema
  */
 export const UserCategorySchema: mongoose.Schema = new mongoose.Schema(
-    {
-        userId: {
-            type: String,
-            required: true,
-        },
-        categoryId: {
-            type: String,
-            required: true,
-        }
-    },
-    {
-        timestamps: true,
-    }
+	{
+		userId: {
+			type: String,
+			required: true,
+		},
+		categoryId: {
+			type: String,
+			required: true,
+		},
+	},
+	{
+		timestamps: true,
+	}
 );
 
 /**
@@ -42,4 +42,7 @@ export const UserCategorySchema: mongoose.Schema = new mongoose.Schema(
  * @export
  * @Model userCategory
  */
-export const userCategory: mongoose.Model<IUserCategoryModel> = mongoose.model<IUserCategoryModel>('UserCategory', UserCategorySchema);
+export const userCategory: mongoose.Model<IUserCategoryModel> = mongoose.model<IUserCategoryModel>(
+	'UserCategory',
+	UserCategorySchema
+);

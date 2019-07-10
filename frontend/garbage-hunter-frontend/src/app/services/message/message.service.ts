@@ -10,11 +10,8 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class MessageService {
-  
   /**
    * @description url for the message API.
-   * @private
-   * @memberof MessageService
    */
   private messageUrl = `${environment.baseUrl}/messages`;
 
@@ -25,26 +22,22 @@ export class MessageService {
     const token = data ? data.token : null;
     return {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
+      Authorization: `Bearer ${token}`,
+    };
   }
 
   /**
    * @description get all messages.
-   * @returns {Observable<Message>[]}
-   * @memberof MessageService
    */
   getAllMessages = (query: any): Observable<Message[]> => {
     return this.http.get<Message[]>(this.messageUrl, { params: query }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description get message by id.
-   * @returns {Observable<Message>}
-   * @memberof MessageService
    */
   getMessageById = (messageid: string): Observable<Message> => {
     const url = `${this.messageUrl}/${messageid}`;
@@ -52,43 +45,40 @@ export class MessageService {
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description create new message.
-   * @returns {Observable<Message>}
-   * @memberof MessageService
    */
   createMessage = (message: Message): Observable<Message> => {
-    return this.http.post<Message>(this.messageUrl, message, {headers: this.getHeader()}).pipe(
+    return this.http.post<Message>(this.messageUrl, message, { headers: this.getHeader() }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description update message by id.
-   * @returns {Observable<Message>}
-   * @memberof MessageService
    */
   updateMessage(message: Message): Observable<Message> {
     const url = `${this.messageUrl}/${message._id}`;
-    return this.http.put<Message>(url, message, {headers: this.getHeader()}).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .put<Message>(url, message, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 
   /**
    * @description delete message by id.
-   * @returns {Observable<{}>}
-   * @memberof MessageService
    */
   deleteMessage(messageid: string): Observable<{}> {
     const url = `${this.messageUrl}/${messageid}`;
-    return this.http.delete<{}>(url, {headers: this.getHeader()}).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .delete<{}>(url, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 
   /**
    * @description download all messages
-   * @memberof MessageService
    */
   downloadMessages(): void {
     window.open(this.messageUrl + '/download', '_self');
@@ -96,9 +86,6 @@ export class MessageService {
 
   /**
    * @description upload image to AWS S3
-   * @param {File} image
-   * @returns {Observable<string>}
-   * @memberof MessageService
    */
   uploadImage(image: File): Observable<string> {
     const url = `${this.messageUrl}/image_upload`;
@@ -112,13 +99,10 @@ export class MessageService {
 
   /**
    * @description upload image to AWS S3
-   * @param {File} image
-   * @returns {Observable<string>}
-   * @memberof MessageService
    */
   deleteUploadedImage(imageKey: string): Observable<{}> {
     const url = `${this.messageUrl}/delete_image`;
-    return this.http.post<string>(url, {key: imageKey}, {headers: this.getHeader()}).pipe(
+    return this.http.post<string>(url, { key: imageKey }, { headers: this.getHeader() }).pipe(
       map((response) => response['data']),
       catchError((err) => observableHandleError(err))
     );

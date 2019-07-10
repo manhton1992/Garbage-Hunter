@@ -45,7 +45,6 @@ import { FlashComponent } from './core/components/flash/flash.component';
     ErrorComponent,
     EditComponent,
     FlashComponent
-    
   ],
   imports: [
     BrowserModule,

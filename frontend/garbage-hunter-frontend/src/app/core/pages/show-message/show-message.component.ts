@@ -20,47 +20,38 @@ import { FlashService } from 'src/app/services/flash/flash.service';
 export class ShowMessageComponent implements OnInit {
   /**
    * @description flash message
-   * @type {*}
-   * @memberof ShowMessageComponent
    */
   flash: any = this.flashService.getFlashes();
 
   /**
    * @description the main message.
-   * @type {Message}
-   * @memberof ShowMessageComponent
    */
   message: Message = null;
 
   /**
    * @description all categories of the main message.
-   * @type {MessageCategory[]}
-   * @memberof ShowMessageComponent
    */
   messageCategories: MessageCategory[] = [];
 
   /**
    * @description all categories in the main message.
-   * @type {Category[]}
-   * @memberof ShowMessageComponent
    */
   category: Category[] = [];
 
   /**
    * @description creator of the main message
-   * @type {User}
-   * @memberof ShowMessageComponent
    */
   creator: User = null;
 
   /**
    * @description all comments of the main message.
-   * @type {Comment[]}
-   * @memberof ShowMessageComponent
    */
   comments: Comment[] = [];
 
-  showError: boolean = false;
+  /**
+   * @description if true, show error component
+   */
+  showError = false;
 
   constructor(
     public messageService: MessageService,
@@ -75,14 +66,13 @@ export class ShowMessageComponent implements OnInit {
 
   ngOnInit() {
     this.route.params.subscribe(async (params) => {
-      let messageid = params['messageid'];
+      const messageid = params['messageid'];
       this.getMessage(messageid);
     });
   }
 
   /**
    * @description get the message item.
-   * @param {string} messageid
    */
   getMessage = (messageid: string): void => {
     this.messageService.getMessageById(messageid).subscribe(
@@ -98,11 +88,10 @@ export class ShowMessageComponent implements OnInit {
         this.showError = true;
       }
     );
-  };
+  }
 
   /**
    * @description get the creator of the message
-   * @memberof ShowMessageComponent
    */
   getCreator = (): void => {
     if (this.message) {
@@ -110,10 +99,9 @@ export class ShowMessageComponent implements OnInit {
         this.creator = user;
       });
     }
-  };
+  }
   /**
    * @description get all comments of the message.
-   * @param {string} messageid
    */
   getComments = (): void => {
     if (this.message) {
@@ -121,11 +109,10 @@ export class ShowMessageComponent implements OnInit {
         this.comments = comments;
       });
     }
-  };
+  }
 
   /**
    * @description get all available messages.
-   * @memberof HomeComponent
    */
   getMessageCategories = (): void => {
     this.messageCategoryService.getAllMessageCategories({ messageId: this.message._id }).subscribe((messages) => {
@@ -134,19 +121,18 @@ export class ShowMessageComponent implements OnInit {
         this.getCategoryNames();
       }
     });
-  };
+  }
 
   getCategoryNames = (): void => {
-    for (let i = 0; i < this.messageCategories.length; i++) {
-      this.categoryService.getCategoryById(this.messageCategories[i].categoryId).subscribe((messages) => {
+    for (const messageCategory of this.messageCategories) {
+      this.categoryService.getCategoryById(messageCategory.categoryId).subscribe((messages) => {
         this.category.push(messages);
       });
     }
-  };
+  }
 
   /**
    * @description set as unavailable.
-   * @memberof ShowMessageComponent
    */
   setAsUnavailable = (): void => {
     this.message.available = false;
@@ -154,11 +140,10 @@ export class ShowMessageComponent implements OnInit {
       this.flashService.setFlashSuccess('Message is marked as unavailable!');
       this.router.navigate(['/']);
     });
-  };
+  }
 
   /**
    * @description delete the message.
-   * @memberof ShowMessageComponent
    */
   archiveMessage = (): void => {
     this.message.archive = true;
@@ -167,27 +152,25 @@ export class ShowMessageComponent implements OnInit {
       this.flashService.setFlashSuccess('MESSAGE IS ARCHIVED!');
       this.router.navigate(['/']);
     });
-  };
+  }
 
   /**
    * @description show/hide edit and mark as unavailable buttons specific to current user.
-   * @memberof ShowMessageComponent
    */
   showEditChangeButton = (): boolean => {
-    if (this.userService.user && (this.userService.user.isAdmin || this.userService.user._id == this.creator._id)) {
+    if (this.userService.user && (this.userService.user.isAdmin || this.userService.user._id === this.creator._id)) {
       return true;
     }
     return false;
-  };
+  }
 
   /**
    * @description show/hide delete button only to admins.
-   * @returns {boolean}
    */
   showDeleteButton = (): boolean => {
     if (this.userService.user && this.userService.user.isAdmin) {
       return true;
     }
     return false;
-  };
+  }
 }

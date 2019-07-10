@@ -8,7 +8,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class ErrorComponent implements OnInit {
 
+  /**
+   * @description code for the error
+   */
   @Input() code: number;
+
+  /**
+   * @description text for the error
+   */
   @Input() message: string;
 
   constructor() { }

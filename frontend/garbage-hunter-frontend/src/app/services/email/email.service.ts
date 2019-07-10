@@ -6,19 +6,18 @@ import { map, catchError } from 'rxjs/internal/operators';
 import { observableHandleError } from 'src/app/middlewares/errorhandler.middleware';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 
 /**
- * this class represent Email Service. 
- * Just send subcribe email when a matching message is created
+ * this class represent Email Service.
+ * Just send subscribe email when a matching message is created
  */
 export class EmailService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http : HttpClient) { }
-
-  sendEmailSubcribe(userId: string, messageId: string) : Observable<any>{
-    let url : string = `${environment.baseUrl}/email?userId=${userId}&messageId=${messageId}`;
+  sendEmailSubscribe(userId: string, messageId: string): Observable<any> {
+    const url = `${environment.baseUrl}/email?userId=${userId}&messageId=${messageId}`;
     return this.http.get<any>(url).pipe(
       map((response) => response['data']),
       catchError((err) => observableHandleError(err))

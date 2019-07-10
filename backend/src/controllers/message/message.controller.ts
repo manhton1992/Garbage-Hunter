@@ -62,9 +62,9 @@ export const createMessage = async (req: Request, res: Response) => {
 export const exportMessagesAsCsv = async (req: Request, res: Response) => {
     try {
         const messages: IMessageModel[] = await message.find({});
-        let documents: object[] = [];
+        const documents: object[] = [];
         messages.forEach((item) => {
-            let data = {
+            const data = {
                 id: item.id,
                 title: item.title,
                 description: item.description,

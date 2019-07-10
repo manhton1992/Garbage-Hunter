@@ -7,54 +7,58 @@ import { UserCategory } from 'src/app/models/user-category.model';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserCategoryService {
-
   private userCategoryUrl = `${environment.baseUrl}/user_category`;
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
+
+  private getHeader = (): any => {
+    const data = JSON.parse(localStorage.getItem('currentUser'));
+    const token = data ? data.token : null;
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+  }
 
   /**
    * @description get all UserCategory in a message.
-   * @returns {Observable<UserCategory>[]}
-   * @memberof UserCategoryService
    */
   getAllUserCategories = (query: any): Observable<UserCategory[]> => {
     return this.http.get<UserCategory[]>(this.userCategoryUrl, { params: query }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description create new UserCategory.
-   * @returns {Observable<UserCategory>}
-   * @memberof UserCategoryService
    */
   createUserCategory = (userCategory: UserCategory): Observable<UserCategory> => {
-    return this.http.post<UserCategory>(this.userCategoryUrl, userCategory).pipe(
+    return this.http.post<UserCategory>(this.userCategoryUrl, userCategory, { headers: this.getHeader() }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description update UserCategory by id.
-   * @returns {Observable<UserCategory>}
-   * @memberof UserCategoryService
    */
   updateUserCategoryById(userCategory: UserCategory): Observable<UserCategory> {
     const url = `${this.userCategoryUrl}/${userCategory._id}`;
-    return this.http.put<UserCategory>(url, userCategory).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .put<UserCategory>(url, userCategory, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 
   /**
    * @description delete UserCategory by id.
-   * @returns {Observable<{}>}
-   * @memberof UserCategoryService
    */
   deleteUserCategoryById(usercategoryid: string): Observable<{}> {
     const url = `${this.userCategoryUrl}/${usercategoryid}`;
-    return this.http.delete<{}>(url).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .delete<{}>(url, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 }

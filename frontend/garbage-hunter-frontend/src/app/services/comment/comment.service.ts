@@ -7,34 +7,37 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class CommentService {
   /**
    * @description url of the comment API.
-   * @private
-   * @memberof CommentService
    */
   private commentUrl = `${environment.baseUrl}/comments`;
 
-  constructor(private http: HttpClient, ) {}
+  constructor(private http: HttpClient) {}
+
+  private getHeader = (): any => {
+    const data = JSON.parse(localStorage.getItem('currentUser'));
+    const token = data ? data.token : null;
+    return {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    };
+  }
 
   /**
    * @description get all comments.
-   * @returns {Observable<Comment>[]}
-   * @memberof CommentService
    */
   getAllComments = (query: any): Observable<Comment[]> => {
     return this.http.get<Comment[]>(this.commentUrl, { params: query }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description get comment by id.
-   * @returns {Observable<Message>}
-   * @memberof CommentService
    */
   getCommentById = (commentid: string): Observable<Comment> => {
     const url = `${this.commentUrl}/${commentid}`;
@@ -42,12 +45,10 @@ export class CommentService {
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description get comment by message id.
-   * @returns {Observable<Message>}
-   * @memberof CommentService
    */
   getCommentByMessageId = (messageId: string): Observable<Comment[]> => {
     const url = `${this.commentUrl}/get_by_messageid/${messageId}`;
@@ -55,37 +56,35 @@ export class CommentService {
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description create new comment.
-   * @returns {Observable<Comment>}
-   * @memberof CommentService
    */
   createComment = (comment: Comment): Observable<Comment> => {
-    return this.http.post<Comment>(this.commentUrl, comment).pipe(
+    return this.http.post<Comment>(this.commentUrl, comment, { headers: this.getHeader() }).pipe(
       map((response) => response['data']['docs']),
       catchError((err) => observableHandleError(err))
     );
-  };
+  }
 
   /**
    * @description update comment by id.
-   * @returns {Observable<Comment>}
-   * @memberof CommentService
    */
   updateCommentById(comment: Comment): Observable<Comment> {
     const url = `${this.commentUrl}/${comment._id}`;
-    return this.http.put<Comment>(url, comment).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .put<Comment>(url, comment, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 
   /**
    * @description delete comment by id.
-   * @returns {Observable<{}>}
-   * @memberof CommentService
    */
   deleteCommentById(commentid: string): Observable<{}> {
     const url = `${this.commentUrl}/${commentid}`;
-    return this.http.delete<{}>(url).pipe(catchError((err) => observableHandleError(err)));
+    return this.http
+      .delete<{}>(url, { headers: this.getHeader() })
+      .pipe(catchError((err) => observableHandleError(err)));
   }
 }

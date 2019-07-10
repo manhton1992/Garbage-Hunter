@@ -11,37 +11,44 @@ import { FlashService } from 'src/app/services/flash/flash.service';
 export class RegisterComponent implements OnInit {
   /**
    * @description flash message
-   * @type {*}
-   * @memberof RegisterComponent
    */
   flash: any = this.flashService.getFlashes();
 
+  /**
+   * @description type for password input (for show/hide password)
+   */
+  passwordType = 'password';
+
+  /**
+   * @description show/hide password text
+   */
+  passwordShow = false;
+
+  /**
+   * @description second password input
+   */
+  passwordConfirm = '';
+
+  /**
+   * @description registered user object
+   */
   userRegister = {
     email: '',
     password: '',
   };
-  passwordType: string = 'password';
-  passwordShow: boolean = false;
 
-  passwordConfirm: String = '';
-  
-  constructor(
-    public userService: UserService, 
-    public router: Router, 
-    public flashService: FlashService
-    ) {}
+  constructor(public userService: UserService, public router: Router, public flashService: FlashService) {}
 
   ngOnInit() {}
 
   submitRegister() {
     if (
-      this.userRegister.email != '' &&
-      this.userRegister.password != '' &&
-      this.passwordConfirm.trim() == this.userRegister.password.trim()
+      this.userRegister.email !== '' &&
+      this.userRegister.password !== '' &&
+      this.passwordConfirm.trim() === this.userRegister.password.trim()
     ) {
       this.userService.register(this.userRegister).subscribe(
         (res) => {
-          // console.log(res);
           this.flashService.setFlashSuccess('register success! please confirm email to use your account!');
           this.router.navigate(['/login']);
         },
@@ -55,6 +62,7 @@ export class RegisterComponent implements OnInit {
       this.flash = this.flashService.getFlashes();
     }
   }
+
   public togglePassword() {
     if (this.passwordShow) {
       this.passwordShow = false;

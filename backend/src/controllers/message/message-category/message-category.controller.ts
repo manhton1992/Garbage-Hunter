@@ -3,9 +3,14 @@
  */
 
 /** Package imports */
-import converter from 'json-2-csv';
 import { Request, Response } from 'express';
 import { IMessageCategoryModel, messageCategory } from '../../../models/message-category.model';
+import { sendSuccess, sendBadRequest, sendCreated, sendForbidden } from '../../../helpers/request-response-helper/response-status';
+import * as jwt from 'jsonwebtoken';
+import config from 'config';
+
+/** Secret key to verify API callers */
+const myJWTSecretKey = config.get<string>('jwt.secret-key');
 
 /**
  * Get all messageCategory.
@@ -14,24 +19,10 @@ import { IMessageCategoryModel, messageCategory } from '../../../models/message-
  */
 export const getMessageCategory = async (req: Request, res: Response) => {
     try {
-        /** Process queries to check for dates*/
-        //req.query = processQueries(req.query);
-
         const messageCategories: IMessageCategoryModel[] = await messageCategory.find(req.query);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                items: messageCategories.length,
-                docs: messageCategories,
-            },
-        });
+        sendSuccess(res, messageCategories);
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -42,20 +33,16 @@ export const getMessageCategory = async (req: Request, res: Response) => {
  */
 export const createMessageCategory = async (req: Request, res: Response) => {
     try {
-        const newMessageCategory: IMessageCategoryModel = await messageCategory.create(req.body);
-        res.status(201).send({
-            data: {
-                status: 'success',
-                docs: newMessageCategory,
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const newMessageCategory: IMessageCategoryModel = await messageCategory.create(req.body);
+                sendCreated(res, newMessageCategory);
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -67,20 +54,16 @@ export const createMessageCategory = async (req: Request, res: Response) => {
  */
 export const deleteAllMessageCategory = async (req: Request, res: Response) => {
     try {
-        await messageCategory.deleteMany({});
-        res.status(200).send({
-            data: {
-                status: 'success',
-                message: 'all message category are deleted',
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                await messageCategory.deleteMany({});
+                sendSuccess(res, null, 'all message category are deleted');
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -92,19 +75,9 @@ export const deleteAllMessageCategory = async (req: Request, res: Response) => {
 export const getSingleMessageCategory = async (req: Request, res: Response) => {
     try {
         const singleMessageCategory: IMessageCategoryModel | null = await messageCategory.findById(req.params.messageCategoryId);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: singleMessageCategory,
-            },
-        });
+        sendSuccess(res, singleMessageCategory);
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -115,23 +88,19 @@ export const getSingleMessageCategory = async (req: Request, res: Response) => {
  */
 export const updateSingleMessageCategory = async (req: Request, res: Response) => {
     try {
-        const updateMessageCategory: IMessageCategoryModel | null 
-        = await messageCategory.findByIdAndUpdate(req.params.messageCategoryId, req.body, {
-            new: true,
-        });
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: updateMessageCategory,
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const updateMessageCategory: IMessageCategoryModel | null
+                = await messageCategory.findByIdAndUpdate(req.params.messageCategoryId, req.body, {
+                    new: true,
+                });
+                sendSuccess(res, updateMessageCategory);
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
 
@@ -142,20 +111,15 @@ export const updateSingleMessageCategory = async (req: Request, res: Response) =
  */
 export const deleteSingleMessageCategory = async (req: Request, res: Response) => {
     try {
-        const deleteMessageCategory: IMessageCategoryModel | null = await messageCategory.findByIdAndDelete(req.params.messageCategoryId);
-        res.status(200).send({
-            data: {
-                status: 'success',
-                docs: deleteMessageCategory,
-            },
+        jwt.verify(req.body.token, myJWTSecretKey, async (error: any, success: any) => {
+            if (error) {
+                sendForbidden(res, error.message);
+            } else {
+                const deleteMessageCategory: IMessageCategoryModel | null = await messageCategory.findByIdAndDelete(req.params.messageCategoryId);
+                sendSuccess(res, deleteMessageCategory);
+            }
         });
     } catch (error) {
-        res.status(400).send({
-            data: {
-                status: 'error',
-                message: error.message,
-            },
-        });
+        sendBadRequest(res, error.message);
     }
 };
-

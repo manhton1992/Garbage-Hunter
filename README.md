@@ -2,7 +2,16 @@
 
 Application that allows you to create a report of garbage on the street that might be useful for others.
 
-This repository is the `Garbage Hunter` project that is made during the course "Advanced Web Development" in Hochschule Darmstadt in SS19.
+This repository is the project `Garbage Hunter` that is made during the course "Advanced Web Development" in Hochschule Darmstadt in SS19.
+
+## Table of contents
+
+1. [Documents](#documents)
+2. [Project structure](#project-structure)
+3. [Backend README](./backend/README.md)
+4. [Frontend README](./frontend/garbage-hunter-frontend/README.md)
+
+---
 
 ## Documents
 
@@ -13,19 +22,6 @@ See this [document](https://docs.google.com/document/d/1pZcK6nOgmYxSbN2b9MdQSOWL
 ### Project pitch
 
 See this [presentation](https://docs.google.com/presentation/d/1I6PNRz_twv2VCshzv1o-vXBFN6c71CpDrIfRMc17KL8/edit?usp=sharing) for our project pitch.
-
-### Backend (`README.md`)
-
-See this [file](backend/README.md) for a complete backend documentation. This covers:
-
-- API references
-- Database schemas
-
-### Frontend
-
-...
-
----
 
 ## Project structure
 

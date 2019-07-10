@@ -8,12 +8,9 @@ import express from 'express';
 /** Module imports */
 import { logTime } from '../../middlewares/timelogger.middleware';
 import { wrapAsync } from '../../middlewares/errorhandler.middleware';
-import {
-    sendEmailSubcribe
-} from './email.controller';
+import { sendEmailSubscribe } from './email.controller';
 
 export const emailRouter: express.Router = express.Router({ mergeParams: true });
 
-/** SEND EMAIL SUBCRIBE */
-emailRouter.get('/', logTime, wrapAsync(sendEmailSubcribe));
-
+/** SEND EMAIL SUBSCRIBE */
+emailRouter.get('/', logTime, wrapAsync(sendEmailSubscribe));

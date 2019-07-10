@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
-import { MessageService } from 'src/app/services/message/message.service';
 import { CommentService } from 'src/app/services/comment/comment.service';
 import { ActivatedRoute } from '@angular/router';
 import { Comment } from 'src/app/models/comment.model';
@@ -11,9 +10,15 @@ import { Comment } from 'src/app/models/comment.model';
   styleUrls: ['./comment.component.scss'],
 })
 export class CommentComponent implements OnInit {
+  /**
+   * @description current pagination to 1
+   */
+  page = 1;
 
-  page: number = 1;
-  pageSize: number = 4;
+  /**
+   * @description items per page
+   */
+  pageSize = 4;
 
   comments: Comment[] = [];
   thisMessageID = '';
@@ -27,11 +32,7 @@ export class CommentComponent implements OnInit {
     archive: false,
   };
 
-  constructor(
-    public userService: UserService,
-    public commentService: CommentService,
-    public route: ActivatedRoute
-  ) {}
+  constructor(public userService: UserService, public commentService: CommentService, public route: ActivatedRoute) {}
 
   ngOnInit() {
     this.getMessageId();
@@ -40,11 +41,11 @@ export class CommentComponent implements OnInit {
 
   getComments(): void {
     this.commentService.getCommentByMessageId(this.thisMessageID).subscribe((comments) => {
-      comments.forEach( comment => {
-        this.userService.getUserById(comment.creatorId).subscribe(user => {
+      comments.forEach((comment) => {
+        this.userService.getUserById(comment.creatorId).subscribe((user) => {
           comment.creatorId = user.email;
-        })
-      })
+        });
+      });
       this.comments = this.sortDateDesc(comments);
     });
   }
@@ -56,10 +57,10 @@ export class CommentComponent implements OnInit {
   }
 
   addNewComment(e: any) {
-    let thisNewComment = Object.assign({}, this.newComment);
+    const thisNewComment = Object.assign({}, this.newComment);
     if (this.userService.user) {
       this.commentService.createComment(thisNewComment).subscribe(
-        (reponseCommnet) => {
+        (responseComment) => {
           thisNewComment.creatorId = this.userService.user.email;
           this.comments.unshift(thisNewComment);
           // alert('COMMENT CREATED! RELOADING PAGE!');
@@ -76,10 +77,9 @@ export class CommentComponent implements OnInit {
 
   /**
    * @description sort comments based on the newest date first
-   * @memberof CommentComponent
    */
   sortDateDesc = (array: Comment[]): Comment[] => {
-    return array.sort((a,b) => {
+    return array.sort((a, b) => {
       if (new Date(a.created_at) < new Date(b.created_at)) {
         return 1;
       } else if (new Date(a.created_at) > new Date(b.created_at)) {

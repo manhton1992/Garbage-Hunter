@@ -12,30 +12,22 @@ export class MapComponent implements OnInit {
   /**
    * @description messages being passed from parent component.
    * HOME, SHOW-MESSAGE
-   * @type {Message[]}
-   * @memberof MapComponent
    */
   @Input() messages: Message[] = [];
 
   /**
    * @description which page is accessing this map.
-   * @type {string}
-   * @memberof MapComponent
    */
   @Input() pageType: string;
 
   /**
-   * @description pass the latlon to the parent component (create page).
+   * @description pass the latitude & longitude to the parent component (create page).
    * CREATE-MESSAGE
-   * @type {EventEmitter<number>}
-   * @memberof MapComponent
    */
   @Output() createPageLatLon: EventEmitter<number> = new EventEmitter();
 
   /**
    * @description the map component of the page
-   * @type {Map}
-   * @memberof MapComponent
    */
   myMap: Map = null;
 
@@ -47,9 +39,8 @@ export class MapComponent implements OnInit {
 
   /**
    * @description config layout for the map.
-   * @memberof MapComponent
    */
-  map_conf_streetmap = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  MAP_CONF_STREET_MAP = tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     detectRetina: true,
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -57,9 +48,8 @@ export class MapComponent implements OnInit {
 
   /**
    * @description config layout for marker.
-   * @memberof MapComponent
    */
-  map_conf_marker = {
+  MAP_CONF_MARKER = {
     icon: icon({
       iconSize: [51, 51],
       iconAnchor: [25, 51],
@@ -70,9 +60,8 @@ export class MapComponent implements OnInit {
 
   /**
    * @description config layout for user marker.
-   * @memberof MapComponent
    */
-  map_conf_user = {
+  MAP_CONF_USER = {
     icon: icon({
       iconSize: [40, 40],
       popupAnchor: [0, -20],
@@ -82,13 +71,22 @@ export class MapComponent implements OnInit {
 
   /**
    * @description general config for the map.
-   * @memberof MapComponent
    */
-  map_conf = {
-    layers: [this.map_conf_streetmap],
+  MAP_CONF = {
+    layers: [this.MAP_CONF_STREET_MAP],
     zoom: 13,
-    center: latLng(49.87283243897958, 8.651180863380432), // luisenplatz
+    center: latLng(49.87283243897958, 8.651180863380432),
   };
+
+  /**
+   * ==========================================
+   * ANGULAR FUNCTIONS
+   * ==========================================
+   */
+
+  constructor(private mapService: MapService) {}
+
+  ngOnInit() {}
 
   /**
    * ==========================================
@@ -98,8 +96,6 @@ export class MapComponent implements OnInit {
 
   /**
    * @description executes after the map is ready.
-   * @param {Map} map
-   * @memberof MapComponent
    */
   onMapReady = (map: Map): void => {
     this.myMap = map;
@@ -107,11 +103,10 @@ export class MapComponent implements OnInit {
       this.setMarker(map);
       this.centerMap();
     }, 1000);
-  };
+  }
 
   /**
    * @description map click event.
-   * @memberof MapComponent
    */
   onMapClick = (e: any): void => {
     switch (this.pageType) {
@@ -124,19 +119,18 @@ export class MapComponent implements OnInit {
       default:
         break;
     }
-  };
+  }
 
   /**
    * @description create popup for the home page.
-   * getting the address of the selected coordinate and 
+   * getting the address of the selected coordinate and
    * create a link to report new message with params
    * HOME
-   * @memberof MapComponent
    */
   homePagePopup = (e: any): void => {
-    this.mapService.getAddressfromLatLon(e.latlng.lat, e.latlng.lng).subscribe(
+    this.mapService.getAddressFromLatLon(e.latlng.lat, e.latlng.lng).subscribe(
       (data) => {
-        let address = this.processAddress(data);
+        const address = this.processAddress(data);
         popup()
           .setLatLng(e.latlng)
           .setContent(
@@ -157,44 +151,39 @@ export class MapComponent implements OnInit {
   }
 
   /**
-   * @description create marker and send latlon in the create page. 
+   * @description create marker and send latitude & longitude to the create page.
    * CREATE-MESSAGE
-   * @memberof MapComponent
    */
   createPageMarker = (e: any): void => {
     // TODO do not remove location marker
-    this.myMap.eachLayer((layer:any) => {
+    this.myMap.eachLayer((layer: any) => {
       if (!layer._url) {
         layer.removeFrom(this.myMap);
       }
-    })
-    
-    marker([e.latlng.lat, e.latlng.lng], this.map_conf_marker)
-        .addTo(this.myMap);
+    });
+
+    marker([e.latlng.lat, e.latlng.lng], this.MAP_CONF_MARKER).addTo(this.myMap);
 
     this.createPageLatLon.emit(e.latlng);
   }
-  
 
   /**
    * @description set markers for the messages in the map
-   * @memberof MapComponent
    */
   setMarker = (map: Map): void => {
-    if (this.messages.length > 0) { 
+    if (this.messages.length > 0) {
       this.messages.forEach((message) => {
-        if (message && message.lat && message.lon) {    
-          marker([message.lat, message.lon], this.map_conf_marker)
-          .addTo(map)
-          .bindPopup(`<a href="messages/${message._id}">${message.title}</a>`);
+        if (message && message.lat && message.lon) {
+          marker([message.lat, message.lon], this.MAP_CONF_MARKER)
+            .addTo(map)
+            .bindPopup(`<a href="messages/${message._id}">${message.title}</a>`);
         }
       });
     }
-  };
+  }
 
   /**
    * @description center the position of the map.
-   * @memberof MapComponent
    */
   centerMap = (): void => {
     switch (this.pageType) {
@@ -216,52 +205,42 @@ export class MapComponent implements OnInit {
   /**
    * @description get the current position.
    * HOME, CREATE-MESSAGE
-   * @memberof MapComponent
    */
   getUserLocation = (): void => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        let latlon = new LatLng(position.coords.latitude, position.coords.longitude);
-        this.myMap.setView(latlon, 14);
-        this.mapService.getAddressfromLatLon(latlon.lat, latlon.lng).subscribe(data => {
-          marker(latlon, this.map_conf_user)
-          .addTo(this.myMap)
-          .bindPopup(`Your current location:<br><strong>${this.processAddress(data)}</strong>`);
+        const latLon = new LatLng(position.coords.latitude, position.coords.longitude);
+        this.myMap.setView(latLon, 14);
+        this.mapService.getAddressFromLatLon(latLon.lat, latLon.lng).subscribe((data) => {
+          marker(latLon, this.MAP_CONF_USER)
+            .addTo(this.myMap)
+            .bindPopup(`Your current location:<br><strong>${this.processAddress(data)}</strong>`);
         });
       },
       () => {
         alert('error, no location is allowed');
       }
     );
-  };
+  }
 
   /**
    * @description center by the message.
    * SHOW-MESSAGE, CREATE-MESSAGE
-   * @memberof MapComponent
    */
   centerToMessage = (): void => {
-    if (this.messages.length > 0 && this.messages[0] && this.messages[0].lat && this.messages[0].lon ) { 
+    if (this.messages.length > 0 && this.messages[0] && this.messages[0].lat && this.messages[0].lon) {
       this.myMap.setView(new LatLng(this.messages[0].lat, this.messages[0].lon), 17);
     }
   }
 
-  processAddress = (data: any): string => {
-    let road = data.road ? data.road : '';
-    let house_number = data.house_number ? data.house_number : '';
-    let postcode = data.postcode ? data.postcode : '';
-    let city = data.city ? data.city : '';
-    return `${road} ${house_number}, ${postcode} ${city}`;
-  }
-
   /**
-   * ==========================================
-   * ANGULAR FUNCTIONS
-   * ==========================================
+   * @description return the address from reverse geocoding
    */
-
-  constructor(private mapService: MapService) {}
-
-  ngOnInit() {
+  processAddress = (data: any): string => {
+    const road = data.road ? data.road : '';
+    const houseNumber = data.house_number ? data.house_number : '';
+    const postcode = data.postcode ? data.postcode : '';
+    const city = data.city ? data.city : '';
+    return `${road} ${houseNumber}, ${postcode} ${city}`;
   }
 }
