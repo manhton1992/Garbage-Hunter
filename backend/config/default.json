@@ -1,6 +1,6 @@
 {
     "database": {
-        "host" : "mongodb://mongo:27017/test-garbage-hunter"
+        "host" : "mongodb://localhost:27017/test-garbage-hunter"
     },
     "server": {
         "port" : 3000

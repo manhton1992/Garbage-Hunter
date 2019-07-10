@@ -68,4 +68,24 @@ describe('EditComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have Title in h1 tag', async() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(()=> {
+      fixture.detectChanges();
+    let compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('h1').textContent).toContain(component.message.title);
+  })
+})
+
+it('should have edit in button tag', async() => {
+  fixture.detectChanges();
+  component.ngOnInit();
+  fixture.whenStable().then(()=> {
+    fixture.detectChanges();
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('button').textContent).toContain('Edit Message!');
+})
+})
 });

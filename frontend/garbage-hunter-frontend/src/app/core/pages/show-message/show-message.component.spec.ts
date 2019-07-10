@@ -16,7 +16,7 @@ import { RegisterComponent } from '../register/register.component';
 import { AdminNumberBoxComponent } from '../../components/admin-number-box/admin-number-box.component';
 import { ChartLineComponent } from '../../components/chart-line/chart-line.component';
 import { ChartPieComponent } from '../../components/chart-pie/chart-pie.component';
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { FormsModule } from '@angular/forms';
@@ -25,10 +25,12 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditComponent } from '../edit/edit.component';
 import { FlashComponent } from '../../components/flash/flash.component';
+import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
 
 describe('ShowMessageComponent', () => {
   let component: ShowMessageComponent;
   let fixture: ComponentFixture<ShowMessageComponent>;
+  let el: HTMLElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -61,16 +63,32 @@ describe('ShowMessageComponent', () => {
         LeafletModule.forRoot(),
         NgbModule.forRoot(),
       ],
-    }).compileComponents();
+    }).compileComponents().then(()=>{
+      fixture = TestBed.createComponent(ShowMessageComponent);
+      component = fixture.componentInstance;
+    });;
   }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ShowMessageComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should have message', async() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(()=> {
+      fixture.detectChanges();
+      expect(component.message).not.toBeNull();
+    })
+  }) 
+  
+  it('should have Title in h1 tag', async() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(()=> {
+      fixture.detectChanges();
+      let compiled = fixture.debugElement.nativeElement;
+      expect(compiled.querySelector('h1').textContent).toContain(component.message.title);
+    })
+  })
 });
