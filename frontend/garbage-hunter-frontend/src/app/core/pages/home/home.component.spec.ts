@@ -23,10 +23,13 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditComponent } from '../edit/edit.component';
 import { FlashComponent } from '../../components/flash/flash.component';
 import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let de: DebugElement;
+  let el: HTMLElement;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -72,14 +75,24 @@ describe('HomeComponent', () => {
     expect(compiled.querySelector('h1').textContent).toContain('Garbage Hunter');
   })
 
-  it('should have messages', async() => {
-    expect(component.messages.length).toBeGreaterThanOrEqual(0);
+  it('should have description in p tag', async() => {
+    const compiled = fixture.debugElement.nativeElement;
+    expect(compiled.querySelector('p').textContent).toContain('Garbage Hunter is the application to report unused things that lies on the side of a street');
   })
+
+  it('should have message', async() => {
+    fixture.detectChanges();
+    component.ngOnInit();
+    fixture.whenStable().then(()=> {
+      fixture.detectChanges();
+      expect(component.messages.length).toBeGreaterThanOrEqual(1);
+    })
+  }) 
 
   it('should call getAllMessageCategories method', async() => {
     fixture.detectChanges();
     spyOn(component, 'getAllMessageCategories');
-    const el = fixture.debugElement.query(By.css('button')).nativeElement;
+    el = fixture.debugElement.nativeElement.querySelector('button');
     el.click();
     expect(component.getAllMessageCategories).toHaveBeenCalledTimes(1);
   })
@@ -87,7 +100,7 @@ describe('HomeComponent', () => {
   it('should call clearFilter method', async() => {
     fixture.detectChanges();
     spyOn(component, 'clearFilter');
-    const el = fixture.debugElement.query(By.css('button')).nativeElement;
+    el = fixture.debugElement.nativeElement.querySelector('button');
     el.click();
     expect(component.clearFilter).toHaveBeenCalledTimes(0);
   })
